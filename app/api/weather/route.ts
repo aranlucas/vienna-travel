@@ -5,16 +5,20 @@ import { resolveDaysWeather } from '@/lib/weatherService'
 
 export const dynamic = 'force-dynamic'
 
+const orderedDays = Object.values(DAYS).sort((a, b) => a.isoDate.localeCompare(b.isoDate))
+
 const getCachedWeather = unstable_cache(
   async () => {
-    const days = await resolveDaysWeather(Object.values(DAYS).sort((a, b) => a.isoDate.localeCompare(b.isoDate)))
+    const days = await resolveDaysWeather(orderedDays)
 
     return {
       days,
       refreshedAt: new Date().toISOString(),
     }
   },
-  ['vienna-trip-weather-v1'],
+  // The data cache persists across deployments. Include every weather input in
+  // the key so itinerary edits cannot reuse a response from an older deploy.
+  ['vienna-trip-weather', JSON.stringify(orderedDays)],
   {
     revalidate: WEATHER_REFRESH_SECONDS,
     tags: ['trip-weather'],
