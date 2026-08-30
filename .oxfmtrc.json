@@ -1,0 +1,8 @@
+{
+  "ignorePatterns": [".next/**"],
+  "objectWrap": "preserve",
+  "printWidth": 120,
+  "proseWrap": "preserve",
+  "semi": false,
+  "singleQuote": true
+}
