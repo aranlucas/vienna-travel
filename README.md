@@ -1,9 +1,9 @@
-# Austria Itinerary Demo
+# Austria Expedition 2026
 
-A public-safe travel-planning demo built with Next.js, TypeScript, Tailwind CSS, Leaflet, and Recharts. It combines a phased itinerary, route maps, GPX-backed hikes, weather guidance, booking-state UI, packing suggestions, and a chronological timeline.
+A public-safe copy of the trip planner built with Next.js, TypeScript, Tailwind CSS, Leaflet, and Recharts. It combines a phased itinerary, route maps, GPX-backed hikes, live weather guidance, booking-state UI, packing suggestions, and a chronological timeline.
 
 > [!IMPORTANT]
-> All dates, flights, lodging, booking states, traveler details, and operational timings in this repository are fictional sample data. This repository does not contain anyone's real travel plans.
+> The itinerary and operational planning details mirror the private planning source. Traveler identity, contact information, booking confirmations, ticket IDs, loyalty numbers, payment data, and private access links must never be committed here.
 
 ## Run locally
 
@@ -27,18 +27,17 @@ pnpm build
 
 All tracked trip fixtures live in [`lib/data`](./lib/data). `lib/tripData.ts` assembles the modular sources into the backward-compatible shapes used by the components. Timeline events are derived from the itinerary, stays, and transport data rather than duplicated manually.
 
-The public fixture deliberately uses:
+The public fixture deliberately keeps:
 
-- far-future 2037 sample dates;
-- `ORIGIN` and `Example Air` instead of a real home airport or carrier itinerary;
-- generic lodging names and city-level coordinates;
-- fictional booking states without confirmation numbers, ticket IDs, property contacts, or passenger data.
+- the same dates, transport, lodging, activities, logistics, and weather locations as the private planning source;
+- booking state only when it does not expose an account or reservation identifier;
+- no confirmation numbers, ticket IDs, traveler names, personal contacts, loyalty identifiers, payment data, or private provider links.
 
 See [`lib/data/README.md`](./lib/data/README.md) before changing trip fixtures.
 
 ## Privacy boundary
 
-Never commit real names, email addresses, phone numbers, home locations, booking references, ticket numbers, loyalty numbers, passport details, exact active travel dates, or private property contacts.
+Never commit traveler names, personal email addresses or phone numbers, home street addresses, booking references, ticket numbers, loyalty numbers, passport details, payment data, private property contacts, or authenticated provider links.
 
 Traveler-specific overlays and exports belong outside Git. Paths matching `lib/data/*.private.*` and `lib/data/private/` are ignored as a last line of defense, but a password manager or encrypted private store is preferable.
 

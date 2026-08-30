@@ -15,13 +15,13 @@ export type TimelineEventType =
 export interface TimelineEvent {
   id: string
   type: TimelineEventType
-  /** ISO date string for grouping, e.g. '2037-09-04' */
+  /** ISO date string for grouping, e.g. '2026-09-04' */
   date: string
   /** Display label for the date group, e.g. 'Friday, Sep 04' */
   dateLabel: string
   /** Sort key within a day — minutes from midnight (approximate) */
   sortTime: number
-  /** Primary line, e.g. 'ORIGIN – MUC' */
+  /** Primary line, e.g. 'SEA – MUC' */
   title: string
   /** Secondary details */
   details: string[]

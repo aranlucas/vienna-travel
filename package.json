@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "check:privacy": "node scripts/check-public-data.mjs",
     "start": "next start",
     "lint": "eslint",
     "format": "oxfmt ."

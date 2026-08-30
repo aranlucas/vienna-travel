@@ -1,14 +1,12 @@
 # Public trip fixtures
 
-Everything tracked in this directory must be safe to publish. The checked-in itinerary is a fictional product demo, not a live trip plan.
+Everything tracked in this directory must be safe to publish. The checked-in itinerary mirrors the private planning source except for identifying and account-specific information.
 
 Before committing data changes, verify that they contain none of the following:
 
 - traveler names or contact information;
-- home addresses or a real home airport tied to active dates;
 - booking, ticket, confirmation, loyalty, passport, or payment identifiers;
-- exact active travel dates, flight numbers, lodging reservations, or pickup/drop-off reservations;
 - private hotel, host, driver, or property contact details;
-- exports copied from booking providers, calendars, email, or travel apps.
+- authenticated links or raw exports copied from booking providers, calendars, email, or travel apps.
 
-Use generic labels such as `ORIGIN`, `Example Air`, and `Sample room`. Keep demo dates far enough in the future that they cannot be mistaken for an active itinerary. Store real confirmations in a password manager or another encrypted private system, never in a local overlay that might later be committed accidentally.
+Dates, public transport details, lodging details, activities, and weather locations may match the private itinerary. Store confirmations and traveler-specific records in a password manager or another encrypted private system, never in a local overlay that might later be committed accidentally.

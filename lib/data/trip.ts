@@ -4,9 +4,9 @@ export interface Coordinates {
 }
 
 export const TRIP_META = {
-  title: 'Austria Itinerary Demo',
-  subtitle: 'Sample Lakes & Hikes',
-  dates: 'Sept 5–14, 2037',
+  title: 'Austria Expedition',
+  subtitle: 'Lakes & Hikes',
+  dates: 'Sept 5–14, 2026',
   totalDays: 10,
   travelers: 2,
 } as const

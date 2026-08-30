@@ -15,8 +15,8 @@ const sourceSerif = Source_Serif_4({
 })
 
 export const metadata: Metadata = {
-  title: 'Austria Itinerary Demo',
-  description: 'A fictional Austria travel-planning demo built with Next.js',
+  title: 'Austria Expedition 2026',
+  description: 'Sept 5–14 | Vienna · Salzkammergut · Tyrol · Innsbruck',
 }
 
 export default function RootLayout({

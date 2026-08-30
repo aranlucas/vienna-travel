@@ -24,21 +24,23 @@ export function PhaseTyrol({ phase, drivingRoutes, hikingRoutes }: PhaseTyrolPro
         <div className="space-y-4">
           <SectionHeader title="Tyrolean Alps" subtitle="Phase 3 · Sept 9–11" />
           <p className="text-cream-muted text-base leading-relaxed">
-            Three days based in Ehrwald at the foot of the Zugspitze. Suspension bridges, emerald alpine lakes,
-            ghost-tree reflections, and a 9,718 ft summit straddling two countries.
+            Three days based in Ehrwald at the foot of the Zugspitze. Suspension bridges, emerald
+            alpine lakes, ghost-tree reflections, and a 9,718 ft summit straddling two countries.
           </p>
 
           <div className="bg-dark-card border border-forest-green/30 rounded-lg p-4">
             <div className="text-sm text-cream-muted/60 uppercase tracking-widest mb-2">Base</div>
-            <div className="text-cream font-medium text-base">Tyrol Mountain Hotel</div>
+            <div className="text-cream font-medium text-base">der grüne Baum Mountain Boutique Hotel</div>
             <div className="text-cream-muted text-sm mt-1">Sept 9–11 (2 nights)</div>
           </div>
 
           <div className="bg-dark-card border border-amber/20 rounded-lg p-4">
-            <div className="text-sm text-amber tracking-widest uppercase mb-2 font-medium">💰 Cash Required</div>
+            <div className="text-sm text-amber tracking-widest uppercase mb-2 font-medium">
+              💰 Cash Required
+            </div>
             <p className="text-cream-muted text-base">
-              Bring <strong className="text-cream">€50+ cash</strong> for the Coburger Hütte mountain hut (cards
-              unreliable at altitude).
+              Bring <strong className="text-cream">€50+ cash</strong> for the Coburger Hütte
+              mountain hut (cards unreliable at altitude).
             </p>
           </div>
         </div>

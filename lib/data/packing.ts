@@ -16,11 +16,11 @@ export interface PackingPlan {
 export const PACKING_PLAN: PackingPlan = {
   title: 'Forecast-Ready Carry-On Packing',
   intro:
-    'Sample carry-on plan for warm city days, wet lake weather, strenuous alpine hikes, and exposed rail-and-cable-car summits. Adjust every quantity for the actual travelers, forecast, and baggage rules.',
+    'Pack for warm city and valley days, wet lake weather, two strenuous alpine hikes, and exposed rail-and-cable-car summits up to 2,962 m — all across a 10-day trip without checked bags. Use one cabin roller plus one trail-capable personal-item daypack each, with a laundry reset on Sept 9.',
   baggageRule:
-    'The sizes and weights in this demo are placeholders. Check the operating carrier and fare shown on each real segment before packing.',
+    'Published Lufthansa and Austrian Economy / short-haul Economy Light allowance: 1 carry-on up to 8 kg (55 × 40 × 23 cm) plus 1 personal item (40 × 30 × 15 cm) per person. Confirm the same allowance appears on the booking because the operating carrier and fare shown on each segment control.',
   strategy:
-    'Wear the hiking shoes and heaviest midlayer in transit. Keep passports, medicines, batteries, and valuables in the personal item in case a larger bag is gate-checked.',
+    'Wear the hiking shoes and heaviest midlayer in transit. Keep each roller at 6.5–7 kg, make each 15–20 L daypack fit the personal-item dimensions, and keep passports, medicines, batteries, and valuables in that daypack in case the roller is gate-checked.',
   groups: [
     {
       title: 'Wear On Plane',
@@ -82,14 +82,14 @@ export const PACKING_PLAN: PackingPlan = {
     },
     {
       title: 'Shared Safety & Trail Kit',
-      subtitle: 'Adapt to the size of the travel party',
+      subtitle: 'Split between the two daypacks',
       items: [
         'Blister kit, compact first aid, pain meds, bandages, and leukotape',
-        'One emergency space blanket per traveler',
-        'A reliable power bank and short charging cable',
-        'Enough EU plug adapters for the devices being carried',
+        '2 emergency space blankets — one per traveler',
+        '1 reliable power bank and short charging cable',
+        '2 EU plug adapters',
         'Trail food and electrolyte packets; restock snacks in Vienna',
-        'An appropriate cash backup in smaller notes for huts and tolls',
+        '€150–200 total in smaller notes, split between both people for huts and toll backup',
         'Tissues, a small trash bag, and a tiny amount of repair tape',
       ],
     },
@@ -106,19 +106,19 @@ export const PACKING_PLAN: PackingPlan = {
       ],
     },
     {
-      title: 'Optional Smart-Casual Items',
+      title: 'For Him',
       items: [
-        'One dinner-ready top for Vienna or Grinzing',
-        'A lightweight belt only if the city trousers need it',
+        '1 collared dinner shirt for Vienna / Grinzing',
+        '1 lightweight belt only if the city trousers need it',
         'Use the hiking shoe for transit and trail days; add a compact city shoe only if it earns the weight',
       ],
     },
     {
-      title: 'Optional Comfort Items',
+      title: 'For Her',
       items: [
-        'One versatile dinner outfit that still layers cleanly',
-        'Any personal support garments needed for back-to-back hike days',
-        'A compact scarf or light layer for churches and cool evenings',
+        '1 versatile dinner outfit that still layers cleanly',
+        '2 sports bras and 1 regular bra, or the proven minimum that works across back-to-back hike days',
+        '1 compact scarf or light layer for churches and cool evenings',
         'Wear the most supportive hiking or walking shoe on the plane',
       ],
     },

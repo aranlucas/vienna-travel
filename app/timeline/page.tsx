@@ -4,7 +4,7 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Trip Timeline | Austria Itinerary Demo',
+  title: 'Trip Timeline | Austria Expedition 2026',
   description: 'Chronological travel timeline — flights, hotels, trains, and activities',
 }
 
@@ -33,11 +33,11 @@ export default function TimelinePage() {
       {/* Hero */}
       <div className="mx-auto max-w-2xl px-4 pt-8 pb-4">
         <div className="mb-2">
-          <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-amber">Austria Itinerary Demo</span>
+          <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-amber">Austria Expedition 2026</span>
         </div>
         <h2 className="font-serif-display text-3xl sm:text-4xl text-cream mb-2">Austria</h2>
-        <p className="text-cream-muted text-base">Fictional sample dates: Sep 4&ndash;14, 2037</p>
-        <p className="text-cream-muted/60 text-sm mt-1">Public demo itinerary</p>
+        <p className="text-cream-muted text-base">Fri, Sep 4 &ndash; Mon, Sep 14, 2026</p>
+        <p className="text-cream-muted/60 text-sm mt-1">Personal itinerary</p>
       </div>
 
       {/* Divider */}

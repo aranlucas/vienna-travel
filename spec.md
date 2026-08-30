@@ -1,19 +1,19 @@
-# Austria Itinerary Demo — Product Spec
+# Austria Expedition 2026 — Product Spec
 
 Repo: `vienna-travel`
 Stack: Next.js 16.3.2 (App Router) · TypeScript · Tailwind v4 · Leaflet + react-leaflet · Recharts
 
-All trip details in this document and the tracked data modules are fictional public-demo fixtures.
+The public data mirrors the private itinerary while excluding identifying and account-specific information.
 
 ---
 
 ## Product Summary
 
-This app demonstrates a trip-planning site using a fictional 10-day Austria itinerary:
+This app provides a trip-planning site for a 10-day Austria itinerary:
 
-- `Sept 5–14, 2037`
-- `2 sample travelers`
-- `ORIGIN → VIE → Vienna → Salzburg/lakes → Tyrol → Innsbruck → Vienna Airport`
+- `Sept 5–14, 2026`
+- `2 travelers`
+- `SEA → VIE → Vienna → Salzburg/lakes → Tyrol → Innsbruck → Vienna Airport`
 
 It combines:
 
@@ -260,7 +260,8 @@ app/page.tsx (async server)
 
 - never commit booking confirmation codes, passenger ticket numbers, names, phone numbers, or private
   property contact details
-- the WebMCP tools expose only the sanitized itinerary data rendered by the page
+- public itinerary details may mirror the private planning source, but identifying and account-specific fields are removed
+- the WebMCP tools expose only the redacted itinerary data rendered by the page
 - keep any traveler-specific confirmation notes in an ignored local file or password manager
 
 ### Google Maps Links

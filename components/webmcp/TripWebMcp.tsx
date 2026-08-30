@@ -20,7 +20,7 @@ const DAY_INPUT_SCHEMA = {
   properties: {
     date_or_day: {
       type: 'string',
-      description: 'A trip date, date label, day title, or day number, such as 2037-09-10, Sept 10, or Day 6.',
+      description: 'A trip date, date label, day title, or day number, such as 2026-09-10, Sept 10, or Day 6.',
     },
   },
   required: ['date_or_day'],

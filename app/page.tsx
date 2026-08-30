@@ -102,12 +102,12 @@ export default async function Home() {
       {/* Hero */}
       <HeroSection />
 
-      <aside className="px-6 pb-8 max-w-3xl mx-auto" aria-label="Demo data notice">
+      <aside className="px-6 pb-8 max-w-3xl mx-auto" aria-label="Public data notice">
         <div className="rounded-xl border border-amber/30 bg-dark-card px-5 py-4 text-center">
-          <p className="text-xs uppercase tracking-[0.22em] text-amber font-medium">Public demo</p>
+          <p className="text-xs uppercase tracking-[0.22em] text-amber font-medium">Public itinerary</p>
           <p className="mt-2 text-sm leading-relaxed text-cream-muted">
-            Every date, booking, flight, lodging, and traveler detail in this repository is fictional sample data. Do
-            not use this itinerary to infer anyone&apos;s real travel plans.
+            This copy keeps the trip&apos;s planning details while omitting traveler identity, contact information,
+            confirmation numbers, ticket IDs, and other account-specific data.
           </p>
         </div>
       </aside>
@@ -125,12 +125,12 @@ export default async function Home() {
           <HeroMap driveCoords={heroDriveCoords} trainRoutes={heroTrainRoutes} />
         </div>
         <p className="text-cream-muted/50 text-sm mt-2 text-center">
-          Sample origin → VIE · {TRIP_DATA.dates} · {TRIP_DATA.phases.length} phases
+          SEA → VIE · {TRIP_DATA.dates} · {TRIP_DATA.phases.length} phases
         </p>
         <div className="mt-4 max-w-xl mx-auto">
           <TripCountdown
-            label="Until the fictional sample departure (Sep 4, 2037 · 6:50 PM UTC)"
-            targetIso="2037-09-04T18:50:00Z"
+            label="Until flight departure from SEA (Sep 4, 2026 · 6:50 PM PT)"
+            targetIso="2026-09-04T18:50:00-07:00"
           />
         </div>
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3">
@@ -281,7 +281,7 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="border-t border-forest-green/20 px-6 py-8 text-center text-cream-muted/40 text-xs">
-        Austria Itinerary Demo
+        Austria Expedition 2026
       </footer>
     </LiveWeatherPage>
   )
