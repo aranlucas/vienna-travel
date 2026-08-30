@@ -50,4 +50,4 @@ Please report vulnerabilities through GitHub's private vulnerability reporting f
 
 ## License
 
-No open-source license has been selected yet. The repository is public for viewing and portfolio purposes; no additional reuse rights are granted until a license is added.
+Licensed under the [MIT License](./LICENSE).
