@@ -102,16 +102,6 @@ export default async function Home() {
       {/* Hero */}
       <HeroSection />
 
-      <aside className="px-6 pb-8 max-w-3xl mx-auto" aria-label="Public data notice">
-        <div className="rounded-xl border border-amber/30 bg-dark-card px-5 py-4 text-center">
-          <p className="text-xs uppercase tracking-[0.22em] text-amber font-medium">Public itinerary</p>
-          <p className="mt-2 text-sm leading-relaxed text-cream-muted">
-            This copy keeps the trip&apos;s planning details while omitting traveler identity, contact information,
-            confirmation numbers, ticket IDs, and other account-specific data.
-          </p>
-        </div>
-      </aside>
-
       {/* Full overview map — drive + train routes both pre-baked (scripts/prefetch-routes.ts) */}
       <section className="px-6 pb-12 max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-4">

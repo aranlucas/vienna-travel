@@ -8,6 +8,7 @@ import { CONFIRMED_STAYS } from '@/lib/confirmedStays'
 import type { LatLng } from '@/lib/routingService'
 import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from '@/lib/heroRouteData'
 import { buildGoogleMapsUrl } from '@/lib/mapLinks'
+import { MAP_ATTRIBUTION, MAP_TILE_URL } from '@/lib/mapTiles'
 import { PolylineWithArrows } from './PolylineWithArrows'
 import { MapInvalidator } from './MapInvalidator'
 
@@ -88,10 +89,6 @@ function createCompactIcon(tone: 'flight' | 'stay') {
   })
 }
 
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-
 // Vienna included in bounds even though it's not part of the drive
 const ALL_BOUND_POINTS: LatLng[] = [[48.2085, 16.3731], ...DRIVE_WAYPOINTS]
 
@@ -135,7 +132,7 @@ export default function HeroMap({ driveCoords, trainRoutes, onPhaseClick }: Hero
         zoomControl={true}
         scrollWheelZoom={false}
       >
-        <TileLayer url={TILE_URL} attribution={ATTRIBUTION} />
+        <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
         <MapInvalidator />
 
         {/* Driving route — pre-fetched OSRM, neon orange with direction arrows */}
