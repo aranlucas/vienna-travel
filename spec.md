@@ -221,7 +221,7 @@ app/page.tsx (async server)
 
 - `OSRM` for road-following routes
 - `Overpass` for rail relation geometry
-- `Leaflet` + Carto dark tiles for map rendering
+- `Leaflet` + OpenStreetMap tiles for map rendering
 
 ### Weather
 

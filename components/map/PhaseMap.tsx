@@ -7,6 +7,7 @@ import type { Phase } from '@/lib/tripData'
 import type { LatLng } from '@/lib/routingService'
 import { buildGoogleMapsUrl } from '@/lib/mapLinks'
 import { formatFeet, formatMiles } from '@/lib/units'
+import { MAP_ATTRIBUTION, MAP_TILE_URL } from '@/lib/mapTiles'
 import { PolylineWithArrows } from './PolylineWithArrows'
 import { MapInvalidator } from './MapInvalidator'
 
@@ -18,10 +19,6 @@ export interface PhaseMapProps {
   /** Pre-fetched GPX/hiking routes keyed by Hike.id */
   hikingRoutes: Record<string, LatLng[]>
 }
-
-const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-const ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 
 const POI_COLORS: Record<string, string> = {
   culture: '#8b9ed4',
@@ -59,7 +56,7 @@ function createHikeIcon() {
 }
 
 // High-contrast neon day-route colors — distinct from each other and from the
-// neon-orange driving lines / green hiking trails on dark tiles.
+// neon-orange driving lines / green hiking trails on the map.
 const DAY_ROUTE_COLORS = ['#22d3ee', '#f472b6', '#a3e635', '#c084fc']
 
 // Driving lines share this color on both HeroMap and PhaseMap.
@@ -92,7 +89,7 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
         zoomControl={true}
         scrollWheelZoom={false}
       >
-        <TileLayer url={TILE_URL} attribution={ATTRIBUTION} />
+        <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
         <MapInvalidator />
 
         {/* Per-segment OSRM driving routes */}
