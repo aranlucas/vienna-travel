@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import type { TimelineEvent, TimelineEventType } from '@/lib/timelineEvents'
 
 // ── Icon components ──
@@ -159,14 +159,22 @@ function getLineColor(type: TimelineEventType): string {
 
 function getTypeLabel(type: TimelineEventType): string {
   switch (type) {
-    case 'flight': return 'Flight'
-    case 'layover': return 'Layover'
-    case 'hotel-checkin': return 'Check In'
-    case 'hotel-checkout': return 'Check Out'
-    case 'train': return 'Train'
-    case 'drive': return 'Drive'
-    case 'hike': return 'Hike'
-    case 'activity': return 'Activity'
+    case 'flight':
+      return 'Flight'
+    case 'layover':
+      return 'Layover'
+    case 'hotel-checkin':
+      return 'Check In'
+    case 'hotel-checkout':
+      return 'Check Out'
+    case 'train':
+      return 'Train'
+    case 'drive':
+      return 'Drive'
+    case 'hike':
+      return 'Hike'
+    case 'activity':
+      return 'Activity'
   }
 }
 
@@ -185,16 +193,18 @@ function TimelineCard({ event, isLast }: { event: TimelineEvent; isLast: boolean
   const accent = getEventAccent(event.type)
 
   return (
-    <div className="relative pl-24 sm:pl-28">
+    <div className="relative pl-20 sm:pl-28">
       {/* Time rail label */}
       <div className="absolute left-0 top-4 w-20 sm:w-24 text-right pr-3">
         <p className="text-xs font-semibold tracking-wide text-cream">{formatSortTime(event.sortTime)}</p>
       </div>
 
       {/* Rail markers */}
-      <div className={`absolute left-[87px] sm:left-[103px] top-5 w-4 h-4 rounded-full ${getDotColor(event.type)} border-[3px] border-dark-surface shadow-lg`} />
+      <div
+        className={`absolute left-[71px] sm:left-[103px] top-5 w-4 h-4 rounded-full ${getDotColor(event.type)} border-[3px] border-dark-surface shadow-lg`}
+      />
       {!isLast && (
-        <div className={`absolute left-[94px] sm:left-[110px] top-9 bottom-[-10px] w-px ${getLineColor(event.type)}`} />
+        <div className={`absolute left-[78px] sm:left-[110px] top-9 bottom-[-10px] w-px ${getLineColor(event.type)}`} />
       )}
 
       <div className={`rounded-2xl border ${accent} p-4 mb-1 shadow-sm`}>
@@ -217,23 +227,21 @@ function TimelineCard({ event, isLast }: { event: TimelineEvent; isLast: boolean
         <h3 className="font-serif-display text-cream text-lg leading-tight">{event.title}</h3>
 
         {/* Subtitle */}
-        {event.subtitle && (
-          <p className="text-sm text-cream-muted/80 mt-0.5">{event.subtitle}</p>
-        )}
+        {event.subtitle && <p className="text-sm text-cream-muted/80 mt-0.5">{event.subtitle}</p>}
 
         {/* Details */}
         {event.details.length > 0 && (
           <div className="mt-2 space-y-1">
             {event.details.map((detail, i) => (
-              <p key={i} className="text-sm text-cream-muted/75 leading-snug">{detail}</p>
+              <p key={i} className="text-sm text-cream-muted/75 leading-snug">
+                {detail}
+              </p>
             ))}
           </div>
         )}
 
         {/* Location */}
-        {event.location && (
-          <p className="mt-2 text-xs text-cream-muted/55 leading-snug">{event.location}</p>
-        )}
+        {event.location && <p className="mt-2 text-xs text-cream-muted/55 leading-snug">{event.location}</p>}
       </div>
     </div>
   )
@@ -269,7 +277,7 @@ function TimelineSummary({ events }: { events: TimelineEvent[] }) {
 
 function DateHeader({ label }: { label: string }) {
   return (
-    <div className="sticky top-[60px] z-10 py-3 bg-dark-surface/90 backdrop-blur-sm">
+    <div className="sticky top-16 z-10 py-3 bg-dark-surface/90 backdrop-blur-sm">
       <h2 className="font-serif-display text-base font-bold text-cream tracking-wide">{label}</h2>
     </div>
   )
@@ -297,12 +305,21 @@ interface TravelTimelineProps {
 export function TravelTimeline({ events }: TravelTimelineProps) {
   const [filter, setFilter] = useState<TimelineEventType | 'all'>('all')
 
-  const filtered = filter === 'all'
-    ? events
-    : events.filter((e) => {
-        if (filter === 'hotel-checkin') return e.type === 'hotel-checkin' || e.type === 'hotel-checkout'
-        return e.type === filter
-      })
+  const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), [])
+  const nextEvent = useMemo(() => events.find((e) => e.date >= todayIso), [events, todayIso])
+
+  const jumpToToday = () => {
+    const targetDate = nextEvent?.date ?? todayIso
+    document.getElementById(`timeline-day-${targetDate}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  const filtered =
+    filter === 'all'
+      ? events
+      : events.filter((e) => {
+          if (filter === 'hotel-checkin') return e.type === 'hotel-checkin' || e.type === 'hotel-checkout'
+          return e.type === filter
+        })
 
   // Group events by date
   const grouped: { date: string; label: string; events: TimelineEvent[] }[] = []
@@ -319,13 +336,30 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
     <div>
       <TimelineSummary events={events} />
 
+      {nextEvent && (
+        <div className="mb-4 rounded-xl border border-amber/35 bg-amber/5 p-4">
+          <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-amber">Next up</div>
+          <p className="mt-1 text-cream font-medium leading-snug">
+            {nextEvent.dateLabel} · {nextEvent.title}
+          </p>
+          {nextEvent.subtitle && <p className="mt-0.5 text-sm text-cream-muted">{nextEvent.subtitle}</p>}
+          <button
+            type="button"
+            onClick={jumpToToday}
+            className="mt-3 inline-flex min-h-[44px] items-center rounded-lg border border-amber/40 px-4 py-2 text-sm font-semibold text-amber transition-colors hover:text-cream"
+          >
+            Jump to today
+          </button>
+        </div>
+      )}
+
       {/* Filter bar */}
       <div className="flex flex-wrap gap-2 mb-8">
         {FILTER_OPTIONS.map((opt) => (
           <button
             key={opt.type}
             onClick={() => setFilter(opt.type)}
-            className={`rounded-full px-3 py-1.5 text-xs font-medium uppercase tracking-[0.15em] transition-colors ${
+            className={`rounded-full px-4 py-2 min-h-[44px] min-w-[44px] text-xs font-medium uppercase tracking-[0.15em] transition-colors ${
               filter === opt.type
                 ? 'bg-amber text-dark-surface'
                 : 'border border-forest-green/40 text-cream-muted hover:border-amber/40 hover:text-cream'
@@ -338,7 +372,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
 
       {/* Timeline */}
       {grouped.map((group) => (
-        <div key={group.date} className="mb-6">
+        <div key={group.date} id={`timeline-day-${group.date}`} className="mb-6 scroll-mt-24">
           <DateHeader label={group.label} />
           <div className="space-y-3 pb-2">
             {group.events.map((event, eventIndex) => (
@@ -349,9 +383,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
       ))}
 
       {filtered.length === 0 && (
-        <div className="text-center py-12 text-cream-muted/50">
-          No events match the selected filter.
-        </div>
+        <div className="text-center py-12 text-cream-muted/50">No events match the selected filter.</div>
       )}
     </div>
   )

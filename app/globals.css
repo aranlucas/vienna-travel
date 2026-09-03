@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 @import 'leaflet/dist/leaflet.css';
 
 @theme {
@@ -25,6 +25,16 @@ html {
   font-size: 19px;
 }
 
+@media (max-width: 640px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 body {
   background-color: var(--color-dark-surface);
   color: var(--color-cream);
@@ -40,7 +50,7 @@ body::after {
   opacity: 0.035;
   mix-blend-mode: overlay;
   pointer-events: none;
-  z-index: 9999;
+  z-index: 5;
 }
 
 /* Leaflet map container fix */

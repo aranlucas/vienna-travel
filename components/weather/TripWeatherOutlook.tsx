@@ -305,7 +305,7 @@ export function TripWeatherOutlook() {
     <button
       type="button"
       onClick={() => changeUnit(value)}
-      className={`rounded-md px-2.5 py-1 text-xs font-medium transition-colors ${
+      className={`rounded-md px-4 py-2 min-h-[44px] min-w-[44px] text-xs font-medium transition-colors ${
         unit === value ? 'bg-amber text-dark-surface' : 'border border-slate-blue/40 text-cream-muted hover:text-cream'
       }`}
       aria-pressed={unit === value}
@@ -315,7 +315,7 @@ export function TripWeatherOutlook() {
   )
 
   return (
-    <section id={HOME_SECTION_IDS.weatherOutlook} className="px-6 pb-20 max-w-6xl mx-auto">
+    <section id={HOME_SECTION_IDS.weatherOutlook} className="px-6 pb-20 max-w-6xl mx-auto scroll-mt-20">
       <div className="flex items-center justify-between gap-4 mb-2 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="h-px w-8 bg-amber/60" />
@@ -330,20 +330,25 @@ export function TripWeatherOutlook() {
             type="button"
             onClick={() => void refresh()}
             disabled={isRefreshing}
-            className="rounded-md border border-amber/35 px-2.5 py-1 text-xs font-medium text-amber transition-colors hover:border-amber/60 hover:text-cream disabled:cursor-wait disabled:opacity-60"
+            className="rounded-md border border-amber/35 px-4 py-2 min-h-[44px] text-xs font-medium text-amber transition-colors hover:border-amber/60 hover:text-cream disabled:cursor-wait disabled:opacity-60"
           >
             {isRefreshing ? 'Checking…' : 'Check for update'}
           </button>
         </div>
       </div>
 
-      <p className="text-cream-muted max-w-3xl text-sm leading-relaxed mb-5">
-        Forecasts load separately from the static itinerary. The browser checks every {WEATHER_REFRESH_MINUTES} minutes
-        while this page is open, and the server shares that forecast cache so open tabs do not multiply Open-Meteo
-        requests. Exposed itinerary days use explicit summit or hut elevations instead of a warmer valley proxy.
-        Outlooks beyond seven days are useful for choosing gear, but exact rain, wind, trail, and lift decisions still
-        need a 24–48 hour recheck.
-      </p>
+      <details className="mb-5 max-w-3xl rounded-lg border border-forest-green/25 bg-dark-card px-4 py-3">
+        <summary className="cursor-pointer list-none text-sm text-cream-muted min-h-[44px] flex items-center">
+          How to read this outlook — forecasts load separately, recheck mountains 24–48h ahead ▾
+        </summary>
+        <p className="mt-2 text-sm leading-relaxed text-cream-muted">
+          Forecasts load separately from the static itinerary. The browser checks every {WEATHER_REFRESH_MINUTES}{' '}
+          minutes while this page is open, and the server shares that forecast cache so open tabs do not multiply
+          Open-Meteo requests. Exposed itinerary days use explicit summit or hut elevations instead of a warmer valley
+          proxy. Outlooks beyond seven days are useful for choosing gear, but exact rain, wind, trail, and lift
+          decisions still need a 24–48 hour recheck.
+        </p>
+      </details>
 
       <div className="mb-5 flex items-center gap-2 text-xs" aria-live="polite">
         <span
@@ -433,9 +438,7 @@ export function TripWeatherOutlook() {
                   <div className="mt-3 flex items-end justify-between gap-3">
                     <div>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-serif-display text-cream">
-                          {toDisplay(highC, unit)}°
-                        </span>
+                        <span className="text-3xl font-serif-display text-cream">{toDisplay(highC, unit)}°</span>
                         <span className="text-lg text-cream-muted">{toDisplay(lowC, unit)}°</span>
                         <span className="text-[9px] uppercase tracking-widest text-cream-muted/50">
                           {day.weatherExposure ? 'Planned high · low' : 'High · low'}

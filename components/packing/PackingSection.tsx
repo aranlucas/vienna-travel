@@ -1,5 +1,6 @@
 import type { DayPlan, PackingPlan } from '@/lib/tripData'
 import { ForecastPackingSummary } from '@/components/packing/ForecastPackingSummary'
+import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 
 interface PackingSectionProps {
   packing: PackingPlan
@@ -14,7 +15,7 @@ const TONE_STYLES: Record<NonNullable<PackingPlan['groups'][number]['tone']>, st
 
 export function PackingSection({ packing, days }: PackingSectionProps) {
   return (
-    <section className="px-6 pb-20 max-w-6xl mx-auto">
+    <section id={HOME_SECTION_IDS.packing} className="px-6 pb-20 max-w-6xl mx-auto scroll-mt-20">
       <div className="flex items-center gap-3 mb-6">
         <div className="h-px w-8 bg-amber/60" />
         <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">{packing.title}</span>
@@ -42,8 +43,7 @@ export function PackingSection({ packing, days }: PackingSectionProps) {
           <ul className="space-y-2 text-sm text-cream-muted leading-relaxed">
             <li>• Vienna still gets a proper dinner outfit, but only one.</li>
             <li>
-              • Fleece + packable insulation + shell covers hot valleys through cold summit wind without a bulky
-              coat.
+              • Fleece + packable insulation + shell covers hot valleys through cold summit wind without a bulky coat.
             </li>
             <li>
               • Each personal item becomes a real daypack, so water, dry layers, and safety gear are split sensibly.
@@ -59,15 +59,20 @@ export function PackingSection({ packing, days }: PackingSectionProps) {
         {packing.groups.map((group) => {
           const tone = group.tone ?? 'default'
           return (
-            <div key={group.title} className={`rounded-xl border p-4 ${TONE_STYLES[tone]}`}>
-              <div className="mb-3">
-                <h3 className="text-cream font-medium text-base">{group.title}</h3>
+            <details key={group.title} className={`rounded-xl border p-4 ${TONE_STYLES[tone]}`} open>
+              <summary className="cursor-pointer list-none">
+                <div className="mb-1 flex items-start justify-between gap-2">
+                  <h3 className="text-cream font-medium text-base">{group.title}</h3>
+                  <span className="mt-1 shrink-0 text-xs text-cream-muted/60" aria-hidden="true">
+                    ▾
+                  </span>
+                </div>
                 {group.subtitle && (
                   <div className="text-xs text-cream-muted/60 tracking-[0.18em] uppercase mt-1">{group.subtitle}</div>
                 )}
-              </div>
+              </summary>
 
-              <ul className="space-y-2">
+              <ul className="space-y-2 mt-3">
                 {group.items.map((item) => (
                   <li key={item} className="flex gap-2 text-sm text-cream-muted">
                     <span className="text-amber/60 shrink-0 mt-0.5">•</span>
@@ -75,7 +80,7 @@ export function PackingSection({ packing, days }: PackingSectionProps) {
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           )
         })}
       </div>
