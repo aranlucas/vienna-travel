@@ -43,7 +43,11 @@ export interface LiveCheckItem {
 const s = STAYS_BY_ID
 
 export const BOOKINGS: BookingItem[] = [
-  { item: 'Flight SEA → VIE → SEA (LH489 / LH6390)', booked: true },
+  {
+    item: 'Flight SEA → VIE → SEA (LH489 + OS186 / OS203 + LH490)',
+    booked: true,
+    note: 'Outbound Austrian-operated OS186 is also sold as Lufthansa codeshare LH6390 · MUC connection 1h 50m · FRA return connection 1h 15m',
+  },
   {
     item: s.vienna.bookingLabel,
     booked: s.vienna.confirmed,
@@ -110,6 +114,15 @@ export const BOOKINGS: BookingItem[] = [
 // ── Pre-departure checklist ───────────────────────────────────────────────────
 
 export const CHECKLIST: { item: string; critical: boolean }[] = [
+  { item: 'Tonight after 7:50 PM PT: check in with Lufthansa for LH489 + OS186, verify both names and passport details, choose seats, and save both boarding passes offline', critical: true },
+  { item: 'Friday flight plan: be inside SEA by 3:50 PM PT for the 6:50 PM international departure; recheck LH489, the departure gate, and live SEA checkpoint waits before leaving home', critical: true },
+  { item: 'Entry documents: each passport must have been issued within the last 10 years and stay valid through at least Dec 14, 2026; ETIAS is not operating yet, so do not pay an unofficial application site', critical: true },
+  { item: 'Munich transfer: go directly to OS186 after landing; the 1h 50m connection includes Schengen passport control and EES registration, so keep passports ready and confirm bags are checked through to VIE', critical: true },
+  { item: 'Book the still-unrecorded Sept 7 direct ÖBB Railjet today: choose a train arriving Salzburg by 11:00 AM and add seat reservations to protect the noon SIXT pickup', critical: true },
+  { item: 'Save an offline travel folder on both phones: flight, hotel, rail, rental, and activity confirmations; travel insurance and emergency contacts; passport copies; and the Almanac address', critical: true },
+  { item: 'Arrival connectivity: install and test the eSIM or roaming plan, download Vienna and Austria offline maps, and separate two usable payment cards plus a little euro cash between both travelers', critical: true },
+  { item: 'Under-seat essentials: passports, prescriptions, phones, charging cables, power banks, valuables, one warm layer, and a minimal overnight change; keep power banks out of checked bags and overhead bins', critical: true },
+  { item: 'Home close-out Friday: keys and wallet accounted for, windows and doors locked, thermostat set, nonessential appliances unplugged, and any mail, plant, or pet coverage confirmed', critical: false },
   { item: 'Cash: €150–200 total in smaller notes, split between both people for Coburger Hütte, Olpererhütte, and toll backup', critical: true },
   { item: 'Pack the full alpine layer system: base layer + fleece + packable insulation + waterproof shell; Zugspitze can be near or below freezing while the valley is warm', critical: true },
   { item: 'Rain protection: reproof hiking shoes, test both shells, and pack rain pants plus one waterproof liner per daypack', critical: true },

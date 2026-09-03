@@ -39,9 +39,9 @@ export const FLIGHT_SEGMENTS: FlightSegment[] = [
     date: '2026-09-05',
     departureTime: '3:30 PM',
     arrivalTime: '4:35 PM',
-    flightNumber: 'OS 186',
+    flightNumber: 'OS186',
     airline: 'Austrian',
-    notes: ['Booking details are kept with the traveler', 'Arrival: 4:35 PM CEST'],
+    notes: ['Lufthansa codeshare LH6390', 'Booking details are kept with the traveler', 'Arrival: 4:35 PM CEST'],
   },
   {
     id: 'vie-fra',
@@ -51,7 +51,7 @@ export const FLIGHT_SEGMENTS: FlightSegment[] = [
     date: '2026-09-14',
     departureTime: '8:00 AM',
     arrivalTime: '9:30 AM',
-    flightNumber: 'OS 203',
+    flightNumber: 'OS203',
     airline: 'Austrian',
     notes: ['Booking details are kept with the traveler', 'Arrival: 9:30 AM CEST'],
   },
@@ -63,7 +63,7 @@ export const FLIGHT_SEGMENTS: FlightSegment[] = [
     date: '2026-09-14',
     departureTime: '10:45 AM',
     arrivalTime: '11:55 AM PDT',
-    flightNumber: 'LH 490',
+    flightNumber: 'LH490',
     airline: 'Lufthansa',
     notes: ['Booking details are kept with the traveler', 'Arrival: 11:55 AM PDT'],
   },
@@ -150,7 +150,7 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     durationHours: 0.75,
     distanceKm: 35,
     scenic: true,
-    notes: 'Depart by 6:45 AM to arrive by 7:30 AM before tour buses.',
+    notes: 'Depart by 6:15 AM to arrive by 7:00 AM. Go straight to signed public parking and preserve the official one-hour parking-search allowance before the 9:00 AM funicular.',
     waypoints: [
       { lat: 47.7377, lng: 13.4437 }, // St. Wolfgang
       { lat: 47.5622, lng: 13.6493 }, // Hallstatt

@@ -98,7 +98,7 @@ export const DAYS: Record<string, DayPlan> = {
     title: 'Arrival & Easy Evening',
     phaseId: 'vienna',
     activities: [
-      { time: '4:35 PM', title: 'Land at VIE (LH6390 via MUC); customs and baggage ~30 min', highlight: 'important' },
+      { time: '4:35 PM', title: 'Land at VIE (OS186 / LH6390 codeshare via MUC); baggage claim and customs ~30 min', highlight: 'important' },
       { time: '5:15 PM', title: 'Buy hiking snacks at an open VIE or Wien Mitte supermarket; do not depend on Naschmarkt stalls', highlight: 'important' },
       { time: '5:45 PM', title: 'CAT or S7 train to city center (~16–25 min)', highlight: 'important' },
       { time: '6:15 PM', title: 'Check in at Almanac Palais Vienna in the city centre', highlight: 'important' },
@@ -169,8 +169,8 @@ export const DAYS: Record<string, DayPlan> = {
     title: 'Hallstatt & Schafberg Summit',
     phaseId: 'salzkammergut',
     activities: [
-      { time: '6:45 AM', title: 'Depart St. Wolfgang; drive 45 min to Hallstatt', highlight: 'important', type: 'drive', segmentId: 'base-to-hallstatt' },
-      { time: '7:30 AM', title: 'Arrive Hallstatt before tour buses; walk the old town and lakeside promenade', highlight: 'fun' },
+      { time: '6:15 AM', title: 'Depart St. Wolfgang; drive 45 min to Hallstatt', highlight: 'important', type: 'drive', segmentId: 'base-to-hallstatt' },
+      { time: '7:00 AM', title: 'Arrive Hallstatt and go straight to signed public parking; allow up to an hour to find a space, then use spare time for the lakeside promenade', highlight: 'important' },
       { time: '8:45 AM', title: 'Be at the rebuilt Salzbergbahn valley station with a first-ascent ticket ready', highlight: 'important' },
       { time: '9:00 AM', title: 'Ride up for the Skywalk "World Heritage View" only; the salt-mine tour does not fit the 10:15 AM departure', highlight: 'fun' },
       { time: '10:15 AM', title: 'Leave Hallstatt; drive 45 min back to St. Wolfgang', highlight: 'important', type: 'drive', segmentId: 'hallstatt-to-st-wolfgang' },
@@ -189,7 +189,7 @@ export const DAYS: Record<string, DayPlan> = {
     },
     weatherWindow: { label: 'Booked Schafbergbahn summit window', startHour: 12, endHour: 17 },
     accommodation: 'Hotel Zimmerbräu, St. Wolfgang',
-    notes: 'Schafbergbahn is booked; keep the time-slot confirmation handy and sit on the RIGHT side. The rebuilt Hallstatt Salzbergbahn officially reopened Aug 29, 2026. The funicular runs from 9:00 AM in September, but first-week operations and parking can still be busy. Keep this to a funicular + Skywalk visit and leave Hallstatt on time.',
+    notes: 'Schafbergbahn is booked; keep the time-slot confirmation handy and sit on the RIGHT side. The rebuilt Hallstatt Salzbergbahn officially reopened Aug 29, 2026. The funicular runs from 9:00 AM in September, and the official site says to allow at least one hour for parking. Park first, keep this to a funicular + Skywalk visit, and leave Hallstatt on time.',
     carryToday: [
       'Waterproof shell and packable insulation',
       'Warm hat and light gloves',
@@ -363,8 +363,8 @@ export const DAYS: Record<string, DayPlan> = {
     activities: [
       { time: '5:30 AM', title: 'Check out NH Vienna Airport; walk to terminal (~5 min)', highlight: 'important' },
       { time: '6:00 AM', title: 'Check-in and security at VIE', highlight: 'important' },
-      { time: '8:00 AM', title: 'VIE → FRA (OS 203, 1h30m; arrive 9:30 AM)', highlight: 'important', type: 'flight', segmentId: 'vie-fra' },
-      { time: '10:45 AM', title: 'FRA → SEA (LH 490, ~10h10m)', highlight: 'important', type: 'flight', segmentId: 'fra-sea' },
+      { time: '8:00 AM', title: 'VIE → FRA (OS203, 1h30m; arrive 9:30 AM)', highlight: 'important', type: 'flight', segmentId: 'vie-fra' },
+      { time: '10:45 AM', title: 'FRA → SEA (LH490, ~10h10m)', highlight: 'important', type: 'flight', segmentId: 'fra-sea' },
       { time: '11:55 AM PDT', title: 'Arrive Seattle', highlight: 'important', type: 'flight' },
     ],
     weather: 'Vienna Airport mornings are usually cool, around the low-to-mid teens °C, before warming later in the day.',

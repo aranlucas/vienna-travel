@@ -116,7 +116,7 @@ export interface FlightInfo {
 
 export const FLIGHT: FlightInfo = {
   airline: 'Lufthansa',
-  flightNumbers: ['LH489', 'LH6390'],
+  flightNumbers: ['LH489', 'OS186 (LH6390)'],
   departure: { airport: 'SEA', datetime: 'Sept 4, 6:50 PM' },
   arrival: { airport: 'VIE', datetime: 'Sept 5, 4:35 PM (+1)' },
   layover: 'MUC (1h 50m)',
