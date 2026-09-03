@@ -1,6 +1,10 @@
 import { HeroSection } from '@/components/hero/HeroSection'
 import { HeroMap } from '@/components/map/MapLoader'
 import { PackingSection } from '@/components/packing/PackingSection'
+import { FlyTonightCard } from '@/components/planning/FlyTonightCard'
+import { PreDepartureChecklist } from '@/components/planning/PreDepartureChecklist'
+import { CopyAddressButton } from '@/components/ui/CopyAddressButton'
+import { MobileQuickNav } from '@/components/ui/MobileQuickNav'
 import { TripChecksTimeline } from '@/components/planning/TripChecksTimeline'
 import { TripCountdown } from '@/components/planning/TripCountdown'
 import { PlanningShortlistSection } from '@/components/planning/PlanningShortlistSection'
@@ -102,16 +106,16 @@ export default async function Home() {
       {/* Hero */}
       <HeroSection />
 
+      {/* Departure-eve action card — above the map so fly-tonight info is reachable */}
+      <FlyTonightCard />
+
       {/* Full overview map — drive + train routes both pre-baked (scripts/prefetch-routes.ts) */}
       <section className="px-6 pb-12 max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-4">
           <div className="h-px w-8 bg-amber/60" />
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Full Route Overview</span>
         </div>
-        <div
-          className="w-full rounded-xl overflow-hidden border border-forest-green/30 shadow-2xl shadow-black/40"
-          style={{ height: '480px' }}
-        >
+        <div className="w-full rounded-xl overflow-hidden border border-forest-green/30 shadow-2xl shadow-black/40 h-[280px] md:h-[480px]">
           <HeroMap driveCoords={heroDriveCoords} trainRoutes={heroTrainRoutes} />
         </div>
         <p className="text-cream-muted/50 text-sm mt-2 text-center">
@@ -119,13 +123,13 @@ export default async function Home() {
         </p>
         <div className="mt-4 max-w-xl mx-auto">
           <TripCountdown
-            label="Until flight departure from SEA (Sep 4, 2026 · 6:50 PM PT)"
+            label="Until flight departure from SEA (Sept 4, 2026 · 6:50 PM PT — inside SEA by 3:50 PM PT)"
             targetIso="2026-09-04T18:50:00-07:00"
           />
         </div>
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3">
-          <div className="rounded-lg border border-slate-blue/25 bg-dark-card px-4 py-3 text-sm">
-            <div className="text-[10px] uppercase tracking-[0.22em] text-amber/80 font-medium">Flight</div>
+          <div className="rounded-lg border border-slate-blue/25 bg-dark-card px-4 py-3 text-sm scroll-mt-20">
+            <div className="text-[10px] uppercase tracking-[0.22em] text-amber/80 font-medium">Flight · LH489</div>
             <div className="mt-1 text-cream font-medium">
               {TRIP_DATA.flight.departure.airport} → {TRIP_DATA.flight.arrival.airport}
             </div>
@@ -136,11 +140,29 @@ export default async function Home() {
               <div>Out: {TRIP_DATA.flight.departure.datetime}</div>
               <div>In: {TRIP_DATA.flight.arrival.datetime}</div>
             </div>
+            <div className="mt-3 grid grid-cols-1 gap-2">
+              <a
+                href="https://www.lufthansa.com/us/en/check-in"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-colors hover:bg-cream"
+              >
+                Check in with Lufthansa
+              </a>
+              <a
+                href="https://www.flysea.com/travelers/security-line-waits"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-amber/35 px-4 py-2 text-sm font-medium text-amber transition-colors hover:text-cream"
+              >
+                SEA checkpoint waits
+              </a>
+            </div>
             <a
               href={buildGoogleMapsUrl('Vienna Airport', { lat: 48.1103, lng: 16.5697 })}
               target="_blank"
               rel="noreferrer"
-              className="mt-3 inline-flex text-amber hover:text-cream transition-colors"
+              className="mt-2 inline-flex min-h-[44px] items-center text-amber hover:text-cream transition-colors"
             >
               Open Vienna Airport in Google Maps
             </a>
@@ -168,10 +190,13 @@ export default async function Home() {
                 href={buildGoogleMapsUrl(stay.propertyName, stay.coordinates)}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-3 inline-flex text-amber hover:text-cream transition-colors"
+                className="mt-3 inline-flex min-h-[44px] items-center text-amber hover:text-cream transition-colors"
               >
                 Open in Google Maps
               </a>
+              <div className="mt-1">
+                <CopyAddressButton address={`${stay.propertyName}, ${stay.address}`} />
+              </div>
             </div>
           ))}
         </div>
@@ -181,7 +206,7 @@ export default async function Home() {
       <TripWeatherOutlook />
 
       {/* Phase navigation — panels pre-rendered server-side */}
-      <section className="px-6 pb-20 max-w-6xl mx-auto">
+      <section id={HOME_SECTION_IDS.itinerary} className="px-6 pb-20 max-w-6xl mx-auto scroll-mt-20">
         <div className="flex items-center gap-3 mb-8">
           <div className="h-px w-8 bg-amber/60" />
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">The Itinerary</span>
@@ -189,50 +214,64 @@ export default async function Home() {
         <PhaseNav panels={panels} />
       </section>
 
-      {/* Booking status */}
-      <section id={HOME_SECTION_IDS.bookingStatus} className="px-6 pb-16 max-w-6xl mx-auto">
+      {/* Booking status — unbooked items first so the Sep 7 train can't be missed */}
+      <section id={HOME_SECTION_IDS.bookingStatus} className="px-6 pb-16 max-w-6xl mx-auto scroll-mt-20">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-8 bg-amber/60" />
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Booking Status</span>
         </div>
         <div className="space-y-2 max-w-2xl">
-          {BOOKINGS.map((b, i) => (
-            <div
-              key={i}
-              className={`flex gap-3 items-start p-3 rounded-lg border text-base ${
-                b.booked ? 'bg-dark-card border-forest-green/30' : 'bg-amber/3 border-amber/15'
-              }`}
-            >
-              <span className={`text-base shrink-0 mt-0.5 ${b.booked ? 'text-emerald-500' : 'text-amber/60'}`}>
-                {b.booked ? '✓' : '○'}
-              </span>
-              <div className="flex-1 min-w-0">
-                <div className={`leading-snug ${b.booked ? 'text-cream-muted' : 'text-cream'}`}>{b.item}</div>
-                {(b.note || b.deadline) && (
-                  <div className="flex flex-wrap gap-3 mt-1">
-                    {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
-                    {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
-                  </div>
-                )}
-                {!b.booked && b.actionUrl && b.actionLabel && (
-                  <a
-                    href={b.actionUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-2 inline-flex text-sm text-amber hover:text-cream transition-colors underline decoration-amber/40 underline-offset-4"
-                  >
-                    {b.actionLabel}
-                  </a>
-                )}
+          {[...BOOKINGS]
+            .sort((a, b) => Number(a.booked) - Number(b.booked))
+            .map((b, i) => (
+              <div
+                key={`${b.item}-${i}`}
+                className={`flex gap-3 items-start p-3 rounded-lg border text-base ${
+                  b.booked
+                    ? 'bg-dark-card border-forest-green/30'
+                    : 'bg-amber/5 border-amber/40 border-l-4 border-l-amber'
+                }`}
+              >
+                <span className={`text-base shrink-0 mt-0.5 ${b.booked ? 'text-emerald-500' : 'text-amber/60'}`}>
+                  {b.booked ? '✓' : '○'}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <div className={`leading-snug ${b.booked ? 'text-cream-muted' : 'text-cream'}`}>{b.item}</div>
+                  {(b.note || b.deadline) && (
+                    <div className="flex flex-wrap gap-3 mt-1">
+                      {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
+                      {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
+                    </div>
+                  )}
+                  {!b.booked && b.actionUrl && b.actionLabel && (
+                    <a
+                      href={b.actionUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-colors hover:bg-cream"
+                    >
+                      {b.actionLabel}
+                    </a>
+                  )}
+                  {b.booked && b.actionUrl && b.actionLabel && (
+                    <a
+                      href={b.actionUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-2 inline-flex min-h-[44px] items-center text-sm text-amber hover:text-cream transition-colors underline decoration-amber/40 underline-offset-4"
+                    >
+                      {b.actionLabel}
+                    </a>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </section>
 
       <PlanningShortlistSection items={PLANNING_SHORTLIST} />
 
-      <section id={HOME_SECTION_IDS.liveChecks} className="px-6 pb-16 max-w-6xl mx-auto">
+      <section id={HOME_SECTION_IDS.liveChecks} className="px-6 pb-16 max-w-6xl mx-auto scroll-mt-20">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-8 bg-amber/60" />
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Deadlines & Live Checks</span>
@@ -246,33 +285,22 @@ export default async function Home() {
 
       <PackingSection packing={TRIP_DATA.packing} days={allDays} />
 
-      {/* Pre-departure checklist */}
-      <section id={HOME_SECTION_IDS.checklist} className="px-6 pb-20 max-w-6xl mx-auto">
+      {/* Pre-departure checklist — interactive with tonight-only filter */}
+      <section id={HOME_SECTION_IDS.checklist} className="px-6 pb-20 max-w-6xl mx-auto scroll-mt-20">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-8 bg-amber/60" />
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Pre-Departure Checklist</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-w-3xl">
-          {TRIP_DATA.checklist.map((item, i) => (
-            <div
-              key={i}
-              className={`flex gap-3 items-start p-3 rounded-lg border text-base ${
-                item.critical
-                  ? 'bg-amber/5 border-amber/20 text-cream'
-                  : 'bg-dark-card border-forest-green/20 text-cream-muted'
-              }`}
-            >
-              <span className={item.critical ? 'text-amber' : 'text-cream-muted/40'}>{item.critical ? '⚠️' : '✓'}</span>
-              <span className="leading-snug">{item.item}</span>
-            </div>
-          ))}
+        <div className="max-w-3xl">
+          <PreDepartureChecklist items={TRIP_DATA.checklist} />
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-forest-green/20 px-6 py-8 text-center text-cream-muted/40 text-xs">
-        Austria Expedition 2026
+      <footer className="border-t border-forest-green/20 px-6 py-8 pb-24 md:pb-8 text-center text-cream-muted/40 text-xs">
+        Austria Expedition 2026 · Updated Sept 3, 2026 · Emergency in Austria: 112 (general) / 140 (mountain rescue)
       </footer>
+      <MobileQuickNav />
     </LiveWeatherPage>
   )
 }

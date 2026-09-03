@@ -81,13 +81,9 @@ export const PHASES: Phase[] = PHASE_DEFINITIONS.map((def) => {
     .filter((h) => h.phaseId === def.id)
     .map(withoutPhaseId)
 
-  const phaseDriving: DrivingSegment[] = DRIVING_SEGMENTS
-    .filter((s) => s.phaseId === def.id)
-    .map(withoutPhaseId)
+  const phaseDriving: DrivingSegment[] = DRIVING_SEGMENTS.filter((s) => s.phaseId === def.id).map(withoutPhaseId)
 
-  const phaseTrains: TrainSegment[] = TRAIN_SEGMENTS
-    .filter((s) => s.phaseId === def.id)
-    .map(withoutPhaseId)
+  const phaseTrains: TrainSegment[] = TRAIN_SEGMENTS.filter((s) => s.phaseId === def.id).map(withoutPhaseId)
 
   const phaseDays: DayPlan[] = Object.values(DAYS)
     .filter((d) => d.phaseId === def.id)
@@ -117,10 +113,11 @@ export interface FlightInfo {
 export const FLIGHT: FlightInfo = {
   airline: 'Lufthansa',
   flightNumbers: ['LH489', 'OS186 (LH6390)'],
-  departure: { airport: 'SEA', datetime: 'Sept 4, 6:50 PM' },
-  arrival: { airport: 'VIE', datetime: 'Sept 5, 4:35 PM (+1)' },
+  departure: { airport: 'SEA', datetime: 'Sept 4, 6:50 PM PT' },
+  arrival: { airport: 'VIE', datetime: 'Sept 5, 4:35 PM CEST (+1)' },
   layover: 'MUC (1h 50m)',
-  seatTip: 'Plane views are wind-dependent. If scenery matters, pick any window; a left-side seat is a slight edge departing Seattle, but there is no reliable best side for both Lufthansa legs.',
+  seatTip:
+    'Plane views are wind-dependent. If scenery matters, pick any window; a left-side seat is a slight edge departing Seattle, but there is no reliable best side for both Lufthansa legs.',
 }
 
 /** NH Vienna Airport coordinates (retained for POI refs in phase map) */

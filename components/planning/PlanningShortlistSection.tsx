@@ -23,14 +23,19 @@ export function PlanningShortlistSection({ items }: PlanningShortlistSectionProp
         <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Open Planning Shortlist</span>
       </div>
       <p className="text-cream-muted max-w-3xl text-base leading-relaxed mb-6">
-        To keep the page readable, unresolved bookings and dining picks are grouped here as collapsible cards.
-        Start with the two <span className="text-cream">Book now</span> items, then finish the reservation-only items.
+        To keep the page readable, unresolved bookings and dining picks are grouped here as collapsible cards. Start
+        with the <span className="text-cream">Soon</span> Vienna dinner picks for this weekend, then the Ehrwald and
+        Innsbruck backups.
       </p>
 
       <div className="space-y-3">
         {items.map((item) => (
-          <details key={item.id} className="bg-dark-card rounded-lg border border-forest-green/30 p-4 group" open={item.priority === 'Book now'}>
-            <summary className="list-none cursor-pointer flex items-start justify-between gap-3">
+          <details
+            key={item.id}
+            className="bg-dark-card rounded-lg border border-forest-green/30 p-4 group scroll-mt-20"
+            open={item.priority === 'Book now' || item.priority === 'Soon'}
+          >
+            <summary className="list-none cursor-pointer flex items-start justify-between gap-3 min-h-[44px]">
               <div>
                 <h3 className="text-cream font-medium text-base">{item.title}</h3>
                 <p className="text-xs text-cream-muted/80 mt-1 uppercase tracking-[0.14em]">{item.area}</p>
@@ -47,7 +52,7 @@ export function PlanningShortlistSection({ items }: PlanningShortlistSectionProp
                   href={option.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="rounded-lg border border-forest-green/30 px-3 py-3 hover:border-amber/40 transition-colors"
+                  className="rounded-lg border border-forest-green/30 px-3 py-3 hover:border-amber/40 transition-colors min-h-[44px]"
                 >
                   <div className="text-amber text-sm font-medium leading-snug">{option.label}</div>
                   {option.note && <p className="text-xs text-cream-muted mt-2 leading-relaxed">{option.note}</p>}

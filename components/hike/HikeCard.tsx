@@ -1,7 +1,7 @@
 import type { Hike } from '@/lib/tripData'
 import { Badge } from '@/components/ui/Badge'
 import { formatFeet, formatMiles } from '@/lib/units'
-import { ElevationChart } from './ElevationChart'
+import { HikeElevation } from './HikeElevation'
 
 interface HikeCardProps {
   hike: Hike
@@ -24,7 +24,7 @@ export function HikeCard({ hike }: HikeCardProps) {
       </div>
 
       <div className="px-2 pb-2">
-        <ElevationChart data={hike.elevationProfile} height={110} />
+        <HikeElevation data={hike.elevationProfile} height={110} />
       </div>
 
       {hike.highlights.length > 0 && (

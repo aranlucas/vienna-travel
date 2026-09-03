@@ -1,11 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Source_Serif_4 } from 'next/font/google'
 import './globals.css'
 
 const playfair = Playfair_Display({
   variable: '--font-playfair',
   subsets: ['latin'],
-  weight: ['400', '700', '900'],
+  weight: ['400', '700'],
 })
 
 const sourceSerif = Source_Serif_4({
@@ -17,6 +17,17 @@ const sourceSerif = Source_Serif_4({
 export const metadata: Metadata = {
   title: 'Austria Expedition 2026',
   description: 'Sept 5–14 | Vienna · Salzkammergut · Tyrol · Innsbruck',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Austria 2026',
+  },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0f1a0f',
 }
 
 export default function RootLayout({
