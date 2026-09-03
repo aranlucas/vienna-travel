@@ -150,7 +150,7 @@ export default async function Home() {
                 Check in with Lufthansa
               </a>
               <a
-                href="https://www.flysea.com/travelers/security-line-waits"
+                href="https://www.portseattle.org/page/live-estimated-checkpoint-wait-times"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-amber/35 px-4 py-2 text-sm font-medium text-amber transition-colors hover:text-cream"

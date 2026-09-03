@@ -3,7 +3,7 @@ import { TRIP_DATA } from '@/lib/tripData'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 
 const LH_CHECKIN = 'https://www.lufthansa.com/us/en/check-in'
-const SEA_WAITS = 'https://www.flysea.com/travelers/security-line-waits'
+const SEA_WAITS = 'https://www.portseattle.org/page/live-estimated-checkpoint-wait-times'
 
 export function FlyTonightCard() {
   return (
