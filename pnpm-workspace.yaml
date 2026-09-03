@@ -11,4 +11,5 @@ minimumReleaseAgeExclude:
   - '@next/swc-win32-arm64-msvc@16.3.4'
   - '@next/swc-win32-x64-msvc@16.3.4'
   - next@16.3.4
+  - '@types/react-dom@19.2.7'
 pmOnFail: ignore
