@@ -59,10 +59,13 @@ export function PackingSection({ packing, days }: PackingSectionProps) {
         {packing.groups.map((group) => {
           const tone = group.tone ?? 'default'
           return (
-            <details key={group.title} className={`rounded-xl border p-4 ${TONE_STYLES[tone]}`} open>
-              <summary className="cursor-pointer list-none">
+            <details key={group.title} className={`rounded-xl border p-4 ${TONE_STYLES[tone]}`}>
+              <summary className="cursor-pointer list-none min-h-[44px]">
                 <div className="mb-1 flex items-start justify-between gap-2">
-                  <h3 className="text-cream font-medium text-base">{group.title}</h3>
+                  <h3 className="text-cream font-medium text-base">
+                    {group.title}{' '}
+                    <span className="text-sm font-normal text-cream-muted/60">· {group.items.length} items</span>
+                  </h3>
                   <span className="mt-1 shrink-0 text-xs text-cream-muted/60" aria-hidden="true">
                     ▾
                   </span>
