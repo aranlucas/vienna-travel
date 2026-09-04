@@ -119,7 +119,7 @@ export default async function Home() {
           <HeroMap driveCoords={heroDriveCoords} trainRoutes={heroTrainRoutes} />
         </div>
         <p className="text-cream-muted/50 text-sm mt-2 text-center">
-          SEA → VIE · {TRIP_DATA.dates} · {TRIP_DATA.phases.length} phases
+          {TRIP_DATA.phases.length} phases · {TRIP_DATA.totalDays} days
         </p>
         <div className="mt-4 max-w-xl mx-auto">
           <TripCountdown
@@ -168,36 +168,46 @@ export default async function Home() {
             </a>
           </div>
           {CONFIRMED_STAYS.map((stay) => (
-            <div
+            <details
               key={stay.id}
               className="rounded-lg border border-forest-green/25 bg-dark-card px-4 py-3 text-sm min-w-0"
             >
-              <div className="text-[10px] uppercase tracking-[0.22em] text-amber/80 font-medium">{stay.phaseLabel}</div>
-              <div className="mt-1 text-cream font-medium leading-snug break-words">{stay.propertyName}</div>
-              <div className="mt-1 text-cream-muted/70 leading-relaxed break-words">{stay.address}</div>
-              <div className="mt-2 text-cream-muted/80">
-                {stay.nights} nights · {stay.room} · {stay.guests}
-              </div>
-              <div className="mt-2 space-y-1 text-cream-muted/80">
-                <div>
-                  In: {stay.checkIn.label} · {stay.checkIn.window}
+              <summary className="list-none cursor-pointer min-h-[44px] flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="text-[10px] uppercase tracking-[0.22em] text-amber/80 font-medium">
+                    {stay.phaseLabel}
+                  </div>
+                  <div className="mt-0.5 text-cream font-medium leading-snug break-words">
+                    {stay.propertyName} · {stay.nights}n
+                  </div>
                 </div>
-                <div>
-                  Out: {stay.checkOut.label} · {stay.checkOut.window}
+                <a
+                  href={buildGoogleMapsUrl(stay.propertyName, stay.coordinates)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="shrink-0 inline-flex min-h-[44px] items-center rounded-lg border border-forest-green/40 px-3 text-amber hover:text-cream transition-colors"
+                >
+                  Maps
+                </a>
+              </summary>
+              <div className="mt-2 border-t border-forest-green/20 pt-2">
+                <div className="text-cream-muted/70 leading-relaxed break-words">{stay.address}</div>
+                <div className="mt-1 text-cream-muted/80">
+                  {stay.room} · {stay.guests}
+                </div>
+                <div className="mt-2 space-y-1 text-cream-muted/80">
+                  <div>
+                    In: {stay.checkIn.label} · {stay.checkIn.window}
+                  </div>
+                  <div>
+                    Out: {stay.checkOut.label} · {stay.checkOut.window}
+                  </div>
+                </div>
+                <div className="mt-1">
+                  <CopyAddressButton address={`${stay.propertyName}, ${stay.address}`} />
                 </div>
               </div>
-              <a
-                href={buildGoogleMapsUrl(stay.propertyName, stay.coordinates)}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-flex min-h-[44px] items-center text-amber hover:text-cream transition-colors"
-              >
-                Open in Google Maps
-              </a>
-              <div className="mt-1">
-                <CopyAddressButton address={`${stay.propertyName}, ${stay.address}`} />
-              </div>
-            </div>
+            </details>
           ))}
         </div>
       </section>
@@ -223,27 +233,22 @@ export default async function Home() {
         <div className="space-y-2 max-w-2xl">
           {[...BOOKINGS]
             .sort((a, b) => Number(a.booked) - Number(b.booked))
+            .filter((b) => !b.booked)
             .map((b, i) => (
               <div
                 key={`${b.item}-${i}`}
-                className={`flex gap-3 items-start p-3 rounded-lg border text-base ${
-                  b.booked
-                    ? 'bg-dark-card border-forest-green/30'
-                    : 'bg-amber/5 border-amber/40 border-l-4 border-l-amber'
-                }`}
+                className="flex gap-3 items-start p-3 rounded-lg border text-base bg-amber/5 border-amber/40 border-l-4 border-l-amber"
               >
-                <span className={`text-base shrink-0 mt-0.5 ${b.booked ? 'text-emerald-500' : 'text-amber/60'}`}>
-                  {b.booked ? '✓' : '○'}
-                </span>
+                <span className="text-base shrink-0 mt-0.5 text-amber/60">○</span>
                 <div className="flex-1 min-w-0">
-                  <div className={`leading-snug ${b.booked ? 'text-cream-muted' : 'text-cream'}`}>{b.item}</div>
+                  <div className="leading-snug text-cream">{b.item}</div>
                   {(b.note || b.deadline) && (
                     <div className="flex flex-wrap gap-3 mt-1">
                       {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
                       {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
                     </div>
                   )}
-                  {!b.booked && b.actionUrl && b.actionLabel && (
+                  {b.actionUrl && b.actionLabel && (
                     <a
                       href={b.actionUrl}
                       target="_blank"
@@ -253,19 +258,40 @@ export default async function Home() {
                       {b.actionLabel}
                     </a>
                   )}
-                  {b.booked && b.actionUrl && b.actionLabel && (
-                    <a
-                      href={b.actionUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="mt-2 inline-flex min-h-[44px] items-center text-sm text-amber hover:text-cream transition-colors underline decoration-amber/40 underline-offset-4"
-                    >
-                      {b.actionLabel}
-                    </a>
-                  )}
                 </div>
               </div>
             ))}
+          <details className="rounded-lg border border-forest-green/25 bg-dark-card px-4 py-3">
+            <summary className="cursor-pointer list-none min-h-[44px] flex items-center text-cream-muted text-base">
+              {BOOKINGS.filter((b) => b.booked).length} of {BOOKINGS.length} booked ✓ — show all
+            </summary>
+            <div className="mt-2 space-y-2 border-t border-forest-green/20 pt-3">
+              {BOOKINGS.filter((b) => b.booked).map((b, i) => (
+                <div key={`${b.item}-${i}`} className="flex gap-3 items-start text-base">
+                  <span className="text-base shrink-0 mt-0.5 text-emerald-500">✓</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="leading-snug text-cream-muted">{b.item}</div>
+                    {(b.note || b.deadline) && (
+                      <div className="flex flex-wrap gap-3 mt-1">
+                        {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
+                        {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
+                      </div>
+                    )}
+                    {b.actionUrl && b.actionLabel && (
+                      <a
+                        href={b.actionUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-2 inline-flex min-h-[44px] items-center text-sm text-amber hover:text-cream transition-colors underline decoration-amber/40 underline-offset-4"
+                      >
+                        {b.actionLabel}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </details>
         </div>
       </section>
 

@@ -3,18 +3,6 @@ import { TRIP_DATA } from '@/lib/tripData'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 
 export function HeroSection() {
-  const totalBookings = TRIP_DATA.bookings.length
-  const bookedCount = TRIP_DATA.bookings.filter((b) => b.booked).length
-  const pendingCount = totalBookings - bookedCount
-  const liveChecksCount = TRIP_DATA.liveChecks.length
-
-  const quickStats = [
-    { label: 'Phases', value: TRIP_DATA.phases.length },
-    { label: 'Booked', value: bookedCount },
-    { label: 'Pending', value: pendingCount },
-    { label: 'Live Checks', value: liveChecksCount },
-  ]
-
   return (
     <section className="relative px-6 pt-16 pb-6 md:pt-24 md:pb-8 max-w-6xl mx-auto">
       {/* Eyebrow */}
@@ -39,16 +27,6 @@ export function HeroSection() {
       </h1>
 
       <p className="font-serif-body text-cream-muted text-lg md:text-xl mt-4 mb-7 md:mb-8">{TRIP_DATA.dates}</p>
-
-      {/* TripIt-style quick summary */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        {quickStats.map((stat) => (
-          <div key={stat.label} className="rounded-xl border border-forest-green/30 bg-dark-card/80 px-4 py-3">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-cream-muted/70">{stat.label}</p>
-            <p className="mt-1 text-2xl font-semibold text-cream">{stat.value}</p>
-          </div>
-        ))}
-      </div>
 
       <div className="flex flex-wrap gap-2 mb-6">
         <a

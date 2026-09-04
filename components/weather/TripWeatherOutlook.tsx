@@ -415,147 +415,147 @@ export function TripWeatherOutlook() {
           const gustKph = forecastGustKph(day)
 
           return (
-            <article
+            <details
               key={day.isoDate}
-              className={`rounded-xl border p-4 flex flex-col ${
+              className={`rounded-xl border px-4 py-3 ${
                 isLive ? 'bg-dark-card border-slate-blue/30' : 'bg-dark-card/50 border-forest-green/15'
               }`}
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="text-cream font-medium leading-tight">
-                    {day.date} · {day.title}
+              <summary className="list-none cursor-pointer min-h-[44px] flex items-center justify-between gap-3">
+                <div className="min-w-0 flex items-center gap-2.5">
+                  <span className="text-xl leading-none" aria-hidden="true">
+                    {isLive ? conditionEmoji(day.weatherCode) : '⏳'}
+                  </span>
+                  <div className="min-w-0">
+                    <div className="text-cream font-medium leading-tight truncate">
+                      {day.date} · {day.title}
+                    </div>
+                    <div className="mt-0.5 text-xs text-cream-muted/75 truncate">
+                      {isLive
+                        ? `${toDisplay(highC, unit)}° / ${toDisplay(lowC, unit)}° · ${conditionLabel(day.weatherCode)}`
+                        : (day.weather ?? 'Seasonal guidance')}
+                    </div>
                   </div>
-                  <div className="mt-0.5 text-[11px] text-cream-muted/70 truncate">{locationLabel(day)}</div>
                 </div>
-                <span className="text-2xl leading-none" role="img" aria-label={conditionLabel(day.weatherCode)}>
-                  {isLive ? conditionEmoji(day.weatherCode) : '⏳'}
+                <span
+                  className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] ${horizon.className}`}
+                >
+                  {horizon.label}
                 </span>
-              </div>
+              </summary>
 
-              {isLive ? (
-                <>
-                  <div className="mt-3 flex items-end justify-between gap-3">
-                    <div>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-serif-display text-cream">{toDisplay(highC, unit)}°</span>
-                        <span className="text-lg text-cream-muted">{toDisplay(lowC, unit)}°</span>
-                        <span className="text-[9px] uppercase tracking-widest text-cream-muted/50">
-                          {day.weatherExposure ? 'Planned high · low' : 'High · low'}
-                        </span>
-                      </div>
-                      <div className="mt-1 text-xs text-cream-muted">
-                        {day.weatherExposure
-                          ? `Full-day signal · ${conditionLabel(day.weatherCode)}`
-                          : conditionLabel(day.weatherCode)}
-                      </div>
+              <div className="mt-3 border-t border-forest-green/15 pt-3">
+                <div className="text-[11px] text-cream-muted/70">{locationLabel(day)}</div>
+
+                {isLive ? (
+                  <>
+                    <div className="mt-2 text-xs text-cream-muted">
+                      {day.weatherExposure
+                        ? `Full-day signal · ${conditionLabel(day.weatherCode)}`
+                        : conditionLabel(day.weatherCode)}
                       {day.weatherExposure && (
-                        <div className="mt-1 text-[11px] text-blue-200/80">
-                          {day.weatherExposure.label} · {formatHour(day.weatherExposure.startHour)}–
+                        <span className="text-blue-200/80">
+                          {' '}
+                          · {day.weatherExposure.label} · {formatHour(day.weatherExposure.startHour)}–
                           {formatHour(day.weatherExposure.endHour)}
-                        </div>
+                        </span>
                       )}
                     </div>
-                    <span
-                      className={`rounded-full border px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.14em] ${horizon.className}`}
-                    >
-                      {horizon.label}
-                    </span>
-                  </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <WeatherMetric
-                      label="Feels like"
-                      value={
-                        feelsHighC == null
-                          ? '—'
-                          : `${toDisplay(feelsHighC, unit)}° / ${toDisplay(feelsLowC ?? feelsHighC, unit)}°`
-                      }
-                      detail={day.weatherExposure ? 'Across the planned window' : 'Afternoon / overnight'}
-                    />
-                    <WeatherMetric
-                      label="Precipitation"
-                      value={`${precipPct == null ? 'Chance n/a' : `${precipPct}%`} · ${formatPrecip(precipMm, unit)}`}
-                      detail={day.weatherExposure ? 'Planned-window total' : formatHours(day.weatherPrecipHours)}
-                    />
-                    <WeatherMetric
-                      label="Wind"
-                      value={
-                        windKph == null
-                          ? '—'
-                          : `${day.weatherExposure || !windDirection ? '' : `${windDirection} `}${formatWind(windKph, unit)}`
-                      }
-                      detail={
-                        day.weatherExposure
-                          ? gustKph == null
-                            ? 'Peak in planned window'
-                            : `Peak window · gusts ${formatWind(gustKph, unit)}`
-                          : gustKph == null
-                            ? undefined
-                            : `Gusts ${formatWind(gustKph, unit)}`
-                      }
-                    />
-                    <WeatherMetric
-                      label="UV max"
-                      value={day.weatherUvMax == null ? '—' : day.weatherUvMax.toFixed(1)}
-                      detail={
-                        (day.weatherUvMax ?? 0) >= 5 || (day.weatherLocation?.elevationM ?? 0) >= 1500
-                          ? 'Sun protection needed'
-                          : 'Lower exposure'
-                      }
-                    />
-                    {day.weatherExposure && (
+                    <div className="mt-3 grid grid-cols-2 gap-2">
                       <WeatherMetric
-                        label="Full-day range"
-                        value={`${toDisplay(day.weatherHighC!, unit)}° / ${toDisplay(day.weatherLowC!, unit)}°`}
-                        detail="Includes hours outside your visit"
+                        label="Feels like"
+                        value={
+                          feelsHighC == null
+                            ? '—'
+                            : `${toDisplay(feelsHighC, unit)}° / ${toDisplay(feelsLowC ?? feelsHighC, unit)}°`
+                        }
+                        detail={day.weatherExposure ? 'Across the planned window' : 'Afternoon / overnight'}
                       />
+                      <WeatherMetric
+                        label="Precipitation"
+                        value={`${precipPct == null ? 'Chance n/a' : `${precipPct}%`} · ${formatPrecip(precipMm, unit)}`}
+                        detail={day.weatherExposure ? 'Planned-window total' : formatHours(day.weatherPrecipHours)}
+                      />
+                      <WeatherMetric
+                        label="Wind"
+                        value={
+                          windKph == null
+                            ? '—'
+                            : `${day.weatherExposure || !windDirection ? '' : `${windDirection} `}${formatWind(windKph, unit)}`
+                        }
+                        detail={
+                          day.weatherExposure
+                            ? gustKph == null
+                              ? 'Peak in planned window'
+                              : `Peak window · gusts ${formatWind(gustKph, unit)}`
+                            : gustKph == null
+                              ? undefined
+                              : `Gusts ${formatWind(gustKph, unit)}`
+                        }
+                      />
+                      <WeatherMetric
+                        label="UV max"
+                        value={day.weatherUvMax == null ? '—' : day.weatherUvMax.toFixed(1)}
+                        detail={
+                          (day.weatherUvMax ?? 0) >= 5 || (day.weatherLocation?.elevationM ?? 0) >= 1500
+                            ? 'Sun protection needed'
+                            : 'Lower exposure'
+                        }
+                      />
+                      {day.weatherExposure && (
+                        <WeatherMetric
+                          label="Full-day range"
+                          value={`${toDisplay(day.weatherHighC!, unit)}° / ${toDisplay(day.weatherLowC!, unit)}°`}
+                          detail="Includes hours outside your visit"
+                        />
+                      )}
+                      <div className={day.weatherExposure ? '' : 'col-span-2'}>
+                        <WeatherMetric
+                          label="Local daylight"
+                          value={`${formatLocalTime(day.weatherSunrise)} – ${formatLocalTime(day.weatherSunset)}`}
+                          detail="Sunrise to sunset at the forecast location"
+                        />
+                      </div>
+                    </div>
+
+                    {day.weatherNote && (
+                      <p className="mt-3 text-xs text-cream-muted/80 leading-relaxed">{day.weatherNote}</p>
                     )}
-                    <div className={day.weatherExposure ? '' : 'col-span-2'}>
-                      <WeatherMetric
-                        label="Local daylight"
-                        value={`${formatLocalTime(day.weatherSunrise)} – ${formatLocalTime(day.weatherSunset)}`}
-                        detail="Sunrise to sunset at the forecast location"
-                      />
+
+                    {hints.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-forest-green/15 flex flex-wrap gap-1.5">
+                        {hints.map((hint) => (
+                          <span
+                            key={hint.label}
+                            className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${HINT_STYLES[hint.tone]}`}
+                          >
+                            {hint.label}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="mt-3 flex flex-1 flex-col">
+                    <div className="text-[10px] uppercase tracking-[0.2em] text-cream-muted/50">
+                      Typical September pattern
                     </div>
-                  </div>
-
-                  {day.weatherNote && (
-                    <p className="mt-3 text-xs text-cream-muted/80 leading-relaxed">{day.weatherNote}</p>
-                  )}
-
-                  {hints.length > 0 && (
-                    <div className="mt-3 pt-3 border-t border-forest-green/15 flex flex-wrap gap-1.5">
-                      {hints.map((hint) => (
-                        <span
-                          key={hint.label}
-                          className={`rounded-full border px-2 py-0.5 text-[10px] font-medium ${HINT_STYLES[hint.tone]}`}
-                        >
-                          {hint.label}
+                    {day.weather && <p className="mt-2 text-sm text-cream-muted leading-relaxed">{day.weather}</p>}
+                    {day.weatherNote && (
+                      <p className="mt-2 text-xs text-cream-muted/75 leading-relaxed">{day.weatherNote}</p>
+                    )}
+                    {day.weatherUnlocks && (
+                      <div className="mt-auto pt-4">
+                        <span className="inline-flex rounded-full border border-amber/25 bg-amber/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-amber">
+                          {day.weatherUnlocks}
                         </span>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="mt-3 flex flex-1 flex-col">
-                  <div className="text-[10px] uppercase tracking-[0.2em] text-cream-muted/50">
-                    Typical September pattern
+                      </div>
+                    )}
                   </div>
-                  {day.weather && <p className="mt-2 text-sm text-cream-muted leading-relaxed">{day.weather}</p>}
-                  {day.weatherNote && (
-                    <p className="mt-2 text-xs text-cream-muted/75 leading-relaxed">{day.weatherNote}</p>
-                  )}
-                  {day.weatherUnlocks && (
-                    <div className="mt-auto pt-4">
-                      <span className="inline-flex rounded-full border border-amber/25 bg-amber/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-[0.16em] text-amber">
-                        {day.weatherUnlocks}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              )}
-            </article>
+                )}
+              </div>
+            </details>
           )
         })}
       </div>
