@@ -187,16 +187,28 @@ function formatSortTime(sortTime: number): string {
   return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`
 }
 
-function formatTimeInput(sortTime: number): string {
-  const normalizedMinutes = ((sortTime % 1440) + 1440) % 1440
-  const hours = Math.floor(normalizedMinutes / 60)
-  const minutes = normalizedMinutes % 60
-  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
-}
-
 function parseTimeInput(value: string): number {
   const [hours, minutes] = value.split(':').map(Number)
   return hours * 60 + minutes
+}
+
+function getViennaNow() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Vienna',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(new Date())
+
+  const value = (type: Intl.DateTimeFormatPartTypes) => parts.find((part) => part.type === type)?.value ?? ''
+
+  return {
+    date: `${value('year')}-${value('month')}-${value('day')}`,
+    time: `${value('hour')}:${value('minute')}`,
+  }
 }
 
 // ── Event card ──
@@ -206,27 +218,20 @@ function TimelineCard({ event, isLast }: { event: TimelineEvent; isLast: boolean
 
   return (
     <div id={`timeline-event-${event.id}`} className="relative scroll-mt-28 pl-20 sm:pl-28">
-      {/* Time rail label */}
       <div className="absolute left-0 top-4 w-20 sm:w-24 text-right pr-3">
         <p className="text-xs font-semibold tracking-wide text-cream">{formatSortTime(event.sortTime)}</p>
       </div>
-
-      {/* Rail markers */}
       <div
         className={`absolute left-[71px] sm:left-[103px] top-5 w-4 h-4 rounded-full ${getDotColor(event.type)} border-[3px] border-dark-surface shadow-lg`}
       />
       {!isLast && (
         <div className={`absolute left-[78px] sm:left-[110px] top-9 bottom-[-10px] w-px ${getLineColor(event.type)}`} />
       )}
-
       <div className={`rounded-2xl border ${accent} p-4 mb-1 shadow-sm`}>
-        {/* Type badge + phase */}
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-2 min-w-0">
             <span className="opacity-70">{getEventIcon(event.type)}</span>
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] opacity-70">
-              {getTypeLabel(event.type)}
-            </span>
+            <span className="text-[10px] font-medium uppercase tracking-[0.2em] opacity-70">{getTypeLabel(event.type)}</span>
           </div>
           {event.phaseId && (
             <span className="shrink-0 rounded-full border border-cream-muted/20 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-cream-muted/80">
@@ -234,25 +239,15 @@ function TimelineCard({ event, isLast }: { event: TimelineEvent; isLast: boolean
             </span>
           )}
         </div>
-
-        {/* Title */}
         <h3 className="font-serif-display text-cream text-lg leading-tight">{event.title}</h3>
-
-        {/* Subtitle */}
         {event.subtitle && <p className="text-sm text-cream-muted/80 mt-0.5">{event.subtitle}</p>}
-
-        {/* Details */}
         {event.details.length > 0 && (
           <div className="mt-2 space-y-1">
             {event.details.map((detail, i) => (
-              <p key={i} className="text-sm text-cream-muted/75 leading-snug">
-                {detail}
-              </p>
+              <p key={i} className="text-sm text-cream-muted/75 leading-snug">{detail}</p>
             ))}
           </div>
         )}
-
-        {/* Location */}
         {event.location && <p className="mt-2 text-xs text-cream-muted/55 leading-snug">{event.location}</p>}
       </div>
     </div>
@@ -264,7 +259,6 @@ function TimelineSummary({ events }: { events: TimelineEvent[] }) {
   const hotels = events.filter((e) => e.type === 'hotel-checkin').length
   const trains = events.filter((e) => e.type === 'train').length
   const drives = events.filter((e) => e.type === 'drive').length
-
   const items = [
     { label: 'Events', value: events.length },
     { label: 'Flights', value: flights },
@@ -285,8 +279,6 @@ function TimelineSummary({ events }: { events: TimelineEvent[] }) {
   )
 }
 
-// ── Date header ──
-
 function DateHeader({ label }: { label: string }) {
   return (
     <div className="sticky top-16 z-10 py-3 bg-dark-surface/90 backdrop-blur-sm">
@@ -294,8 +286,6 @@ function DateHeader({ label }: { label: string }) {
     </div>
   )
 }
-
-// ── Filter pills ──
 
 const FILTER_OPTIONS: { type: TimelineEventType | 'all'; label: string }[] = [
   { type: 'all', label: 'All' },
@@ -308,25 +298,21 @@ const FILTER_OPTIONS: { type: TimelineEventType | 'all'; label: string }[] = [
   { type: 'activity', label: 'Activities' },
 ]
 
-// ── Main component ──
-
 interface TravelTimelineProps {
   events: TimelineEvent[]
 }
 
 export function TravelTimeline({ events }: TravelTimelineProps) {
   const [filter, setFilter] = useState<TimelineEventType | 'all'>('all')
-
-  const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), [])
-  const nextEvent = useMemo(() => events.find((e) => e.date >= todayIso), [events, todayIso])
-  const initialJumpEvent = nextEvent ?? events[0]
-  const [jumpDate, setJumpDate] = useState(initialJumpEvent?.date ?? todayIso)
-  const [jumpTime, setJumpTime] = useState(initialJumpEvent ? formatTimeInput(initialJumpEvent.sortTime) : '12:00')
-
-  const jumpToToday = () => {
-    const targetDate = nextEvent?.date ?? todayIso
-    document.getElementById(`timeline-day-${targetDate}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
+  const viennaNow = useMemo(getViennaNow, [])
+  const todayIso = viennaNow.date
+  const currentMinutes = parseTimeInput(viennaNow.time)
+  const nextEvent = useMemo(
+    () => events.find((event) => event.date > todayIso || (event.date === todayIso && event.sortTime >= currentMinutes)),
+    [events, todayIso, currentMinutes],
+  )
+  const [jumpDate, setJumpDate] = useState(viennaNow.date)
+  const [jumpTime, setJumpTime] = useState(viennaNow.time)
 
   const filtered =
     filter === 'all'
@@ -336,18 +322,23 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
           return e.type === filter
         })
 
-  const jumpToTime = () => {
-    const targetMinutes = parseTimeInput(jumpTime)
+  const jumpToTime = (date = jumpDate, time = jumpTime) => {
+    const targetMinutes = parseTimeInput(time)
     const target =
-      filtered.find((event) => event.date > jumpDate || (event.date === jumpDate && event.sortTime >= targetMinutes)) ??
+      filtered.find((event) => event.date > date || (event.date === date && event.sortTime >= targetMinutes)) ??
       filtered[filtered.length - 1]
 
     if (!target) return
-
     document.getElementById(`timeline-event-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // Group events by date
+  const jumpToNow = () => {
+    const now = getViennaNow()
+    setJumpDate(now.date)
+    setJumpTime(now.time)
+    jumpToTime(now.date, now.time)
+  }
+
   const grouped: { date: string; label: string; events: TimelineEvent[] }[] = []
   for (const event of filtered) {
     const last = grouped[grouped.length - 1]
@@ -368,16 +359,14 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
       {nextEvent && (
         <div className="mb-4 rounded-xl border border-amber/35 bg-amber/5 p-4">
           <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-amber">Next up</div>
-          <p className="mt-1 text-cream font-medium leading-snug">
-            {nextEvent.dateLabel} · {nextEvent.title}
-          </p>
+          <p className="mt-1 text-cream font-medium leading-snug">{nextEvent.dateLabel} · {nextEvent.title}</p>
           {nextEvent.subtitle && <p className="mt-0.5 text-sm text-cream-muted">{nextEvent.subtitle}</p>}
           <button
             type="button"
-            onClick={jumpToToday}
+            onClick={jumpToNow}
             className="mt-3 inline-flex min-h-[44px] items-center rounded-lg border border-amber/40 px-4 py-2 text-sm font-semibold text-amber transition-colors hover:text-cream"
           >
-            Jump to today
+            Jump to now
           </button>
         </div>
       )}
@@ -407,16 +396,15 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
           </label>
           <button
             type="button"
-            onClick={jumpToTime}
+            onClick={() => jumpToTime()}
             className="min-h-[44px] self-end rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-opacity hover:opacity-90"
           >
             Jump
           </button>
         </div>
-        <p className="mt-2 text-xs text-cream-muted/55">Jumps to the first visible event at or after that time.</p>
+        <p className="mt-2 text-xs text-cream-muted/55">Defaults to the current time in Vienna and jumps to the first visible event at or after it.</p>
       </div>
 
-      {/* Filter bar */}
       <div className="flex flex-wrap gap-2 mb-8">
         {FILTER_OPTIONS.map((opt) => (
           <button
@@ -433,7 +421,6 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
         ))}
       </div>
 
-      {/* Timeline */}
       {grouped.map((group) => (
         <div key={group.date} id={`timeline-day-${group.date}`} className="mb-6 scroll-mt-24">
           <DateHeader label={group.label} />
