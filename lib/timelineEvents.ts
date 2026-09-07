@@ -1,6 +1,6 @@
 import { PHASES } from '@/lib/tripData'
 import { STAYS } from '@/lib/data/stays'
-import { FLIGHT_SEGMENTS, LAYOVERS, DRIVING_SEGMENTS } from '@/lib/data/transport'
+import { FLIGHT_SEGMENTS, LAYOVERS, DRIVING_SEGMENTS, TRAIN_SEGMENTS } from '@/lib/data/transport'
 
 export type TimelineEventType =
   | 'flight'
@@ -25,6 +25,8 @@ export interface TimelineEvent {
   title: string
   /** Secondary details */
   details: string[]
+  links?: { label: string; href: string }[]
+  timeLabel?: string
   /** Optional subtitle shown below title */
   subtitle?: string
   /** Optional location/address */
@@ -74,6 +76,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
 
   // Lookup maps for enrichment in the activity loop
   const driveById = new Map(DRIVING_SEGMENTS.map((s) => [s.id, s]))
+  const trainById = new Map(TRAIN_SEGMENTS.map((s) => [s.id, s]))
   const flightById = new Map(FLIGHT_SEGMENTS.map((s) => [s.id, s]))
 
   // ── Flights — skip segments claimed by an activity ────────────────────────
@@ -110,17 +113,13 @@ export function buildTimelineEvents(): TimelineEvent[] {
   }
 
   // ── Hotel check-ins / check-outs — all STAYS (confirmed + unconfirmed) ────
-  // Vienna check-in is overridden: flight lands 4:35 PM so realistic arrival is ~5 PM.
-  const CHECKIN_TIME_OVERRIDES: Record<string, number> = {
-    vienna: timeToMinutes('5:00 PM'),
-  }
-
   for (const stay of STAYS) {
-    const checkinTime = CHECKIN_TIME_OVERRIDES[stay.id] ?? timeToMinutes(parseTimeFromWindow(stay.checkIn.window))
+    const checkinTime = timeToMinutes(parseTimeFromWindow(stay.checkIn.window))
 
     events.push({
       id: `checkin-${stay.id}`,
       type: 'hotel-checkin',
+      timeLabel: 'Check-in window',
       date: stay.checkIn.isoDate,
       dateLabel: formatDateLabel(stay.checkIn.isoDate),
       sortTime: checkinTime,
@@ -134,6 +133,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
     events.push({
       id: `checkout-${stay.id}`,
       type: 'hotel-checkout',
+      timeLabel: 'Checkout by',
       date: stay.checkOut.isoDate,
       dateLabel: formatDateLabel(stay.checkOut.isoDate),
       sortTime: timeToMinutes(parseTimeFromWindow(stay.checkOut.window)),
@@ -149,14 +149,17 @@ export function buildTimelineEvents(): TimelineEvent[] {
   for (const phase of PHASES) {
     if (!phase.trainSegments) continue
     for (const train of phase.trainSegments) {
+      if (claimedSegmentIds.has(train.id)) continue
       events.push({
         id: `train-${train.id}`,
         type: 'train',
         date: train.isoDate,
         dateLabel: formatDateLabel(train.isoDate),
-        sortTime: train.departureTime ? timeToMinutes(train.departureTime) : timeToMinutes('12:00 PM'),
+        sortTime: train.departureTime ? timeToMinutes(train.departureTime) : 1440,
+        timeLabel: train.departureTime ? undefined : 'Time TBD',
         title: `${train.from} \u2013 ${train.to}`,
         subtitle: train.operator,
+        links: train.links,
         details: [
           ...(train.departureTime ? [`Departs: ${train.departureTime}`] : []),
           ...(train.arrivalTime ? [`Arrives: ${train.arrivalTime}`] : []),
@@ -182,7 +185,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
         dateLabel: formatDateLabel(drive.isoDate),
         sortTime,
         title: `${drive.from} \u2013 ${drive.to}`,
-        subtitle: `${Math.round(drive.durationHours * 60)}min drive`,
+        subtitle: `${Math.round(drive.durationHours * 60)}min driving across this route`,
         details: [
           ...(drive.scenic ? ['Scenic route'] : []),
           ...(drive.toll ? [`Toll: ${drive.toll.description} (~\u20AC${drive.toll.amountEur})`] : []),
@@ -200,9 +203,29 @@ export function buildTimelineEvents(): TimelineEvent[] {
     for (const day of phase.days) {
       for (let i = 0; i < day.activities.length; i++) {
         const activity = day.activities[i]
-        if (!activity.time) continue
 
         if (activity.segmentId) {
+          const train = trainById.get(activity.segmentId)
+          if (train) {
+            events.push({
+              id: `train-${train.id}`,
+              type: 'train',
+              date: day.isoDate,
+              dateLabel: formatDateLabel(day.isoDate),
+              sortTime: timeToMinutes(train.departureTime ?? activity.time ?? '12:00 PM'),
+              timeLabel: !train.departureTime && activity.time ? `Target ${activity.time}` : undefined,
+              title: activity.title,
+              subtitle: train.operator,
+              details: [
+                ...(train.arrivalTime ? [`Arrives: ${train.arrivalTime}`] : []),
+                ...(train.notes ? [train.notes] : []),
+                ...(activity.details ?? []),
+              ],
+              links: [...(train.links ?? []), ...(activity.links ?? [])],
+              phaseId: phase.id,
+            })
+            continue
+          }
           // ── Consolidated drive event ──────────────────────────────────────
           const drive = driveById.get(activity.segmentId)
           if (drive) {
@@ -211,14 +234,16 @@ export function buildTimelineEvents(): TimelineEvent[] {
               type: 'drive',
               date: day.isoDate,
               dateLabel: formatDateLabel(day.isoDate),
-              sortTime: timeToMinutes(activity.time),
+              sortTime: timeToMinutes(activity.time ?? '12:00 PM'),
               title: activity.title,
-              subtitle: `${Math.round(drive.durationHours * 60)}min drive`,
+              subtitle: `${Math.round(drive.durationHours * 60)}min driving across this route`,
               details: [
                 ...(drive.scenic ? ['Scenic route'] : []),
                 ...(drive.toll ? [`Toll: ${drive.toll.description} (~\u20AC${drive.toll.amountEur})`] : []),
                 ...(drive.notes ? [drive.notes] : []),
+                ...(activity.details ?? []),
               ],
+              links: activity.links,
               phaseId: phase.id,
             })
             continue
@@ -231,10 +256,11 @@ export function buildTimelineEvents(): TimelineEvent[] {
               type: 'flight',
               date: day.isoDate,
               dateLabel: formatDateLabel(day.isoDate),
-              sortTime: timeToMinutes(activity.time),
+              sortTime: timeToMinutes(activity.time ?? '12:00 PM'),
               title: activity.title,
               subtitle: `${flight.flightNumber} (${flight.airline})`,
-              details: flight.notes ?? [],
+              details: [...(flight.notes ?? []), ...(activity.details ?? [])],
+              links: activity.links,
               phaseId: phase.id,
             })
             continue
@@ -247,9 +273,11 @@ export function buildTimelineEvents(): TimelineEvent[] {
           type: activity.type ?? 'activity',
           date: day.isoDate,
           dateLabel: formatDateLabel(day.isoDate),
-          sortTime: timeToMinutes(activity.time),
+          sortTime: activity.time ? timeToMinutes(activity.time) : 1440,
+          timeLabel: activity.time ? undefined : 'Flexible',
           title: activity.title,
-          details: [],
+          details: activity.details ?? [],
+          links: activity.links,
           phaseId: phase.id,
         })
       }

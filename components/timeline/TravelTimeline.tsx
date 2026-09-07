@@ -1,5 +1,7 @@
 'use client'
 
+import { DAYS } from '@/lib/data/itinerary'
+import { ActivityDetails } from './ActivityDetails'
 import { useMemo, useState } from 'react'
 import type { TimelineEvent, TimelineEventType } from '@/lib/timelineEvents'
 
@@ -136,27 +138,6 @@ function getDotColor(type: TimelineEventType): string {
   }
 }
 
-function getLineColor(type: TimelineEventType): string {
-  switch (type) {
-    case 'flight':
-      return 'bg-blue-400/30'
-    case 'layover':
-      return 'bg-cream-muted/15'
-    case 'hotel-checkin':
-      return 'bg-emerald-400/30'
-    case 'hotel-checkout':
-      return 'bg-amber/30'
-    case 'train':
-      return 'bg-purple-400/30'
-    case 'drive':
-      return 'bg-orange-400/30'
-    case 'hike':
-      return 'bg-emerald-500/30'
-    case 'activity':
-      return 'bg-cyan-400/30'
-  }
-}
-
 function getTypeLabel(type: TimelineEventType): string {
   switch (type) {
     case 'flight':
@@ -217,39 +198,35 @@ function TimelineCard({ event, isLast }: { event: TimelineEvent; isLast: boolean
   const accent = getEventAccent(event.type)
 
   return (
-    <div id={`timeline-event-${event.id}`} className="relative scroll-mt-28 pl-20 sm:pl-28">
-      <div className="absolute left-0 top-4 w-20 sm:w-24 text-right pr-3">
-        <p className="text-xs font-semibold tracking-wide text-cream">{formatSortTime(event.sortTime)}</p>
+    <div
+      id={`timeline-event-${event.id}`}
+      className="scroll-mt-28 grid grid-cols-[3.5rem_1.5rem_minmax(0,1fr)] sm:grid-cols-[5rem_2rem_minmax(0,1fr)]"
+    >
+      <div className="pt-4 pr-1 text-right">
+        <p className="text-[11px] sm:text-xs font-semibold leading-4 tabular-nums text-cream-muted">
+          {event.timeLabel ?? formatSortTime(event.sortTime)}
+        </p>
       </div>
-      <div
-        className={`absolute left-[71px] sm:left-[103px] top-5 w-4 h-4 rounded-full ${getDotColor(event.type)} border-[3px] border-dark-surface shadow-lg`}
-      />
-      {!isLast && (
-        <div className={`absolute left-[78px] sm:left-[110px] top-9 bottom-[-10px] w-px ${getLineColor(event.type)}`} />
-      )}
-      <div className={`rounded-2xl border ${accent} p-4 mb-1 shadow-sm`}>
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="opacity-70">{getEventIcon(event.type)}</span>
-            <span className="text-[10px] font-medium uppercase tracking-[0.2em] opacity-70">{getTypeLabel(event.type)}</span>
-          </div>
-          {event.phaseId && (
-            <span className="shrink-0 rounded-full border border-cream-muted/20 px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] text-cream-muted/80">
-              {event.phaseId.replaceAll('-', ' ').replace(/\b\w/g, (c) => c.toUpperCase())}
-            </span>
-          )}
+      <div className="relative flex justify-center" aria-hidden="true">
+        {!isLast && <div className="absolute top-6 bottom-[-24px] w-px bg-cream-muted/20" />}
+        <div
+          className={`relative mt-5 h-2.5 w-2.5 shrink-0 rounded-full ring-4 ring-dark-surface ${getDotColor(event.type)}`}
+        />
+      </div>
+      <article className="min-w-0 mb-3 rounded-xl border border-cream-muted/15 bg-dark-card px-4 py-3 shadow-sm">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className={`inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md ${accent}`}>
+            {getEventIcon(event.type)}
+          </span>
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-cream-muted">
+            {getTypeLabel(event.type)}
+          </span>
         </div>
-        <h3 className="font-serif-display text-cream text-lg leading-tight">{event.title}</h3>
-        {event.subtitle && <p className="text-sm text-cream-muted/80 mt-0.5">{event.subtitle}</p>}
-        {event.details.length > 0 && (
-          <div className="mt-2 space-y-1">
-            {event.details.map((detail, i) => (
-              <p key={i} className="text-sm text-cream-muted/75 leading-snug">{detail}</p>
-            ))}
-          </div>
-        )}
-        {event.location && <p className="mt-2 text-xs text-cream-muted/55 leading-snug">{event.location}</p>}
-      </div>
+        <h3 className="text-[15px] sm:text-base font-semibold text-cream leading-snug break-words">{event.title}</h3>
+        {event.subtitle && <p className="mt-1 text-xs sm:text-sm leading-relaxed text-cream-muted">{event.subtitle}</p>}
+        {event.location && <p className="mt-1 text-xs leading-relaxed text-cream-muted/80">{event.location}</p>}
+        <ActivityDetails details={event.details} links={event.links} />
+      </article>
     </div>
   )
 }
@@ -281,8 +258,8 @@ function TimelineSummary({ events }: { events: TimelineEvent[] }) {
 
 function DateHeader({ label }: { label: string }) {
   return (
-    <div className="sticky top-16 z-10 py-3 bg-dark-surface/90 backdrop-blur-sm">
-      <h2 className="font-serif-display text-base font-bold text-cream tracking-wide">{label}</h2>
+    <div className="sticky top-16 z-10 mb-3 border-y border-cream-muted/15 bg-dark-surface/95 py-3 backdrop-blur-sm">
+      <h2 className="text-sm font-semibold text-cream tracking-wide">{label}</h2>
     </div>
   )
 }
@@ -308,7 +285,8 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
   const todayIso = viennaNow.date
   const currentMinutes = parseTimeInput(viennaNow.time)
   const nextEvent = useMemo(
-    () => events.find((event) => event.date > todayIso || (event.date === todayIso && event.sortTime >= currentMinutes)),
+    () =>
+      events.find((event) => event.date > todayIso || (event.date === todayIso && event.sortTime >= currentMinutes)),
     [events, todayIso, currentMinutes],
   )
   const [jumpDate, setJumpDate] = useState(viennaNow.date)
@@ -359,7 +337,9 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
       {nextEvent && (
         <div className="mb-4 rounded-xl border border-amber/35 bg-amber/5 p-4">
           <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-amber">Next up</div>
-          <p className="mt-1 text-cream font-medium leading-snug">{nextEvent.dateLabel} · {nextEvent.title}</p>
+          <p className="mt-1 text-cream font-medium leading-snug">
+            {nextEvent.dateLabel} · {nextEvent.title}
+          </p>
           {nextEvent.subtitle && <p className="mt-0.5 text-sm text-cream-muted">{nextEvent.subtitle}</p>}
           <button
             type="button"
@@ -402,7 +382,9 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
             Jump
           </button>
         </div>
-        <p className="mt-2 text-xs text-cream-muted/55">Defaults to the current time in Vienna and jumps to the first visible event at or after it.</p>
+        <p className="mt-2 text-xs text-cream-muted/55">
+          Defaults to the current time in Vienna and jumps to the first visible event at or after it.
+        </p>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-8">
@@ -421,10 +403,36 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
         ))}
       </div>
 
+      <nav aria-label="Jump to trip date" className="mb-6 flex flex-wrap gap-2">
+        {grouped.map((group) => (
+          <a
+            key={group.date}
+            href={`#timeline-day-${group.date}`}
+            className="inline-flex min-h-[44px] items-center rounded-lg border border-forest-green/40 px-3 text-sm text-amber"
+          >
+            Sep {Number(group.date.slice(-2))}
+          </a>
+        ))}
+      </nav>
+      <p className="mb-4 text-sm text-cream-muted">
+        Activity times are planning targets. Choose one version of each day; optional alternatives are not extra
+        commitments. Hotel windows are shown separately from planned arrivals.
+      </p>
+      {/* Timeline */}
       {grouped.map((group) => (
         <div key={group.date} id={`timeline-day-${group.date}`} className="mb-6 scroll-mt-24">
           <DateHeader label={group.label} />
-          <div className="space-y-3 pb-2">
+          {DAYS[group.date]?.recommendation && (
+            <div className="mb-4 rounded-xl border border-amber/30 p-4 text-sm leading-relaxed text-cream">
+              <strong className="text-amber">Best experience: </strong>
+              {DAYS[group.date].recommendation}
+              <ActivityDetails
+                label="Alternative plan"
+                details={DAYS[group.date].alternative ? [DAYS[group.date].alternative!] : []}
+              />
+            </div>
+          )}
+          <div className="pb-2">
             {group.events.map((event, eventIndex) => (
               <TimelineCard key={event.id} event={event} isLast={eventIndex === group.events.length - 1} />
             ))}

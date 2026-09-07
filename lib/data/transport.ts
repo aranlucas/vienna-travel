@@ -132,42 +132,13 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     durationHours: 1.5,
     distanceKm: 80,
     scenic: true,
-    notes: 'Confirmed pickup: 12:00 PM at SIXT Salzburg Centre/RadissonBlu. Via Mondsee (Sound of Music church) then Attersee. Confirm the Austrian vignette is active before leaving.',
+    notes:
+      'Confirmed pickup: 12:00 PM at SIXT Salzburg Centre/RadissonBlu. Via Mondsee (Sound of Music church) then Attersee. Confirm the Austrian vignette is active before leaving.',
     waypoints: [
       { lat: 47.8129, lng: 13.0444 }, // Salzburg Hbf
-      { lat: 47.8556, lng: 13.3490 }, // Mondsee
+      { lat: 47.8556, lng: 13.349 }, // Mondsee
       { lat: 47.9195, lng: 13.5307 }, // Attersee
       { lat: 47.7668, lng: 13.3664 }, // St. Gilgen
-      { lat: 47.7377, lng: 13.4437 }, // St. Wolfgang
-    ],
-    phaseId: 'salzkammergut',
-  },
-  {
-    id: 'base-to-hallstatt',
-    from: 'St. Wolfgang',
-    to: 'Hallstatt',
-    isoDate: '2026-09-08',
-    durationHours: 0.75,
-    distanceKm: 35,
-    scenic: true,
-    notes: 'Depart by 6:15 AM to arrive by 7:00 AM. Go straight to signed public parking and preserve the official one-hour parking-search allowance before the 9:00 AM funicular.',
-    waypoints: [
-      { lat: 47.7377, lng: 13.4437 }, // St. Wolfgang
-      { lat: 47.5622, lng: 13.6493 }, // Hallstatt
-    ],
-    phaseId: 'salzkammergut',
-  },
-  {
-    id: 'hallstatt-to-st-wolfgang',
-    from: 'Hallstatt',
-    to: 'St. Wolfgang',
-    isoDate: '2026-09-08',
-    durationHours: 0.75,
-    distanceKm: 30,
-    scenic: true,
-    notes: 'Leave Hallstatt around 10:15 AM after the first Skywalk ascent, then return for the booked Schafbergbahn slot.',
-    waypoints: [
-      { lat: 47.5622, lng: 13.6493 }, // Hallstatt
       { lat: 47.7377, lng: 13.4437 }, // St. Wolfgang
     ],
     phaseId: 'salzkammergut',
@@ -177,16 +148,17 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     from: 'St. Wolfgang',
     to: 'Ehrwald',
     isoDate: '2026-09-09',
-    durationHours: 3,
+    durationHours: 4,
     distanceKm: 200,
     scenic: true,
-    notes: 'Scenic western route through Germany to Reutte and Ehrwald. Confirm the rental agreement allows the planned cross-border route. Stop at Highline179 and Plansee, but shorten Plansee if needed to protect the 3:00 PM Ehrwald check-in.',
+    notes:
+      'Scenic western route through Germany to Reutte and Ehrwald. Confirm the rental agreement allows the planned cross-border route. Stop at Highline179 and Plansee, but allow 4–4½ hours to Reutte including a break; shorten or omit Plansee if delayed. Hotel check-in ends at 21:30.',
     waypoints: [
       { lat: 47.7377, lng: 13.4437 }, // St. Wolfgang
-      { lat: 47.8015, lng: 13.0550 }, // Salzburg (pass through)
+      { lat: 47.8015, lng: 13.055 }, // Salzburg (pass through)
       { lat: 47.4851, lng: 10.7198 }, // Reutte / Highline179
       { lat: 47.4532, lng: 10.7372 }, // Plansee
-      { lat: 47.4009, lng: 10.9160 }, // Ehrwald
+      { lat: 47.4009, lng: 10.916 }, // Ehrwald
     ],
     phaseId: 'tyrol',
   },
@@ -195,12 +167,12 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     from: 'Ehrwald',
     to: 'Innsbruck',
     isoDate: '2026-09-11',
-    durationHours: 0.5,
+    durationHours: 1.25,
     distanceKm: 35,
     scenic: false,
     notes: '2:30 PM — Short drive after Zugspitze visit. Check in to Urban Inn.',
     waypoints: [
-      { lat: 47.4009, lng: 10.9160 }, // Ehrwald
+      { lat: 47.4009, lng: 10.916 }, // Ehrwald
       { lat: 47.2636, lng: 11.4009 }, // Innsbruck
     ],
     phaseId: 'tyrol',
@@ -210,11 +182,12 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     from: 'Innsbruck',
     to: 'Schlegeis Reservoir',
     isoDate: '2026-09-12',
-    durationHours: 1.5,
+    durationHours: 2.25,
     distanceKm: 85,
     scenic: true,
     toll: { description: 'Schlegeis Alpine Road 2026 car day ticket', amountEur: 19 },
-    notes: 'Depart Innsbruck at 7:00 AM when the alpine road opens; target Schlegeis parking around 8:30 AM. Buy the day ticket online if possible and recheck parking / traffic-control status.',
+    notes:
+      'Depart Innsbruck at 6:30 AM; allow 2–2½ hours including mountain-road traffic control. Keep the Urban Inn room for the second night. Buy the day ticket online if possible and recheck parking / traffic-control status.',
     waypoints: [
       { lat: 47.2636, lng: 11.4009 }, // Innsbruck
       { lat: 47.0357, lng: 11.6637 }, // Schlegeis Reservoir
@@ -226,10 +199,11 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     from: 'Schlegeis',
     to: 'Innsbruck Airport',
     isoDate: '2026-09-12',
-    durationHours: 1.5,
+    durationHours: 2.25,
     distanceKm: 80,
     scenic: false,
-    notes: 'Leave Schlegeis no later than 2:30 PM. Confirmed drop-off: 5:30 PM at Innsbruck Airport. Passenger cars return in parking area A; follow the blue “Car rental return” signs.',
+    notes:
+      'Leave Schlegeis no later than 2:30 PM. Confirmed drop-off: 5:30 PM at Innsbruck Airport. Passenger cars return in parking area A; follow the blue “Car rental return” signs.',
     waypoints: [
       { lat: 47.0357, lng: 11.6637 }, // Schlegeis Reservoir
       { lat: 47.2602, lng: 11.3439 }, // Innsbruck Airport
@@ -256,12 +230,55 @@ export interface TrainSegment {
   notes?: string
   /** Key waypoints along the rail corridor */
   waypoints: Coordinates[]
-  /** Booking/confirmation reference */
+  /** Optional researched links; planned is not a seat reservation. */
+  links?: { label: string; href: string }[]
 }
 
 type TrainSegmentData = TrainSegment & { phaseId: string }
 
 export const TRAIN_SEGMENTS: TrainSegmentData[] = [
+  {
+    id: 'schafberg-ascent',
+    phaseId: 'salzkammergut',
+    from: 'St. Wolfgang',
+    to: 'Schafbergspitze',
+    isoDate: '2026-09-08',
+    operator: 'Schafbergbahn · planned, not booked',
+    departureTime: '9:15 AM',
+    arrivalTime: '9:50 AM',
+    durationHours: 35 / 60,
+    distanceKm: 5.85,
+    waypoints: [],
+    notes:
+      'Published daily service A, April 25–November 1, 2026. Seats not confirmed. Book ascent and descent together; €61 adult return. Railway may change or cancel services.',
+    links: [
+      {
+        label: 'Official 2026 timetable',
+        href: 'https://www.5schaetze.at/content/dam/tourism/downloads/fahrpl%C3%A4ne/2026/sbb/en/2026_Fahrplan_SchafbergBahn__EN.pdf',
+      },
+    ],
+  },
+  {
+    id: 'schafberg-descent',
+    phaseId: 'salzkammergut',
+    from: 'Schafbergspitze',
+    to: 'St. Wolfgang',
+    isoDate: '2026-09-08',
+    operator: 'Schafbergbahn · planned, not booked',
+    departureTime: '12:05 PM',
+    arrivalTime: '12:40 PM',
+    durationHours: 35 / 60,
+    distanceKm: 5.85,
+    waypoints: [],
+    notes:
+      'Published daily service A, April 25–November 1, 2026. Seats not confirmed. Book ascent and descent together; €61 adult return. Railway may change or cancel services.',
+    links: [
+      {
+        label: 'Official 2026 timetable',
+        href: 'https://www.5schaetze.at/content/dam/tourism/downloads/fahrpl%C3%A4ne/2026/sbb/en/2026_Fahrplan_SchafbergBahn__EN.pdf',
+      },
+    ],
+  },
   {
     id: 'vienna-salzburg-rail',
     from: 'Wien Hbf',
@@ -271,7 +288,8 @@ export const TRAIN_SEGMENTS: TrainSegmentData[] = [
     relationId: 3654420, // Wien Hbf → Zürich HB, Westbahn corridor
     durationHours: 2.25,
     distanceKm: 295,
-    notes: 'Sept 7. Leave the hotel around 7:45 AM and choose a Railjet scheduled to reach Salzburg by 11:00 AM, preserving at least 45 minutes before the confirmed noon SIXT pickup at Salzburg Centre/RadissonBlu near Hbf. Verify the final departure and platform in the ÖBB app. Scenery tip: westbound, try a left-side window for mountain views later in the run.',
+    notes:
+      'Sept 7. Leave the hotel around 7:45 AM and choose a Railjet scheduled to reach Salzburg by 11:00 AM, preserving at least 45 minutes before the confirmed noon SIXT pickup at Salzburg Centre/RadissonBlu near Hbf. Verify the final departure and platform in the ÖBB app. Scenery tip: westbound, try a left-side window for mountain views later in the run.',
     waypoints: [
       { lat: 48.1847, lng: 16.3765 }, // Wien Hbf
       { lat: 48.2047, lng: 15.6256 }, // St. Pölten Hbf
@@ -294,14 +312,15 @@ export const TRAIN_SEGMENTS: TrainSegmentData[] = [
     arrivalTime: '~19:55',
     durationHours: 5,
     distanceKm: 480,
-    notes: 'Sept 13. RJX 13479 — dep Innsbruck 14:56, direct to Vienna Airport (arr ~19:55, no transfer). 1st class, 2 tickets. Keep passenger and reservation details with the traveler. Scenery tip: eastbound, try a right-side window for the alpine side between Innsbruck and Salzburg.',
+    notes:
+      'Sept 13. RJX 13479 — dep Innsbruck 14:56, direct to Vienna Airport (arr ~19:55, no transfer). 1st class, 2 tickets. Keep passenger and reservation details with the traveler. Scenery tip: eastbound, try a right-side window for the alpine side between Innsbruck and Salzburg.',
     waypoints: [
       { lat: 47.2636, lng: 11.4009 }, // Innsbruck Hbf 14:56
       { lat: 47.3903, lng: 11.7714 }, // Jenbach 15:13
       { lat: 47.4882, lng: 12.0637 }, // Wörgl 15:27
       { lat: 47.5819, lng: 12.1636 }, // Kufstein
       { lat: 47.8558, lng: 12.1222 }, // Rosenheim (DE)
-      { lat: 47.8370, lng: 12.9690 }, // Freilassing (DE/AT border)
+      { lat: 47.837, lng: 12.969 }, // Freilassing (DE/AT border)
       { lat: 47.8129, lng: 13.0444 }, // Salzburg Hbf 17:07
       { lat: 48.0121, lng: 13.7214 }, // Attnang-Puchheim
       { lat: 48.2906, lng: 14.2932 }, // Linz Hbf 18:17

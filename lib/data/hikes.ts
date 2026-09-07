@@ -32,8 +32,9 @@ export const HIKES: Record<string, HikeData> = {
   seebensee: {
     id: 'seebensee',
     name: 'Seebensee & Drachensee',
-    description: 'Gondola-start alpine-lakes route from Ehrwalder Alm to Seebensee, Drachensee, and Coburger Hütte. The downloadable GPX is a separate valley-start reference and is not used on the phase map.',
-    start: { lat: 47.3838, lng: 10.9560 },
+    description:
+      'Gondola-start alpine-lakes route from Ehrwalder Alm to Seebensee, Drachensee, and Coburger Hütte. The downloadable GPX is a separate valley-start reference and is not used on the phase map.',
+    start: { lat: 47.3838, lng: 10.956 },
     distanceKm: 13,
     elevationGainM: 580,
     difficulty: 'Medium-Hard',
@@ -59,7 +60,7 @@ export const HIKES: Record<string, HikeData> = {
   'three-lakes': {
     id: 'three-lakes',
     name: '3-Lake Loop (Biberwier)',
-    description: 'Relaxed morning loop connecting three lakes: Blindsee, Mittersee, and Weißensee.',
+    description: 'Optional separate half-day loop connecting three lakes: Blindsee, Mittersee, and Weißensee.',
     start: { lat: 47.3647, lng: 10.87525 },
     distanceKm: 9,
     elevationGainM: 350,
@@ -84,7 +85,8 @@ export const HIKES: Record<string, HikeData> = {
   'olpererhuette-hike': {
     id: 'olpererhuette-hike',
     name: 'Trail 502 → Olpererhütte',
-    description: 'The iconic Zillertal Alps hike. Famous suspension bridge with a perfect mirror reflection of the reservoir.',
+    description:
+      'The iconic Zillertal Alps hike. Reservoir panorama and optional suspension-bridge photo; views depend on water level and weather.',
     start: { lat: 47.03203, lng: 11.69734 },
     distanceKm: 6.2,
     elevationGainM: 784,

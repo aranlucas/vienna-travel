@@ -24,11 +24,13 @@ export const RAIL_SEGMENT_OVERRIDES: Record<string, LatLng[]> = {
  * segments so the overview cannot silently retain an old pickup, stop, or return.
  */
 export const DRIVE_WAYPOINTS: LatLng[] = DRIVING_SEGMENTS.flatMap((segment) =>
-  (segment.waypoints ?? []).map(({ lat, lng }) => [lat, lng] as LatLng)
+  (segment.waypoints ?? []).map(({ lat, lng }) => [lat, lng] as LatLng),
 ).filter(([lat, lng], index, points) => {
   const previous = points[index - 1]
   return !previous || previous[0] !== lat || previous[1] !== lng
 })
 
 /** All train segments across all phases, for the hero overview map. */
-export const HERO_TRAIN_SEGMENTS = PHASES.flatMap((p) => p.trainSegments ?? [])
+export const HERO_TRAIN_SEGMENTS = PHASES.flatMap((p) => p.trainSegments ?? []).filter(
+  (segment) => segment.waypoints.length >= 2,
+)

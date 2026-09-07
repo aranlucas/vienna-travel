@@ -85,11 +85,11 @@ export const BOOKINGS: BookingItem[] = [
     actionUrl: s['nh-airport'].actionUrl,
   },
   {
-    item: 'Schafbergbahn time slot (Sept 8 afternoon)',
-    booked: true,
-    note: 'Booked · keep the time-slot confirmation handy and recheck summit weather before departure',
+    item: 'Schafbergbahn return tickets (Sept 8 · 9:15 up / 12:05 down)',
+    booked: false,
+    note: 'Planned daily services, not reserved. €61 per adult return. Confirm seats and both departures before payment.',
     actionLabel: 'Open Schafbergbahn',
-    actionUrl: 'https://www.5schaetze.at/en/schafberg-bahn/',
+    actionUrl: 'https://www.5schaetze.at/en/Info_SchafbergBahn_and_WolfgangseeSchifffahrt.html',
   },
   {
     item: 'ÖBB Vienna Hbf → Salzburg Hbf (Sept 7 morning)',
@@ -100,11 +100,11 @@ export const BOOKINGS: BookingItem[] = [
     actionUrl: 'https://www.oebb.at/en/',
   },
   {
-    item: 'Hallstatt Salzbergbahn / Skywalk-only first ascent (Sept 8)',
-    booked: true,
-    note: 'Booked; details kept with traveler. Choose the 9:00 AM funicular + Skywalk option, not a salt-mine combination; the mine tour cannot fit the fixed 10:15 AM Hallstatt departure.',
-    actionLabel: 'Check official tickets and hours',
-    actionUrl: 'https://www.salzwelten.at/en/hallstatt/prices-opening-hours',
+    item: 'Two e-trekking bikes (Sept 8 afternoon)',
+    booked: false,
+    note: 'Pro Travel first choice: €72 for two/day, locks included. Call +43 6138 2525 for next-day availability, helmets and agreed 14:00 pickup / 17:30 return. See-Biker fallback €78 for two/afternoon, walk-in stock unconfirmed.',
+    actionLabel: 'Rental details',
+    actionUrl: 'https://www.protravel.at/radverleih/',
   },
   {
     item: 'ÖBB RJX 13479 dep 14:56 Innsbruck → Vienna Airport (Sept 13)',
@@ -185,7 +185,7 @@ export const CHECKLIST: { item: string; critical: boolean }[] = [
     critical: true,
   },
   { item: 'Keep €1/€2 coins handy for station restrooms and small kiosks', critical: false },
-  { item: 'Schafbergbahn: booked ✓ — keep the time-slot confirmation handy', critical: false },
+  { item: 'Schafbergbahn: reserve Sept 8 morning ascent and noon descent; nothing booked yet', critical: false },
   { item: 'RJX 13479 (Sept 13, dep 14:56): booked ✓ — keep passenger details with the traveler', critical: false },
   {
     item: 'Arrival supplies: buy hiking snacks at VIE or Wien Mitte before hotel check-in; do not depend on Naschmarkt stalls',
@@ -222,24 +222,24 @@ export const CHECKLIST: { item: string; critical: boolean }[] = [
 
 export const LIVE_CHECKS: LiveCheckItem[] = [
   {
-    id: 'hallstatt-access',
-    title: 'Hallstatt Skywalk / Salzberg access',
-    dueDate: '2026-09-05',
+    id: 'bike-swim-confirmation',
+    title: 'Bike rental and Felmayerbad opening',
+    dueDate: '2026-09-07',
     scope: 'Salzkammergut',
-    kind: 'Live Check',
+    kind: 'Reservation',
     description:
-      'Reconfirm the booked 9:00 AM first ascent, current parking pattern, and first-week funicular status before Tuesday, Sept 8, 2026.',
-    note: 'The rebuilt Salzbergbahn officially reopened Aug 29. Keep this to the Skywalk-only visit; if operations change, use the lakeside old-town promenade and still leave Hallstatt on time.',
+      'Call Pro Travel for two bikes, frame sizes, helmets, 14:00 collection and 17:30 return. Online next-day reservations are not accepted.',
+    note: 'Felmayerbad is the named swim stop. September is in the published beach-card season; exact daily gate hours are unpublished. Municipal contact +43 6137 7256. See-Biker only accepts reservations from one day.',
   },
   {
     id: 'schafbergbahn-status',
-    title: 'Schafbergbahn operating status',
-    dueDate: '2026-09-06',
+    title: 'Schafbergbahn seats and morning weather',
+    dueDate: '2026-09-08',
     scope: 'Salzkammergut',
     kind: 'Live Check',
     description:
-      'Recheck the mountain railway operating status and summit weather for the booked Sept 8 afternoon ride.',
-    note: 'Use the exact ascent and return times on the booking confirmation. If low cloud, sustained rain, or wind threatens operations, keep the Hallstatt morning and replace the summit with a lower St. Wolfgang or Bad Ischl afternoon.',
+      'Reserve the published 9:15 ascent and 12:05 descent only after checking seat availability and summit conditions.',
+    note: 'No reservation exists. If the morning service is unavailable, keep the afternoon bike + swim plan and use a local morning walk. Do not silently shift the train into the rental window.',
   },
   {
     id: 'seebensee-conditions',

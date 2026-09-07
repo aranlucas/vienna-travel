@@ -1,5 +1,6 @@
 'use client'
 
+import { ActivityDetails } from './ActivityDetails'
 import type { DayActivity, DayPlan } from '@/lib/tripData'
 import { useLiveWeatherDays } from '@/components/weather/LiveWeatherProvider'
 
@@ -36,11 +37,17 @@ function DayEntry({ day }: DayEntryProps) {
 
       <div className="bg-dark-card rounded-lg border border-forest-green/30 p-4 mb-4">
         <div className="mb-2">
-          <span className="text-sm text-amber tracking-widest uppercase font-medium">
-            {day.dayLabel}
-          </span>
+          <span className="text-sm text-amber tracking-widest uppercase font-medium">{day.dayLabel}</span>
         </div>
         <h4 className="font-serif-display text-cream text-base mb-3">{day.title}</h4>
+
+        {day.recommendation && (
+          <p className="mb-3 text-sm leading-relaxed text-cream">
+            <strong className="text-amber">Best experience: </strong>
+            {day.recommendation}
+          </p>
+        )}
+        {day.alternative && <ActivityDetails details={[day.alternative]} label="Alternative plan" />}
 
         {day.weather && (
           <div className="mb-3 rounded-lg border border-slate-blue/30 bg-slate-blue/12 px-3 py-2">
@@ -81,6 +88,7 @@ function DayEntry({ day }: DayEntryProps) {
                   {activity.time ? `${activity.time} — ${activity.title}` : activity.title}
                 </span>
                 <ActivityBadge activity={activity} />
+                <ActivityDetails details={activity.details} links={activity.links} />
               </div>
             </li>
           ))}
@@ -93,9 +101,7 @@ function DayEntry({ day }: DayEntryProps) {
           </div>
         )}
 
-        {day.notes && (
-          <div className="mt-2 text-sm text-amber/70 italic leading-relaxed">{day.notes}</div>
-        )}
+        {day.notes && <div className="mt-2 text-sm text-amber/70 italic leading-relaxed">{day.notes}</div>}
       </div>
     </div>
   )

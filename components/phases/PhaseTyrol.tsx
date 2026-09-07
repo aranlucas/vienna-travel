@@ -24,8 +24,8 @@ export function PhaseTyrol({ phase, drivingRoutes, hikingRoutes }: PhaseTyrolPro
         <div className="space-y-4">
           <SectionHeader title="Tyrolean Alps" subtitle="Phase 3 · Sept 9–11" />
           <p className="text-cream-muted text-base leading-relaxed">
-            Three days based in Ehrwald at the foot of the Zugspitze. Suspension bridges, emerald
-            alpine lakes, ghost-tree reflections, and a 9,718 ft summit straddling two countries.
+            Three days based in Ehrwald at the foot of the Zugspitze. Suspension bridges, emerald alpine lakes,
+            ghost-tree reflections, and a 9,718 ft summit straddling two countries.
           </p>
 
           <div className="bg-dark-card border border-forest-green/30 rounded-lg p-4">
@@ -36,11 +36,11 @@ export function PhaseTyrol({ phase, drivingRoutes, hikingRoutes }: PhaseTyrolPro
 
           <div className="bg-dark-card border border-amber/20 rounded-lg p-4">
             <div className="text-sm text-amber tracking-widest uppercase mb-2 font-medium">
-              💰 Cash Required
+              Prioritize the best weather window
             </div>
             <p className="text-cream-muted text-base">
-              Bring <strong className="text-cream">€50+ cash</strong> for the Coburger Hütte
-              mountain hut (cards unreliable at altitude).
+              Give Coburger Hütte the best safe day. If Thursday is wet and Friday improves, move the hike and skip
+              Zugspitze. Carry cash as a payment backup for the hut.
             </p>
           </div>
         </div>
