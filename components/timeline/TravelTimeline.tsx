@@ -187,13 +187,25 @@ function formatSortTime(sortTime: number): string {
   return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`
 }
 
+function formatTimeInput(sortTime: number): string {
+  const normalizedMinutes = ((sortTime % 1440) + 1440) % 1440
+  const hours = Math.floor(normalizedMinutes / 60)
+  const minutes = normalizedMinutes % 60
+  return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`
+}
+
+function parseTimeInput(value: string): number {
+  const [hours, minutes] = value.split(':').map(Number)
+  return hours * 60 + minutes
+}
+
 // ── Event card ──
 
 function TimelineCard({ event, isLast }: { event: TimelineEvent; isLast: boolean }) {
   const accent = getEventAccent(event.type)
 
   return (
-    <div className="relative pl-20 sm:pl-28">
+    <div id={`timeline-event-${event.id}`} className="relative scroll-mt-28 pl-20 sm:pl-28">
       {/* Time rail label */}
       <div className="absolute left-0 top-4 w-20 sm:w-24 text-right pr-3">
         <p className="text-xs font-semibold tracking-wide text-cream">{formatSortTime(event.sortTime)}</p>
@@ -307,6 +319,9 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
 
   const todayIso = useMemo(() => new Date().toISOString().slice(0, 10), [])
   const nextEvent = useMemo(() => events.find((e) => e.date >= todayIso), [events, todayIso])
+  const initialJumpEvent = nextEvent ?? events[0]
+  const [jumpDate, setJumpDate] = useState(initialJumpEvent?.date ?? todayIso)
+  const [jumpTime, setJumpTime] = useState(initialJumpEvent ? formatTimeInput(initialJumpEvent.sortTime) : '12:00')
 
   const jumpToToday = () => {
     const targetDate = nextEvent?.date ?? todayIso
@@ -321,6 +336,17 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
           return e.type === filter
         })
 
+  const jumpToTime = () => {
+    const targetMinutes = parseTimeInput(jumpTime)
+    const target =
+      filtered.find((event) => event.date > jumpDate || (event.date === jumpDate && event.sortTime >= targetMinutes)) ??
+      filtered[filtered.length - 1]
+
+    if (!target) return
+
+    document.getElementById(`timeline-event-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   // Group events by date
   const grouped: { date: string; label: string; events: TimelineEvent[] }[] = []
   for (const event of filtered) {
@@ -331,6 +357,9 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
       grouped.push({ date: event.date, label: event.dateLabel, events: [event] })
     }
   }
+
+  const firstEventDate = events[0]?.date
+  const lastEventDate = events[events.length - 1]?.date
 
   return (
     <div>
@@ -352,6 +381,40 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
           </button>
         </div>
       )}
+
+      <div className="mb-4 rounded-xl border border-forest-green/35 bg-dark-surface/60 p-4">
+        <div className="text-[10px] font-medium uppercase tracking-[0.22em] text-cream-muted/70">Jump to time</div>
+        <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-[1fr_1fr_auto]">
+          <label className="flex flex-col gap-1 text-xs text-cream-muted">
+            Date
+            <input
+              type="date"
+              value={jumpDate}
+              min={firstEventDate}
+              max={lastEventDate}
+              onChange={(event) => setJumpDate(event.target.value)}
+              className="min-h-[44px] rounded-lg border border-forest-green/40 bg-dark-surface px-3 py-2 text-sm text-cream outline-none transition-colors focus:border-amber/60"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-xs text-cream-muted">
+            Time
+            <input
+              type="time"
+              value={jumpTime}
+              onChange={(event) => setJumpTime(event.target.value)}
+              className="min-h-[44px] rounded-lg border border-forest-green/40 bg-dark-surface px-3 py-2 text-sm text-cream outline-none transition-colors focus:border-amber/60"
+            />
+          </label>
+          <button
+            type="button"
+            onClick={jumpToTime}
+            className="min-h-[44px] self-end rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-opacity hover:opacity-90"
+          >
+            Jump
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-cream-muted/55">Jumps to the first visible event at or after that time.</p>
+      </div>
 
       {/* Filter bar */}
       <div className="flex flex-wrap gap-2 mb-8">
