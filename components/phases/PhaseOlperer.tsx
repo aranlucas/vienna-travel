@@ -25,17 +25,17 @@ export function PhaseOlperer({ phase, drivingRoutes, hikingRoutes }: PhaseOlpere
         <div className="space-y-4">
           <SectionHeader title="Olpererhütte & Return" subtitle="Phase 4 · Sept 12–14" />
           <p className="text-cream-muted text-base leading-relaxed">
-            The finale. A dawn drive into the Zillertal Alps, the iconic suspension bridge photo,
-            then a swift rail journey back to Vienna Airport.
+            Choose an ambitious Olpererhütte day only in good conditions, or enjoy a relaxed Ambras Castle and Innsbruck
+            day. Sunday leaves time for an easy city morning before the airport train.
           </p>
 
           <div className="bg-dark-card border border-amber/20 rounded-lg p-4">
             <div className="text-sm text-amber tracking-widest uppercase font-medium mb-2">
-              💰 Cash at the Hütte
+              Choose the mountain day carefully
             </div>
             <p className="text-cream-muted text-base">
-              Bring <strong className="text-cream">€100+ cash</strong>. The Olpererhütte card reader
-              is unreliable at 7,835 ft.
+              The hut reports construction noise and possible helicopter flights in summer 2026. Carry cash as a payment
+              backup. The detailed day plan includes a timed city alternative.
             </p>
           </div>
 
@@ -44,8 +44,8 @@ export function PhaseOlperer({ phase, drivingRoutes, hikingRoutes }: PhaseOlpere
               🚂 Sunday Train (Sept 13)
             </div>
             <p className="text-cream-muted text-base">
-              RJX 13479 to Vienna Airport is <strong className="text-cream">booked in 1st class</strong>{' '}
-              with seat reservations. Keep the confirmation offline and check the platform in ÖBB Scotty.
+              RJX 13479 to Vienna Airport is <strong className="text-cream">booked in 1st class</strong> with seat
+              reservations. Keep the confirmation offline and check the platform in ÖBB Scotty.
             </p>
           </div>
 
@@ -55,8 +55,8 @@ export function PhaseOlperer({ phase, drivingRoutes, hikingRoutes }: PhaseOlpere
             </div>
             <p className="text-cream-muted text-base">
               Leave Schlegeis no later than 2:30 PM for the confirmed{' '}
-              <strong className="text-cream">5:30 PM airport return</strong>. Passenger cars use
-              parking area A; follow the blue &ldquo;Car rental return&rdquo; signs.
+              <strong className="text-cream">5:30 PM airport return</strong>. Passenger cars use parking area A; follow
+              the blue &ldquo;Car rental return&rdquo; signs.
             </p>
           </div>
         </div>
