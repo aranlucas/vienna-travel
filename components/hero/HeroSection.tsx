@@ -59,12 +59,12 @@ export function HeroSection() {
         >
           Weather
         </a>
-        <a
-          href={`#${HOME_SECTION_IDS.packing}`}
+        <Link
+          href="/packing"
           className="rounded-full border border-forest-green/35 bg-dark-card px-4 py-2.5 min-h-[44px] inline-flex items-center text-xs font-medium uppercase tracking-[0.15em] text-cream-muted hover:text-cream hover:border-amber/40 transition-colors"
         >
           Packing
-        </a>
+        </Link>
       </div>
 
       {/* Phase dots */}

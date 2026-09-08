@@ -1,6 +1,5 @@
 import { HeroSection } from '@/components/hero/HeroSection'
 import { HeroMap } from '@/components/map/MapLoader'
-import { PackingSection } from '@/components/packing/PackingSection'
 import { FlyTonightCard } from '@/components/planning/FlyTonightCard'
 import { PreDepartureChecklist } from '@/components/planning/PreDepartureChecklist'
 import { CopyAddressButton } from '@/components/ui/CopyAddressButton'
@@ -319,7 +318,6 @@ export default async function Home() {
         <TripChecksTimeline items={LIVE_CHECKS} />
       </section>
 
-      <PackingSection packing={TRIP_DATA.packing} />
       <PlanningShortlistSection items={PLANNING_SHORTLIST} />
 
       {/* Pre-departure checklist — interactive with tonight-only filter */}

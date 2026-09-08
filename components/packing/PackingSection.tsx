@@ -1,5 +1,4 @@
 import type { PackingPlan } from '@/lib/tripData'
-import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 
 interface PackingSectionProps {
   packing: PackingPlan
@@ -13,7 +12,7 @@ const TONE_STYLES: Record<NonNullable<PackingPlan['groups'][number]['tone']>, st
 
 export function PackingSection({ packing }: PackingSectionProps) {
   return (
-    <section id={HOME_SECTION_IDS.packing} className="px-6 pb-20 max-w-6xl mx-auto scroll-mt-20">
+    <section className="px-6 pb-20 max-w-6xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <div className="h-px w-8 bg-amber/60" />
         <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">{packing.title}</span>

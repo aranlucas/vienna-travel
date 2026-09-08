@@ -5,7 +5,7 @@ const LINKS = [
   { label: 'Plan', href: `#${HOME_SECTION_IDS.itinerary}` },
   { label: 'Stays', href: `#${HOME_SECTION_IDS.bookingStatus}` },
   { label: 'Timeline', href: '/timeline' },
-  { label: 'Pack', href: `#${HOME_SECTION_IDS.packing}` },
+  { label: 'Pack', href: '/packing' },
   { label: 'Weather', href: `#${HOME_SECTION_IDS.weatherOutlook}` },
 ] as const
 
