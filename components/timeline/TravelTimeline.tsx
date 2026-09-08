@@ -281,7 +281,7 @@ interface TravelTimelineProps {
 
 export function TravelTimeline({ events }: TravelTimelineProps) {
   const [filter, setFilter] = useState<TimelineEventType | 'all'>('all')
-  const viennaNow = useMemo(getViennaNow, [])
+  const viennaNow = useMemo(() => getViennaNow(), [])
   const todayIso = viennaNow.date
   const currentMinutes = parseTimeInput(viennaNow.time)
   const nextEvent = useMemo(
@@ -331,7 +331,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
   const lastEventDate = events[events.length - 1]?.date
 
   return (
-    <div>
+    <div className="font-sans">
       <TimelineSummary events={events} />
 
       {nextEvent && (
