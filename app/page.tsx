@@ -321,7 +321,7 @@ export default async function Home() {
         <TripChecksTimeline items={LIVE_CHECKS} />
       </section>
 
-      <PackingSection packing={TRIP_DATA.packing} days={allDays} />
+      <PackingSection packing={TRIP_DATA.packing} />
 
       {/* Pre-departure checklist — interactive with tonight-only filter */}
       <ThroughDate date="2026-09-04">
