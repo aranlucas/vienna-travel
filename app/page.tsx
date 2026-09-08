@@ -307,8 +307,6 @@ export default async function Home() {
         </div>
       </section>
 
-      <PlanningShortlistSection items={PLANNING_SHORTLIST} />
-
       <section id={HOME_SECTION_IDS.liveChecks} className="px-6 pb-16 max-w-6xl mx-auto scroll-mt-20">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-8 bg-amber/60" />
@@ -322,6 +320,7 @@ export default async function Home() {
       </section>
 
       <PackingSection packing={TRIP_DATA.packing} />
+      <PlanningShortlistSection items={PLANNING_SHORTLIST} />
 
       {/* Pre-departure checklist — interactive with tonight-only filter */}
       <ThroughDate date="2026-09-04">

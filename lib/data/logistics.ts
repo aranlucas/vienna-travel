@@ -21,6 +21,7 @@ export interface PlanningOption {
 
 export interface PlanningShortlistItem {
   id: string
+  endDate?: string
   title: string
   area: string
   why: string
@@ -291,6 +292,7 @@ export const LIVE_CHECKS: LiveCheckItem[] = [
 export const PLANNING_SHORTLIST: PlanningShortlistItem[] = [
   {
     id: 'restaurants-vienna',
+    endDate: '2026-09-07',
     title: 'Dinner reservations in Vienna',
     area: 'Innere Stadt / Stadtpark / Naschmarkt belt',
     why: 'September weekend tables in core districts can sell out, especially for classic Austrian spots.',
@@ -315,6 +317,7 @@ export const PLANNING_SHORTLIST: PlanningShortlistItem[] = [
   },
   {
     id: 'restaurants-ehrwald',
+    endDate: '2026-09-11',
     title: 'Ehrwald dinner picks for the hike nights',
     area: 'Zugspitz Arena · Ehrwald / Lermoos',
     why: 'Sept 9–11 is hard-hiking territory. Pre-pick one or two Tyrolean dinner spots so you are not decision-fatigued after the Seebensee descent or the 3-Lake Loop.',
@@ -339,6 +342,7 @@ export const PLANNING_SHORTLIST: PlanningShortlistItem[] = [
   },
   {
     id: 'restaurants-innsbruck',
+    endDate: '2026-09-13',
     title: 'Innsbruck Sunday lunch / dinner shortlist',
     area: 'Altstadt + around Hbf',
     why: 'You only have a half day in Innsbruck before the long train; pick one fixed meal target.',
