@@ -5,6 +5,7 @@ import type { DayPlan } from '@/lib/tripData'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 import { WEATHER_REFRESH_MINUTES } from '@/lib/weatherRefresh'
 import { useLiveWeather } from '@/components/weather/LiveWeatherProvider'
+import { useTripProgress } from '@/components/planning/TripProgress'
 
 type Unit = 'F' | 'C'
 type HintTone = 'cold' | 'wet' | 'hot' | 'alert'
@@ -272,6 +273,7 @@ function WeatherMetric({ label, value, detail }: { label: string; value: string;
 }
 
 export function TripWeatherOutlook() {
+  const { today, showPast } = useTripProgress()
   const { days, error, isLoading, isRefreshing, refreshedAt, refresh } = useLiveWeather()
   const unit = useSyncExternalStore(subscribeToUnit, getUnitSnapshot, getServerUnit)
 
@@ -280,27 +282,10 @@ export function TripWeatherOutlook() {
     window.dispatchEvent(new Event(UNIT_EVENT))
   }
 
-  const orderedDays = useMemo(() => [...days].sort((a, b) => a.isoDate.localeCompare(b.isoDate)), [days])
-  const liveDays = useMemo(
-    () => orderedDays.filter((day) => day.weatherSource === 'forecast' && day.weatherHighC != null),
-    [orderedDays],
+  const orderedDays = useMemo(
+    () => days.filter((day) => showPast || day.isoDate >= today).sort((a, b) => a.isoDate.localeCompare(b.isoDate)),
+    [days, today, showPast],
   )
-
-  const highlights = useMemo(() => {
-    if (!liveDays.length) return null
-    const warmest = liveDays.reduce((a, b) => (forecastHigh(b) > forecastHigh(a) ? b : a))
-    const coldest = liveDays.reduce((a, b) =>
-      (forecastFeelsLow(b) ?? forecastLow(b)) < (forecastFeelsLow(a) ?? forecastLow(a)) ? b : a,
-    )
-    const wettest = liveDays.reduce((a, b) => {
-      const aRain = forecastPrecipMm(a)
-      const bRain = forecastPrecipMm(b)
-      if (aRain !== bRain) return bRain > aRain ? b : a
-      return (forecastPrecipPct(b) ?? -1) > (forecastPrecipPct(a) ?? -1) ? b : a
-    })
-    return { warmest, coldest, wettest }
-  }, [liveDays])
-
   const unitButton = (value: Unit) => (
     <button
       type="button"
@@ -366,38 +351,6 @@ export function TripWeatherOutlook() {
         </span>
         {error && <span className="text-cream-muted/70">{error}</span>}
       </div>
-
-      {highlights && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
-          {[
-            {
-              label: 'Warmest afternoon',
-              day: highlights.warmest,
-              value: `${toDisplay(forecastHigh(highlights.warmest), unit)}°${unit}`,
-            },
-            {
-              label: 'Coldest planned exposure',
-              day: highlights.coldest,
-              value: `${toDisplay(forecastFeelsLow(highlights.coldest) ?? forecastLow(highlights.coldest), unit)}°${unit}`,
-            },
-            {
-              label: 'Wettest relevant window',
-              day: highlights.wettest,
-              value: formatPrecip(forecastPrecipMm(highlights.wettest), unit),
-            },
-          ].map(({ label, day, value }) => (
-            <div key={label} className="rounded-lg border border-slate-blue/30 bg-slate-blue/12 px-4 py-3">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-blue-200 font-medium">{label}</div>
-              <div className="mt-1 flex items-baseline gap-2 flex-wrap">
-                <span className="text-xl font-semibold text-cream">{value}</span>
-                <span className="text-sm text-cream-muted">
-                  {day.date} · {locationLabel(day)}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
         {orderedDays.map((day) => {

@@ -1,10 +1,7 @@
-import type { DayPlan, PackingPlan } from '@/lib/tripData'
-import { ForecastPackingSummary } from '@/components/packing/ForecastPackingSummary'
-import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
+import type { PackingPlan } from '@/lib/tripData'
 
 interface PackingSectionProps {
   packing: PackingPlan
-  days: DayPlan[]
 }
 
 const TONE_STYLES: Record<NonNullable<PackingPlan['groups'][number]['tone']>, string> = {
@@ -13,9 +10,9 @@ const TONE_STYLES: Record<NonNullable<PackingPlan['groups'][number]['tone']>, st
   warning: 'bg-amber/5 border-amber/20',
 }
 
-export function PackingSection({ packing, days }: PackingSectionProps) {
+export function PackingSection({ packing }: PackingSectionProps) {
   return (
-    <section id={HOME_SECTION_IDS.packing} className="px-6 pb-20 max-w-6xl mx-auto scroll-mt-20">
+    <section className="px-6 pb-20 max-w-6xl mx-auto">
       <div className="flex items-center gap-3 mb-6">
         <div className="h-px w-8 bg-amber/60" />
         <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">{packing.title}</span>
@@ -52,8 +49,6 @@ export function PackingSection({ packing, days }: PackingSectionProps) {
           </ul>
         </div>
       </div>
-
-      <ForecastPackingSummary days={days} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-6">
         {packing.groups.map((group) => {

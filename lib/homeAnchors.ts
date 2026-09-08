@@ -5,6 +5,5 @@ export const HOME_SECTION_IDS = {
   bookingStatus: 'booking-status',
   liveChecks: 'live-checks',
   checklist: 'checklist',
-  packing: 'packing',
   itinerary: 'itinerary',
 } as const
