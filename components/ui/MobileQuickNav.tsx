@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 
 const LINKS = [
-  { label: 'Fly', href: `#${HOME_SECTION_IDS.flight}` },
+  { label: 'Plan', href: `#${HOME_SECTION_IDS.itinerary}` },
   { label: 'Stays', href: `#${HOME_SECTION_IDS.bookingStatus}` },
   { label: 'Timeline', href: '/timeline' },
   { label: 'Pack', href: `#${HOME_SECTION_IDS.packing}` },

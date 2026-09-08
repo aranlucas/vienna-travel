@@ -2,6 +2,7 @@
 
 import { startTransition, useState } from 'react'
 import { TRIP_DATA } from '@/lib/tripData'
+import { useTripProgress } from '@/components/planning/TripProgress'
 
 interface PhaseNavProps {
   panels: React.ReactNode[]
@@ -9,7 +10,14 @@ interface PhaseNavProps {
 
 export function PhaseNav({ panels }: PhaseNavProps) {
   const phases = TRIP_DATA.phases
-  const [activeIndex, setActiveIndex] = useState(0)
+  const { today, showPast } = useTripProgress()
+  const visiblePhases = phases
+    .map((phase, index) => ({ phase, index }))
+    .filter(({ phase }) => showPast || phase.days.some((day) => day.isoDate >= today))
+  const [selectedIndex, setActiveIndex] = useState<number | null>(null)
+  const activeIndex = visiblePhases.some(({ index }) => index === selectedIndex)
+    ? selectedIndex!
+    : (visiblePhases[0]?.index ?? -1)
   const activePanel = panels[activeIndex] ?? null
 
   return (
@@ -20,7 +28,7 @@ export function PhaseNav({ panels }: PhaseNavProps) {
         aria-label="Trip phases"
         className="flex overflow-x-auto gap-1 pb-1 mb-8 border-b border-forest-green/30 scrollbar-hide"
       >
-        {phases.map((phase, i) => {
+        {visiblePhases.map(({ phase, index: i }) => {
           const isActive = i === activeIndex
           return (
             <button
@@ -49,6 +57,9 @@ export function PhaseNav({ panels }: PhaseNavProps) {
       </div>
 
       <div key={phases[activeIndex]?.id ?? activeIndex}>{activePanel}</div>
+      {!visiblePhases.length && (
+        <p className="text-cream-muted">The trip is complete. Use “Show past days” to browse the itinerary.</p>
+      )}
     </div>
   )
 }

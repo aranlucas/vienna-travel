@@ -1,6 +1,7 @@
 'use client'
 
 import { ActivityDetails } from './ActivityDetails'
+import { useTripProgress } from '@/components/planning/TripProgress'
 import type { DayActivity, DayPlan } from '@/lib/tripData'
 import { useLiveWeatherDays } from '@/components/weather/LiveWeatherProvider'
 
@@ -113,6 +114,7 @@ interface DayTimelineProps {
 
 export function DayTimeline({ days }: DayTimelineProps) {
   const liveDays = useLiveWeatherDays(days)
+  const { today, showPast } = useTripProgress()
   if (!liveDays.length) return null
 
   return (
@@ -120,9 +122,11 @@ export function DayTimeline({ days }: DayTimelineProps) {
       {/* Vertical connecting line */}
       <div className="absolute left-[7px] top-4 bottom-4 w-px bg-amber/25" />
       <div className="space-y-0">
-        {liveDays.map((day, i) => (
-          <DayEntry key={day.date} day={day} index={i} />
-        ))}
+        {liveDays
+          .filter((day) => showPast || day.isoDate >= today)
+          .map((day, i) => (
+            <DayEntry key={day.date} day={day} index={i} />
+          ))}
       </div>
     </div>
   )

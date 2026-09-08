@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Source_Serif_4 } from 'next/font/google'
+import { TripProgressProvider } from '@/components/planning/TripProgress'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -37,7 +38,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${playfair.variable} ${sourceSerif.variable}`}>
-      <body className="bg-dark-surface text-cream antialiased">{children}</body>
+      <body className="bg-dark-surface text-cream antialiased">
+        <TripProgressProvider>{children}</TripProgressProvider>
+      </body>
     </html>
   )
 }

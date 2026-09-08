@@ -4,6 +4,8 @@ import { STAYS_BY_ID } from './stays'
 
 export interface BookingItem {
   item: string
+  /** Last local date this reservation remains relevant. */
+  endDate?: string
   booked: boolean
   note?: string
   deadline?: string
@@ -86,6 +88,7 @@ export const BOOKINGS: BookingItem[] = [
   },
   {
     item: 'Schafbergbahn return tickets (Sept 8 · 9:15 up / 12:05 down)',
+    endDate: '2026-09-08',
     booked: false,
     note: 'Planned daily services, not reserved. €61 per adult return. Confirm seats and both departures before payment.',
     actionLabel: 'Open Schafbergbahn',
@@ -93,6 +96,7 @@ export const BOOKINGS: BookingItem[] = [
   },
   {
     item: 'ÖBB Vienna Hbf → Salzburg Hbf (Sept 7 morning)',
+    endDate: '2026-09-07',
     booked: false,
     deadline: 'Book now',
     note: 'No outbound train booking is recorded. Choose a direct morning Railjet scheduled to reach Salzburg by 11:00 AM, preserve at least 45 minutes before the confirmed 12:00 PM SIXT pickup, and add seat reservations.',
@@ -101,6 +105,7 @@ export const BOOKINGS: BookingItem[] = [
   },
   {
     item: 'Two e-trekking bikes (Sept 8 afternoon)',
+    endDate: '2026-09-08',
     booked: false,
     note: 'Pro Travel first choice: €72 for two/day, locks included. Call +43 6138 2525 for next-day availability, helmets and agreed 14:00 pickup / 17:30 return. See-Biker fallback €78 for two/afternoon, walk-in stock unconfirmed.',
     actionLabel: 'Rental details',

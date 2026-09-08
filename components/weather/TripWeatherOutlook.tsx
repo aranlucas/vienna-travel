@@ -5,6 +5,7 @@ import type { DayPlan } from '@/lib/tripData'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 import { WEATHER_REFRESH_MINUTES } from '@/lib/weatherRefresh'
 import { useLiveWeather } from '@/components/weather/LiveWeatherProvider'
+import { useTripProgress } from '@/components/planning/TripProgress'
 
 type Unit = 'F' | 'C'
 type HintTone = 'cold' | 'wet' | 'hot' | 'alert'
@@ -272,6 +273,7 @@ function WeatherMetric({ label, value, detail }: { label: string; value: string;
 }
 
 export function TripWeatherOutlook() {
+  const { today, showPast } = useTripProgress()
   const { days, error, isLoading, isRefreshing, refreshedAt, refresh } = useLiveWeather()
   const unit = useSyncExternalStore(subscribeToUnit, getUnitSnapshot, getServerUnit)
 
@@ -280,7 +282,10 @@ export function TripWeatherOutlook() {
     window.dispatchEvent(new Event(UNIT_EVENT))
   }
 
-  const orderedDays = useMemo(() => [...days].sort((a, b) => a.isoDate.localeCompare(b.isoDate)), [days])
+  const orderedDays = useMemo(
+    () => days.filter((day) => showPast || day.isoDate >= today).sort((a, b) => a.isoDate.localeCompare(b.isoDate)),
+    [days, today, showPast],
+  )
   const liveDays = useMemo(
     () => orderedDays.filter((day) => day.weatherSource === 'forecast' && day.weatherHighC != null),
     [orderedDays],

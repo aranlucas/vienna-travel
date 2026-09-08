@@ -1,6 +1,8 @@
 'use client'
 
 import { DAYS } from '@/lib/data/itinerary'
+import { flushSync } from 'react-dom'
+import { TripProgressControl, useTripProgress } from '@/components/planning/TripProgress'
 import { ActivityDetails } from './ActivityDetails'
 import { useMemo, useState } from 'react'
 import type { TimelineEvent, TimelineEventType } from '@/lib/timelineEvents'
@@ -280,6 +282,7 @@ interface TravelTimelineProps {
 }
 
 export function TravelTimeline({ events }: TravelTimelineProps) {
+  const { today, showPast, setShowPast } = useTripProgress()
   const [filter, setFilter] = useState<TimelineEventType | 'all'>('all')
   const viennaNow = useMemo(() => getViennaNow(), [])
   const todayIso = viennaNow.date
@@ -292,7 +295,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
   const [jumpDate, setJumpDate] = useState(viennaNow.date)
   const [jumpTime, setJumpTime] = useState(viennaNow.time)
 
-  const filtered =
+  const typeFiltered =
     filter === 'all'
       ? events
       : events.filter((e) => {
@@ -300,14 +303,19 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
           return e.type === filter
         })
 
+  const filtered = typeFiltered.filter((event) => showPast || event.date >= today)
+
   const jumpToTime = (date = jumpDate, time = jumpTime) => {
     const targetMinutes = parseTimeInput(time)
     const target =
-      filtered.find((event) => event.date > date || (event.date === date && event.sortTime >= targetMinutes)) ??
-      filtered[filtered.length - 1]
+      typeFiltered.find((event) => event.date > date || (event.date === date && event.sortTime >= targetMinutes)) ??
+      typeFiltered[typeFiltered.length - 1]
 
     if (!target) return
-    document.getElementById(`timeline-event-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (target.date < today) flushSync(() => setShowPast(true))
+    window.requestAnimationFrame(() =>
+      document.getElementById(`timeline-event-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+    )
   }
 
   const jumpToNow = () => {
@@ -332,7 +340,8 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
 
   return (
     <div className="font-sans">
-      <TimelineSummary events={events} />
+      <TripProgressControl />
+      <TimelineSummary events={events.filter((event) => showPast || event.date >= today)} />
 
       {nextEvent && (
         <div className="mb-4 rounded-xl border border-amber/35 bg-amber/5 p-4">
@@ -441,7 +450,9 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
       ))}
 
       {filtered.length === 0 && (
-        <div className="text-center py-12 text-cream-muted/50">No events match the selected filter.</div>
+        <div className="text-center py-12 text-cream-muted/70">
+          No upcoming events match this filter. Use “Show past days” to browse earlier events.
+        </div>
       )}
     </div>
   )
