@@ -14,14 +14,27 @@ export function PhaseNav({ panels }: PhaseNavProps) {
   const visiblePhases = phases
     .map((phase, index) => ({ phase, index }))
     .filter(({ phase }) => showPast || phase.days.some((day) => day.isoDate >= today))
-  const [selectedIndex, setActiveIndex] = useState<number | null>(null)
+  const currentIndex = phases.findIndex((phase) => phase.days.some((day) => day.isoDate === today))
+  const [selection, setSelection] = useState<{ index: number; date: string } | null>(null)
+  const selectedIndex = selection?.date === today ? selection.index : null
   const activeIndex = visiblePhases.some(({ index }) => index === selectedIndex)
     ? selectedIndex!
-    : (visiblePhases[0]?.index ?? -1)
+    : currentIndex >= 0
+      ? currentIndex
+      : (visiblePhases[0]?.index ?? -1)
   const activePanel = panels[activeIndex] ?? null
 
   return (
     <div>
+      {currentIndex >= 0 && activeIndex !== currentIndex && (
+        <button
+          type="button"
+          onClick={() => setSelection(null)}
+          className="mb-3 min-h-[44px] rounded-lg border border-amber/40 px-4 text-sm text-amber"
+        >
+          Back to today · {phases[currentIndex].title}
+        </button>
+      )}
       {/* Tab bar */}
       <div
         role="tablist"
@@ -37,7 +50,7 @@ export function PhaseNav({ panels }: PhaseNavProps) {
               aria-selected={isActive}
               onClick={() => {
                 if (i === activeIndex) return
-                startTransition(() => setActiveIndex(i))
+                startTransition(() => setSelection({ index: i, date: today }))
               }}
               className={`flex items-center gap-2 px-4 py-3 min-h-[44px] rounded-t text-sm font-medium whitespace-nowrap transition-all duration-200 border-b-2 -mb-px ${
                 isActive
