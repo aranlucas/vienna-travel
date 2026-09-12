@@ -48,7 +48,9 @@ function DayEntry({ day }: DayEntryProps) {
             {day.recommendation}
           </p>
         )}
-        {day.alternative && <ActivityDetails details={[day.alternative]} label="Alternative plan" />}
+        {day.alternative && (
+          <ActivityDetails details={[day.alternative]} links={day.alternativeLinks} label="Alternative plan" />
+        )}
 
         {day.weather && (
           <div className="mb-3 rounded-lg border border-slate-blue/30 bg-slate-blue/12 px-3 py-2">

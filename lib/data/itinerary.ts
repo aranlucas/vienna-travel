@@ -60,6 +60,7 @@ export interface DayPlan {
   phaseId: string
   recommendation?: string
   alternative?: string
+  alternativeLinks?: { label: string; href: string }[]
   activities: DayActivity[]
   weather?: string
   weatherNote?: string
@@ -751,71 +752,70 @@ export const DAYS: Record<string, DayPlan> = {
     isoDate: '2026-09-12',
     date: 'Sept 12',
     dayLabel: 'Day 8 — Saturday',
-    title: 'Choose: Olpererhütte adventure or relaxed Innsbruck',
+    title: 'Easy Achensee day trip and car return',
     phaseId: 'olperer',
     recommendation:
-      'Olpererhütte is an ambitious optional finale. Choose it only if both of you actively want a second big hike and the trail is dry with clear views. For an easier, more balanced day after Coburger, my preference is the Innsbruck alternative below.',
+      'One destination: Pertisau on Achensee. Drive over after breakfast, take a short flat lakeside stroll, have lunch and relax by the water. Plan only 20–30 minutes of optional promenade walking, plus getting between the car and café. Leave Pertisau at 14:30 to protect the fixed 17:30 airport car return.',
     alternative:
-      'Relaxed alternative: 09:00 breakfast in Wilten; 10:00–12:30 Ambras Castle (Spanish Hall, armouries and curiosities); 12:30 lunch; 14:00–15:30 old-town cafés and Inn riverfront, or more museum time in rain; 16:30 refuel; 17:30 airport car return; Bus F back for dinner. Ambras opens 10:00–17:00 daily; summer 2026 adults €16 online / €18 on site. Allow transfer time before opening. No Schlegeis toll or mountain drive on this version.',
+      'If it is rainy or you are tired, shorten the promenade to a few minutes and spend more time over lunch or coffee. Return early whenever you feel done. If leaving Innsbruck late, shorten the lakeside visit rather than moving the 14:30 return drive later.',
     activities: [
       {
-        time: '6:30 AM',
-        title: 'Leave Urban Inn for Schlegeis — keep the room',
+        time: '9:30 AM',
+        title: 'Drive from Innsbruck to Pertisau on Achensee',
         type: 'drive',
-        segmentId: 'innsbruck-to-schlegeis',
+        segmentId: 'innsbruck-to-pertisau',
         details: [
-          'Allow 2–2½ hours with mountain-road traffic control. You are staying in Innsbruck September 11–13: leave luggage at the accommodation, not a checkout.',
-          'September road hours: 07:00–18:00; 2026 passenger-car day ticket €19. Parking and uphill access may be restricted when full.',
+          'Have breakfast first and leave overnight luggage at Urban Inn; the room is still yours tonight. Allow about 75 minutes including parking, as a planning estimate rather than live traffic.',
+          'Follow navigation via the Inntal valley, Wiesing and Maurach to Pertisau. Check the current arrival estimate before leaving and confirm the rental car’s motorway vignette coverage if using the A12.',
+        ],
+      },
+      {
+        time: '10:45 AM',
+        title: 'Park by the lake and take a short promenade stroll',
+        details: [
+          'Use the signed paid Uferpromenade parking in Pertisau. Pay the posted tariff and keep the car close to the lake; do not drive into the Karwendel valleys.',
+          'Walk along the flat village promenade for 10–15 minutes, then turn back when you feel like it. Benches and lake views are the activity. Stay on the promenade; the Gaisalm route and a full lake circuit are outside today’s plan.',
         ],
         links: [
           {
-            label: 'Official visitor information',
-            href: 'https://visit.verbund.com/de/schlegeis/schlegeis-hardfacts',
+            label: 'Official Pertisau lakeside parking',
+            href: 'https://www.achensee.com/de/map-winter/uferpromenade-pertisau-1-17551943/',
+          },
+          {
+            label: 'Promenade accessibility',
+            href: 'https://www.achensee.com/en/map-detail/maurach-pertisau-maurach-121211554/',
+          },
+        ],
+        highlight: 'fun',
+      },
+      {
+        time: '12:00 PM',
+        title: 'Lakeside lunch at Café & Restaurant Christina',
+        details: [
+          'Café & Restaurant Christina, Seepromenade 27: the tourism listing gives Saturday 10:00–22:00 and hot food 11:00–21:00. Allow an hour for lunch, indoors if breezy or rainy. No table is reserved; use a nearby café if full.',
+        ],
+        links: [
+          {
+            label: 'Christina hours and location',
+            href: 'https://www.achensee.com/de/map-detail/cafe-restaurant-christina-118124727/',
           },
         ],
       },
       {
-        time: '9:00 AM',
-        title: 'Start Trail 502 toward Olpererhütte if conditions permit',
-        type: 'hike',
+        time: '1:00 PM',
+        title: 'Coffee, lake views and time to sit',
         details: [
-          'Allow two hours up. If you cannot start by 09:30, choose the reservoir shore walk instead; the airport car return remains fixed.',
-          'Do not start the exposed hike in thunderstorms, snow/ice or poor visibility. Check the actual trailhead signs and current hut notice.',
-        ],
-        links: [
-          {
-            label: 'Official visitor information',
-            href: 'https://www.olpererhuette.de/Aktivit%C3%A4ten/Zustiege',
-          },
+          'Keep the afternoon deliberately empty: read, take photos from the promenade or have another coffee. No boat timetable, cable car or additional stop to fit in.',
         ],
       },
       {
-        time: '11:00 AM',
-        title: 'Olpererhütte lunch, reservoir view and optional bridge photo',
-        details: [
-          'The hut says open until approximately early October. Its 2026 construction notice warns of possible building noise and helicopter flights; follow staff instructions.',
-          'Allow 45 minutes. A photo queue is optional and must not delay descent. Carry food and cash; a €100 cash reserve is a planning allowance, not an entry charge.',
-        ],
-        links: [
-          {
-            label: 'Official visitor information',
-            href: 'https://www.olpererhuette.de/',
-          },
-        ],
-      },
-      {
-        time: '11:45 AM',
-        title: 'Descend Trail 502; return to the car',
-        type: 'hike',
-        details: ['Allow 1½–2 hours. Begin descending at this time even if lunch or photos are unfinished.'],
-      },
-      {
-        time: '1:45 PM',
-        title: 'Target departure from Schlegeis toward Innsbruck Airport',
+        time: '2:30 PM',
+        title: 'Leave Pertisau and drive back toward Innsbruck Airport',
         type: 'drive',
-        segmentId: 'schlegeis-to-innsbruck',
+        segmentId: 'pertisau-to-innsbruck-airport',
         details: [
-          '14:30 is the absolute latest departure, not the target. Allow up to 2½ hours plus refuelling and handover for the confirmed 17:30 return.',
+          'Allow up to 90 minutes for the return drive as a planning buffer, then fuel and handover time. Check live navigation before lunch and leave earlier if delays are building.',
+          'Aim to be back in the Innsbruck area around 16:00 and at the rental return area by 17:00. If ahead of schedule, take a nearby break or return the car earlier under the rental terms; do not add another excursion.',
         ],
       },
       {
@@ -830,17 +830,17 @@ export const DAYS: Record<string, DayPlan> = {
         title: 'Confirmed car return at Innsbruck Airport',
         links: [
           {
-            label: 'Ambras alternative: hours and tickets',
-            href: 'https://www.schlossambras-innsbruck.at/en/visit-tickets',
+            label: 'SIXT airport return directions',
+            href: 'https://www.sixt.com/car-rental/austria/innsbruck/innsbruck-airport/',
           },
         ],
         details: [
-          'Use the provider’s return instructions and parking area A / blue rental-return signs recorded with the booking.',
+          'Follow blue Car rental return signs into the garage, take the barrier chip and use a marked SIXT space in area A on the ground floor. Leave the chip in the vehicle or hand it over with the key. Published Saturday counter hours are 08:00–19:00; the rental deadline remains 17:30.',
         ],
       },
       {
         time: '6:00 PM',
-        title: 'Bus F toward the city; dinner and second night at Urban Inn',
+        title: 'Take the next F bus toward Innsbruck Hbf, then freshen up at Urban Inn',
         details: [
           'Airport information describes about 20 minutes to the city / main station. This is a target departure, not a verified bus timetable; use the next posted F service.',
         ],
@@ -851,27 +851,49 @@ export const DAYS: Record<string, DayPlan> = {
           },
         ],
       },
+      {
+        time: '7:15 PM',
+        title: 'Dinner at Die Wilderin, with Stiftskeller as backup',
+        details: [
+          'Die Wilderin on Seilergasse serves seasonal regional food; the tourism listing gives Saturday opening from 17:00. Check for a table before walking over. Dinner is a suggestion, not a reservation.',
+          'If it is full or you want something simpler, Stiftskeller serves food until 22:00. Keep dinner relaxed and leave energy for packing; there is no need for another sightseeing stop.',
+        ],
+        links: [
+          { label: 'Die Wilderin', href: 'https://www.diewilderin.at/' },
+          { label: 'Published Wilderin hours', href: 'https://www.tyrol.com/activities/food/restaurants/die-wilderin' },
+          { label: 'Stiftskeller kitchen hours', href: 'https://www.stiftskeller.eu/en/opening-hours' },
+        ],
+        highlight: 'fun',
+      },
+      {
+        time: '8:30 PM',
+        title: 'Pack for checkout and check the return flights',
+        details: [
+          'Dry hiking layers and separate tomorrow’s train food, passports, medication and chargers. Check the room, car-return receipt and Sunday train details before winding down.',
+          'Austrian check-in normally opens today at 09:00 CEST. USA itinerary boarding passes are withheld until Sunday 08:00 CEST; try again then if passes are unavailable tonight.',
+        ],
+        links: [{ label: 'Austrian online check-in', href: 'https://www.austrian.com/at/en/online-check-in' }],
+      },
     ],
-    weather: 'Olpererhütte at 2,389 m is far colder and more exposed than Innsbruck or the Zillertal valley.',
+    weather: 'Check the lakeside forecast for Pertisau; a breeze by the water can feel cool even in mild weather.',
     weatherNote:
-      'This is the Olpererhütte forecast at the hike high point. Waterproof layers, insulation, hat, gloves, grippy footwear, and a morning-of trail and road check are non-negotiable.',
+      'This forecast is for the lakeside day at Pertisau. Use a light warm layer and rain jacket; shorten the stroll if the weather is unpleasant.',
     weatherSource: 'historical',
     weatherLocation: {
-      name: 'Olpererhütte',
-      coordinates: { lat: 47.0421, lng: 11.688 },
-      elevationM: 2389,
+      name: 'Pertisau · Achensee lakeside',
+      coordinates: { lat: 47.4407, lng: 11.7025 },
+      elevationM: 930,
     },
-    weatherWindow: { label: 'Trail 502 and hut window', startHour: 8, endHour: 14 },
+    weatherWindow: { label: 'Pertisau lakeside visit', startHour: 10, endHour: 14 },
     accommodation: 'Urban Inn - Wilten 24/7, Innsbruck',
     notes:
-      'Schlegeis road hours are 7:00 AM–6:00 PM in September and the 2026 passenger-car day toll is €19. Buy the day ticket online if possible because parking can fill and uphill traffic may pause. Carry cash as a payment backup; €100 is a planning reserve, not a quoted charge. Target 1:45 PM departure; the 2:30 PM absolute cutoff protects the fixed 5:30 PM airport return.',
+      'A relaxed day trip with a short optional flat stroll, lunch and lake views. Driving times are planning allowances, not live traffic. Leave Pertisau at 14:30, refuel around 16:30 and aim for the airport return area at 17:00. The confirmed car return remains 17:30.',
     carryToday: [
-      'Waterproof shell and rain pants plus packable insulation',
-      'Warm hat, light gloves, and grippy water-resistant footwear',
-      '2 L water capacity per person plus trail food',
-      'First aid, space blanket, headlamp, and waterproof pack liner',
-      '€100+ hut cash',
-      'Offline map, charged phone, and power bank',
+      'Comfortable everyday shoes',
+      'Light warm layer and rain jacket',
+      'Water, sunglasses and a small snack',
+      'Phone, charger and offline navigation',
+      'Payment card, a little cash, car keys and rental details',
     ],
   },
 
@@ -879,7 +901,7 @@ export const DAYS: Record<string, DayPlan> = {
     isoDate: '2026-09-13',
     date: 'Sept 13',
     dayLabel: 'Day 9 — Sunday',
-    title: 'Innsbruck & The Long Rail Home',
+    title: 'An easy Innsbruck morning, then the airport train',
     phaseId: 'olperer',
     recommendation:
       'Keep the final Innsbruck morning walkable and close to the station. Early lunch plus a short Hofkirche visit is a better fit than adding another mountain excursion.',
@@ -887,42 +909,75 @@ export const DAYS: Record<string, DayPlan> = {
       'Skip Hofkirche if luggage handling or lunch runs late. Use the spare time at the station; the airport train is the travel priority.',
     activities: [
       {
-        time: '9:00 AM',
-        title: 'Check out Urban Inn and store luggage',
+        time: '8:00 AM',
+        title: 'Breakfast and save Monday’s boarding passes',
         details: [
-          'Use station lockers if available. Do not assume this self-check-in property has a staffed luggage desk; verify with the property.',
-          'Keep passports, rail tickets, medication and valuables in the day bag.',
+          'Allow a relaxed breakfast before checkout. Bäckerei Ruetz at Innsbruck Hbf is a practical fallback; ÖBB lists it open daily 05:00–20:00.',
+          'Check Austrian for both travelers and both flight legs now that the USA boarding-pass window has opened. Save passes offline and check whether a staffed document check is still required.',
+        ],
+        links: [
+          { label: 'Station food and services', href: 'https://bahnhof.oebb.at/en/tirol/innsbruck-hauptbahnhof' },
+          { label: 'Austrian online check-in', href: 'https://www.austrian.com/at/en/online-check-in' },
         ],
       },
       {
-        time: '9:45 AM',
+        time: '9:00 AM',
+        title: 'Check out Urban Inn and store luggage',
+        details: [
+          'Check out by 09:00 as planned; the saved property deadline is 11:00. Allow 20–25 minutes to reach Innsbruck Hbf with bags and another 15 minutes for storage.',
+          'ÖBB lists lockers downstairs near the garage, north underpass and WC area. Follow current signs and the posted payment instructions; size, price and availability are checked at booking. Do not assume Urban Inn has a staffed luggage desk.',
+          'If you cannot store both bags by 09:45, simplify to breakfast near Hbf and a short walk with bags. Skip the church and long loop rather than spending the morning searching for storage.',
+          'Keep passports, rail tickets, medication and valuables in the day bag.',
+        ],
+        links: [
+          {
+            label: 'Innsbruck Hbf luggage storage',
+            href: 'https://bahnhofcityinnsbruck.oebb.at/de/services/schliessfaecher',
+          },
+        ],
+      },
+      {
+        time: '10:00 AM',
         title: 'Old town and Inn riverfront stroll',
         details: [
-          'Golden Roof exterior → Inn bridge views → Hofgarten → Maria-Theresien-Straße. Keep the morning local; skip Nordkette before the fixed train.',
+          'From Hbf: Maria-Theresien-Straße → Golden Roof exterior → Inn bridge views → Hofgarten → lunch in the old town. Allow 75–90 minutes at strolling pace, with café and photo stops; this is a planning allowance.',
+          'Keep the morning local. In rain, shorten the river walk and spend longer over coffee; Hofkirche remains the optional indoor stop after lunch. Nordkette and Swarovski do not fit this departure morning.',
         ],
       },
       {
         time: '11:30 AM',
-        title: 'Early lunch in the centre',
+        title: 'Early Tyrolean lunch at Stiftskeller',
+        details: [
+          'Stiftskeller’s kitchen opens at 11:00 daily, including Sunday. Allow 45–50 minutes and keep lunch to one course if visiting Hofkirche next. No table has been reserved.',
+          'If there is a queue or lunch runs late, skip Hofkirche. Die Wilderin opens at 17:00 on Sundays, after your train, so it is a Saturday dinner choice.',
+        ],
+        links: [
+          { label: 'Stiftskeller opening and kitchen hours', href: 'https://www.stiftskeller.eu/en/opening-hours' },
+        ],
+        highlight: 'fun',
       },
       {
         time: '12:30 PM',
         title: 'Optional Hofkirche visit',
         details: [
-          'Sunday opening starts at 12:30, not 09:00. Allow 45 minutes and leave by 13:15; skip if luggage collection or lunch runs late.',
+          'Sunday opening is 12:30–17:00; enter through the Tiroler Volkskunstmuseum. Allow 30–40 minutes with a firm 13:10 departure for Hbf. Skip the visit if lunch runs late.',
         ],
         links: [
           {
             label: 'Official visitor information',
-            href: 'https://www.innsbruck.info/sehenswuerdigkeiten/i/kaiserliche-hofkirche.html',
+            href: 'https://www.tiroler-landesmuseen.at/haeuser/hofkirche/besucherinfo-hofkirche/',
           },
         ],
       },
       {
         time: '1:30 PM',
-        title: 'Return to Innsbruck Hbf; collect bags and buy train snacks',
+        title: 'Collect bags at Innsbruck Hbf and buy train food',
         details: [
-          'Be ready at the station by 14:00 and check the live platform. Your recorded departure is 14:56; the booking confirmation and live ÖBB information take precedence.',
+          'Allow 20 minutes back from Hofkirche plus time to collect bags. MPREIS in Hbf is listed open daily 06:00–21:00; buy sandwiches, water and a shelf-stable dinner backup for the five-hour ride. Do not depend on the onboard bistro.',
+          'Finish storage and shopping by 14:00. Check the actual train, destination, platform and coach position; be ready to board around 14:30. Departure is recorded as 14:56, subject to the ticket and live ÖBB information.',
+        ],
+        links: [
+          { label: 'ÖBB station shops and services', href: 'https://bahnhof.oebb.at/en/tirol/innsbruck-hauptbahnhof' },
         ],
       },
       {
@@ -931,7 +986,8 @@ export const DAYS: Record<string, DayPlan> = {
         type: 'train',
         segmentId: 'innsbruck-vienna-airport-rail',
         details: [
-          'Direct service and first-class reservation are recorded in the trip data. Recheck current train number, times and platform in ÖBB; this research did not independently authenticate the private ticket.',
+          'Direct service and first-class seats are recorded as booked. Match the coach and seats to your private ticket. Stay aboard to Flughafen Wien if the live destination confirms the direct service; do not get off at Wien Hbf out of habit.',
+          'If cancelled or rerouted, ask ÖBB staff for a replacement connection all the way to Flughafen Wien and check ticket validity before buying anything. If arrival slips substantially, update the hotel using your private booking contact.',
         ],
         links: [
           {
@@ -946,10 +1002,34 @@ export const DAYS: Record<string, DayPlan> = {
         details: [
           'Arrival is approximate in the existing booking record. Allow 20 minutes from platform to hotel and keep tomorrow’s airport essentials accessible.',
         ],
+        links: [
+          {
+            label: 'NH airport hotel directions',
+            href: 'https://www.nh-hotels.com/en/hotel/nh-vienna-airport-conference-center/map',
+          },
+        ],
       },
       {
         time: '8:15 PM',
-        title: 'Check in, light dinner and pack for the early flight',
+        title: 'Check in and have a light dinner at NH',
+        details: [
+          'Mundo at the hotel publishes an à la carte menu until 22:00. Aim to eat by 20:30; availability is not reserved. If the train is late, use the food bought at Hbf and ask reception what is still serving.',
+          'Ask about early-bird breakfast availability and cost, agree early checkout, and keep the morning bag separate. A hotel breakfast is not recorded as included.',
+        ],
+        links: [
+          {
+            label: 'NH dining and early-bird breakfast',
+            href: 'https://www.nh-hotels.com/en/hotel/nh-vienna-airport-conference-center/restaurants',
+          },
+        ],
+      },
+      {
+        time: '9:15 PM',
+        title: 'Final flight check, two alarms and lights out',
+        details: [
+          'Check both flights and boarding deadlines, charge devices and put passports with the boarding passes. Default wake-up is 05:00 for hand luggage only; use 04:30 if checking a bag or the airline requests an earlier arrival.',
+          'Keep a small breakfast and water ready. Finish packing tonight so Monday starts with a short walk to the terminal.',
+        ],
       },
     ],
     weather: 'Innsbruck typically runs cooler than Vienna in September: about 14°C / 58°F high and 4°C / 39°F low.',
@@ -963,6 +1043,9 @@ export const DAYS: Record<string, DayPlan> = {
       'Railjet seat reservation',
       'Hotel essentials kept accessible',
       'Warm layer for the platform',
+      'Both flight boarding passes saved offline',
+      'Train food, water and a dinner backup',
+      'Payment card and phone for luggage storage',
     ],
   },
 
@@ -970,19 +1053,46 @@ export const DAYS: Record<string, DayPlan> = {
     isoDate: '2026-09-14',
     date: 'Sept 14',
     dayLabel: 'Day 10 — Monday',
-    title: 'Departure',
+    title: 'Fly home via Frankfurt',
     phaseId: 'olperer',
     recommendation:
-      'Keep this as an airport morning. Breakfast, checkout and the terminal take precedence over one last sightseeing stop.',
+      'For the recorded hand-luggage plan, wake at 05:00, leave NH at 05:15 and aim to be inside the terminal at 05:30 for the 08:00 flight. Keep the Frankfurt transfer direct: the 75-minute gap includes walking, passport control and boarding.',
     alternative:
-      'Use the airline app and airport screens for live flight status; stored flight times are itinerary records, not a fresh operational confirmation.',
-    activities: [
-      { time: '5:30 AM', title: 'Check out NH Vienna Airport; walk to terminal (~5 min)', highlight: 'important' },
+      'If checking a bag, wake at 04:30, check out at 04:45 and reach the terminal by 05:00. Vienna Airport recommends three hours with checked luggage and two hours with hand luggage. The airline’s current instructions and boarding deadlines take precedence; all flight times here are saved itinerary records.',
+    alternativeLinks: [
       {
-        time: '6:00 AM',
-        title: 'Check-in and security at VIE',
+        label: 'Vienna Airport arrival-time guidance',
+        href: 'https://viennaairport.com/en/passengers/arrival__departure/tips_for_departure',
+      },
+    ],
+    activities: [
+      {
+        time: '5:00 AM',
+        title: 'Wake, quick breakfast and final room check',
         details: [
-          'Verify the operating airline, terminal and boarding deadline on your ticket. Flight and connection times are from the existing trip record, not independently verified live flight inventory. In Frankfurt follow the Seattle gate and passport-control signs promptly.',
+          'Use the early breakfast arranged with reception or your own food. Check the safe, sockets and bathroom; keep passports, medication and devices in the day bag.',
+        ],
+      },
+      {
+        time: '5:15 AM',
+        title: 'Check out NH and walk to the terminal',
+        details: [
+          'NH publishes a six-minute airport walk; allow 15 minutes with bags and wayfinding. Use the earlier 04:45 departure if checking luggage.',
+        ],
+        links: [
+          {
+            label: 'Hotel-to-airport directions',
+            href: 'https://www.nh-hotels.com/en/hotel/nh-vienna-airport-conference-center/map',
+          },
+        ],
+        highlight: 'important',
+      },
+      {
+        time: '5:30 AM',
+        title: 'Airline document check if needed, then security at VIE',
+        details: [
+          'Verify the operating airline, desk and boarding deadline in the app. Use a staffed desk if document checks are required. If checking a bag, arrive at 05:00 instead and confirm the bag tag says SEA.',
+          'Save both boarding passes and confirm the short Frankfurt connection. Do not assume first-class rail tickets provide any airport fast-track or lounge access.',
         ],
         links: [
           {
@@ -993,6 +1103,13 @@ export const DAYS: Record<string, DayPlan> = {
         highlight: 'important',
       },
       {
+        time: '6:45 AM',
+        title: 'Be near the assigned OS203 gate',
+        details: [
+          'This is a planning target, not the airline’s boarding time. Follow the boarding pass and screens, refill water after security and finish any food before boarding begins.',
+        ],
+      },
+      {
         time: '8:00 AM',
         title: 'VIE → FRA (OS203, 1h30m; arrive 9:30 AM)',
         highlight: 'important',
@@ -1000,19 +1117,51 @@ export const DAYS: Record<string, DayPlan> = {
         segmentId: 'vie-fra',
       },
       {
+        time: '9:30 AM',
+        title: 'At Frankfurt, go directly to the current LH490 gate',
+        details: [
+          'Scheduled arrival is 09:30 CEST. Follow transfer signs and the airport’s displayed walking time to the actual Seattle gate; Schengen exit passport control and possible extra security reduce the 75-minute gap.',
+          'Use the airline transfer desk or airport service staff if delayed or missing a boarding pass. Fast lanes are conditional on the flight being displayed at the checkpoint. Through-checked bags normally transfer automatically; confirm at VIE.',
+        ],
+        links: [
+          {
+            label: 'Frankfurt transfer instructions',
+            href: 'https://www.frankfurt-airport.com/en/flights-and-transfer/transferring-at-fra.html',
+          },
+        ],
+        highlight: 'important',
+      },
+      {
         time: '10:45 AM',
-        title: 'FRA → SEA (LH490, ~10h10m)',
+        title: 'FRA → SEA (LH490, ~10h10m; arrival in Seattle local time)',
         highlight: 'important',
         type: 'flight',
         segmentId: 'fra-sea',
       },
-      { time: '11:55 AM PDT', title: 'Arrive Seattle', highlight: 'important', type: 'flight' },
+      {
+        time: '11:55 AM PDT',
+        title: 'Arrive Seattle; clear entry formalities and head home',
+        details: [
+          '11:55 is Seattle local time, nine hours behind Vienna on this date. Allow for entry formalities and any baggage collection before arranging the ride home; do not promise a pickup at landing time.',
+        ],
+        highlight: 'important',
+        type: 'flight',
+      },
     ],
     weather:
       'Vienna Airport mornings are usually cool, around the low-to-mid teens °C, before warming later in the day.',
     weatherNote: 'You only need airport-comfort layers here, but keep the shell accessible in your personal item.',
     weatherSource: 'historical',
     weatherLocation: { name: 'Vienna Airport', coordinates: { lat: 48.1103, lng: 16.5697 } },
-    carryToday: ['Passport', 'Liquids bag', 'Chargers and power bank', 'Shell in personal item'],
+    carryToday: [
+      'Passport and both boarding passes',
+      'Medication and valuables',
+      'Liquids bag',
+      'Chargers and power bank',
+      'Small breakfast',
+      'Shell in personal item',
+    ],
+    notes:
+      'All times are CEST until the explicitly labeled Seattle arrival in PDT. Boarding deadlines, desks and gates come from the airline on the day. The saved 75-minute FRA connection is not a guarantee against delay.',
   },
 }

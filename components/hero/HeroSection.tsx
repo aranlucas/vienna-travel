@@ -33,13 +33,13 @@ export function HeroSection() {
           href={`#${HOME_SECTION_IDS.flight}`}
           className="rounded-full border border-amber/40 bg-amber/10 px-4 py-2.5 min-h-[44px] inline-flex items-center text-xs font-medium uppercase tracking-[0.15em] text-amber hover:bg-amber/20 transition-colors"
         >
-          Fly Tonight
+          Next Up
         </a>
         <a
           href={`#${HOME_SECTION_IDS.bookingStatus}`}
           className="rounded-full border border-forest-green/35 bg-dark-card px-4 py-2.5 min-h-[44px] inline-flex items-center text-xs font-medium uppercase tracking-[0.15em] text-cream-muted hover:text-cream hover:border-amber/40 transition-colors"
         >
-          Booking Queue
+          Bookings
         </a>
         <a
           href={`#${HOME_SECTION_IDS.liveChecks}`}
@@ -48,10 +48,10 @@ export function HeroSection() {
           Live Checks
         </a>
         <a
-          href={`#${HOME_SECTION_IDS.checklist}`}
+          href={`#${HOME_SECTION_IDS.itinerary}`}
           className="rounded-full border border-forest-green/35 bg-dark-card px-4 py-2.5 min-h-[44px] inline-flex items-center text-xs font-medium uppercase tracking-[0.15em] text-cream-muted hover:text-cream hover:border-amber/40 transition-colors"
         >
-          Preflight Checklist
+          Day by Day
         </a>
         <a
           href={`#${HOME_SECTION_IDS.weatherOutlook}`}

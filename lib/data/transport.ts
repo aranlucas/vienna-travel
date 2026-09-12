@@ -178,34 +178,33 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     phaseId: 'tyrol',
   },
   {
-    id: 'innsbruck-to-schlegeis',
+    id: 'innsbruck-to-pertisau',
     from: 'Innsbruck',
-    to: 'Schlegeis Reservoir',
+    to: 'Pertisau · Achensee',
     isoDate: '2026-09-12',
-    durationHours: 2.25,
-    distanceKm: 85,
+    durationHours: 1.25,
+    distanceKm: 46,
     scenic: true,
-    toll: { description: 'Schlegeis Alpine Road 2026 car day ticket', amountEur: 19 },
     notes:
-      'Depart Innsbruck at 6:30 AM; allow 2–2½ hours including mountain-road traffic control. Keep the Urban Inn room for the second night. Buy the day ticket online if possible and recheck parking / traffic-control status.',
+      'Leave Urban Inn at 09:30 after breakfast. Allow about 75 minutes including parking; this is a planning estimate, not live traffic. Use the signed lakeside parking in Pertisau and check motorway vignette coverage if navigating via the A12.',
     waypoints: [
-      { lat: 47.2636, lng: 11.4009 }, // Innsbruck
-      { lat: 47.0357, lng: 11.6637 }, // Schlegeis Reservoir
+      { lat: 47.2596, lng: 11.3879 }, // Urban Inn
+      { lat: 47.4407, lng: 11.7025 }, // Pertisau lakeside
     ],
     phaseId: 'olperer',
   },
   {
-    id: 'schlegeis-to-innsbruck',
-    from: 'Schlegeis',
+    id: 'pertisau-to-innsbruck-airport',
+    from: 'Pertisau · Achensee',
     to: 'Innsbruck Airport',
     isoDate: '2026-09-12',
-    durationHours: 2.25,
-    distanceKm: 80,
+    durationHours: 1.5,
+    distanceKm: 52,
     scenic: false,
     notes:
-      'Leave Schlegeis no later than 2:30 PM. Confirmed drop-off: 5:30 PM at Innsbruck Airport. Passenger cars return in parking area A; follow the blue “Car rental return” signs.',
+      'Leave Pertisau at 14:30 and allow up to 90 minutes back toward Innsbruck, as a planning buffer rather than live traffic. Refuel around 16:30, aim for the return area by 17:00, and complete the confirmed SIXT handover by 17:30. Leave earlier if navigation shows delays.',
     waypoints: [
-      { lat: 47.0357, lng: 11.6637 }, // Schlegeis Reservoir
+      { lat: 47.4407, lng: 11.7025 }, // Pertisau lakeside
       { lat: 47.2602, lng: 11.3439 }, // Innsbruck Airport
     ],
     phaseId: 'olperer',

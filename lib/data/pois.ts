@@ -1,4 +1,5 @@
 import type { Coordinates } from './trip'
+import { STAYS_BY_ID } from './stays'
 
 export interface PointOfInterest {
   id: string
@@ -331,22 +332,13 @@ export const POIS: Record<string, POIData> = {
     phaseId: 'tyrol',
   },
 
-  // ── Olperer ──────────────────────────────────────────────────────────────────
-  schlegeis: {
-    id: 'schlegeis',
-    name: 'Schlegeis Reservoir',
-    coordinates: { lat: 47.0357, lng: 11.6637 },
-    description: 'Dramatic alpine reservoir at 5,846 ft. Starting point for the Olpererhütte hike.',
-    tip: '2026 passenger-car day ticket: €19. Buy online if possible, carry payment backup, and recheck weather, parking capacity, and traffic-control status before the early drive.',
-    icon: 'nature',
-    phaseId: 'olperer',
-  },
-  olpererhuette: {
-    id: 'olpererhuette',
-    name: 'Olpererhütte',
-    coordinates: { lat: 47.0419, lng: 11.6569 },
-    description: '7,835 ft mountain hut famous for its photogenic suspension bridge with Schlegeis Reservoir backdrop.',
-    tip: 'Bring €100+ cash — card machines unreliable at altitude.',
+  // ── Achensee and return ─────────────────────────────────────────────────────
+  'pertisau-lakeside': {
+    id: 'pertisau-lakeside',
+    name: 'Pertisau · Achensee lakeside',
+    coordinates: { lat: 47.4407, lng: 11.7025 },
+    description: 'Today’s relaxed day trip: lake views, a short flat promenade stroll and lunch in Pertisau.',
+    tip: 'Use signed paid lakeside parking, walk only as far as you feel like, and leave at 14:30 for the 17:30 Innsbruck Airport car return. Lunch suggestion: Café & Restaurant Christina, Seepromenade 27.',
     icon: 'nature',
     phaseId: 'olperer',
   },
@@ -355,7 +347,7 @@ export const POIS: Record<string, POIData> = {
     name: 'Innsbruck — Golden Roof',
     coordinates: { lat: 47.2683, lng: 11.3933 },
     description: "Innsbruck's medieval Old Town. The Golden Roof (Goldenes Dachl) is the city's iconic landmark.",
-    tip: 'On Sept 13, store bags at Hbf lockers or the hotel before the old-town walk. The rental car is already scheduled for return at Innsbruck Airport on Sept 12.',
+    tip: 'On Sept 13, use Hbf luggage storage before the old-town walk; hotel storage must be confirmed separately. Return to Hbf by 13:30 for bags and train food. The rental car is scheduled for return the previous evening.',
     icon: 'culture',
     phaseId: 'olperer',
   },
@@ -375,31 +367,10 @@ export const POIS: Record<string, POIData> = {
     icon: 'culture',
     phaseId: 'olperer',
   },
-  'innsbruck-nordkette': {
-    id: 'innsbruck-nordkette',
-    name: 'Nordkette — Top of Innsbruck',
-    coordinates: { lat: 47.3125, lng: 11.3833 },
-    description:
-      'Three-stage lift (Hungerburgbahn funicular + two cable cars) from the Congress station to the 2,256 m Hafelekar ridge. ~20 min each way, 360° views over the Karwendel range.',
-    tip: 'Sept hours: Seegrube 08:30–18:30, Hafelekar 09:00–18:00. Entire round trip is ~60 min + time at the top. If Sept 13 morning is clear, this is the cleanest "one more view" add-on before the 14:56 train — Congress station is 5 min from the Golden Roof.',
-    icon: 'nature',
-    phaseId: 'olperer',
-  },
-  'swarovski-kristallwelten': {
-    id: 'swarovski-kristallwelten',
-    name: 'Swarovski Kristallwelten (Wattens)',
-    coordinates: { lat: 47.2902, lng: 11.5961 },
-    description:
-      'Crystal-themed art installations, the "Crystal Cloud" with 800,000 hand-set crystals, and Chambers of Wonder. 20 km east of Innsbruck, 30-min shuttle from Hbf Bus Terminal C.',
-    warning:
-      'Needs 2–4 hours on site. Probably too tight against the Sept 13 14:56 RJX departure — treat as a Plan B only if the Nordkette is weathered out and you skip the old-town stroll.',
-    icon: 'culture',
-    phaseId: 'olperer',
-  },
   'nh-vienna-airport': {
     id: 'nh-vienna-airport',
     name: 'NH Vienna Airport',
-    coordinates: { lat: 48.1103, lng: 16.5697 },
+    coordinates: STAYS_BY_ID['nh-airport'].coordinates,
     description: 'Airport hotel for the final overnight, directly by the terminal.',
     icon: 'hotel',
     phaseId: 'olperer',
@@ -408,7 +379,8 @@ export const POIS: Record<string, POIData> = {
     id: 'vie-airport',
     name: 'Vienna Airport (VIE)',
     coordinates: { lat: 48.1103, lng: 16.5697 },
-    description: 'NH Vienna Airport hotel is steps from the terminal. 5:30 AM checkout for 8:00 AM flight.',
+    description:
+      'Monday flight departs at 08:00. Leave NH at 05:15 with hand luggage only, or 04:45 if checking a bag; follow the airline’s current instructions.',
     icon: 'transport',
     phaseId: 'olperer',
   },

@@ -1,4 +1,8 @@
+'use client'
+
 import type { LiveCheckItem } from '@/lib/tripData'
+import { ActivityDetails } from '@/components/timeline/ActivityDetails'
+import { useTripProgress } from './TripProgress'
 
 interface TripChecksTimelineProps {
   items: LiveCheckItem[]
@@ -15,17 +19,30 @@ function formatDueDate(isoDate: string) {
 }
 
 export function TripChecksTimeline({ items }: TripChecksTimelineProps) {
-  if (!items.length) return null
+  const { today, showPast } = useTripProgress()
+  const visibleItems = items.filter((item) => showPast || item.dueDate >= today)
+  const sorted = [...visibleItems].sort((a, b) => a.dueDate.localeCompare(b.dueDate))
 
-  const sorted = [...items].sort((a, b) => a.dueDate.localeCompare(b.dueDate))
+  if (!sorted.length) {
+    return (
+      <div className="rounded-xl border border-forest-green/25 bg-dark-card p-5 max-w-5xl">
+        <p className="text-base font-medium text-cream">
+          {items.length ? 'No upcoming checks.' : 'No live checks are scheduled.'}
+        </p>
+        {items.length > 0 && (
+          <p className="text-sm text-cream-muted mt-2 leading-relaxed">
+            All check dates have passed. Show past days above to review them.
+          </p>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-5xl">
       {sorted.map((item) => {
         const accentClass =
-          item.kind === 'Reservation'
-            ? 'border-amber/20 bg-amber/4'
-            : 'border-slate-blue/25 bg-slate-blue/8'
+          item.kind === 'Reservation' ? 'border-amber/20 bg-amber/4' : 'border-slate-blue/25 bg-slate-blue/8'
 
         return (
           <article key={item.id} className={`rounded-xl border p-4 ${accentClass}`}>
@@ -42,9 +59,8 @@ export function TripChecksTimeline({ items }: TripChecksTimelineProps) {
             </div>
             <h3 className="font-serif-display text-xl text-cream leading-tight">{item.title}</h3>
             <p className="text-sm text-cream-muted mt-2 leading-relaxed">{item.description}</p>
-            {item.note && (
-              <p className="text-xs text-cream-muted/75 mt-3 leading-relaxed">{item.note}</p>
-            )}
+            {item.note && <p className="text-xs text-cream-muted/75 mt-3 leading-relaxed">{item.note}</p>}
+            <ActivityDetails links={item.links} label="Sources & actions" />
           </article>
         )
       })}
