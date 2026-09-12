@@ -312,8 +312,8 @@ export default async function Home() {
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Deadlines & Live Checks</span>
         </div>
         <p className="text-cream-muted max-w-3xl text-base leading-relaxed mb-6">
-          The highest-variance parts of this itinerary are now pinned to concrete dates, so the access checks and
-          reservation follow-ups happen before the tight logistics days arrive.
+          Check the remaining access, transport and departure details here. Past checks follow the “Show past days”
+          control, so today’s decisions stay easy to find.
         </p>
         <TripChecksTimeline items={LIVE_CHECKS} />
       </section>
@@ -335,7 +335,7 @@ export default async function Home() {
 
       {/* Footer */}
       <footer className="border-t border-forest-green/20 px-6 py-8 pb-24 md:pb-8 text-center text-cream-muted/40 text-xs">
-        Austria Expedition 2026 · Updated Sept 3, 2026 · Emergency in Austria: 112 (general) / 140 (mountain rescue)
+        Austria Expedition 2026 · Updated Sept 12, 2026 · Emergency in Austria: 112 (general) / 140 (mountain rescue)
       </footer>
       <MobileQuickNav />
     </LiveWeatherPage>

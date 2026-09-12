@@ -37,6 +37,7 @@ export interface LiveCheckItem {
   kind: 'Live Check' | 'Reservation'
   description: string
   note?: string
+  links?: { label: string; href: string }[]
 }
 
 // ── Bookings ──────────────────────────────────────────────────────────────────
@@ -49,9 +50,9 @@ export const BOOKINGS: BookingItem[] = [
   {
     item: 'Flight SEA → VIE → SEA (LH489 + OS186 / OS203 + LH490)',
     booked: true,
-    note: 'Outbound Austrian-operated OS186 is also sold as Lufthansa codeshare LH6390 · MUC connection 1h 50m · FRA return connection 1h 15m · Out Sept 4, 6:50 PM PT — inside SEA by 3:50 PM PT · check in after 7:50 PM PT tonight',
-    actionLabel: 'Check in with Lufthansa',
-    actionUrl: 'https://www.lufthansa.com/us/en/check-in',
+    note: 'Return Monday Sept 14: OS203 departs VIE 08:00; LH490 departs FRA 10:45, with a 75-minute connection. Austrian online check-in normally opens Saturday 09:00 CEST; USA itinerary boarding passes are released no earlier than Sunday 08:00 CEST. Saved flight times must be checked against the airline app.',
+    actionLabel: 'Return flight check-in',
+    actionUrl: 'https://www.austrian.com/at/en/online-check-in',
   },
   {
     item: s.vienna.bookingLabel,
@@ -66,7 +67,8 @@ export const BOOKINGS: BookingItem[] = [
   {
     item: 'SIXT rental car: Salzburg Centre → Innsbruck Airport (Sept 7–12)',
     booked: true,
-    note: 'VW T-Cross or similar (automatic) · Pickup Sept 7 at 12:00 PM · Return Sept 12 at 5:30 PM · Stay Flexible · one driver · confirm Germany / Zone 1 authorization and the current rental insurance terms before pickup',
+    endDate: '2026-09-12',
+    note: 'VW T-Cross or similar (automatic) · Pickup Sept 7 at 12:00 PM · Return Sept 12 at 5:30 PM at Innsbruck Airport. Allow time to refuel, photograph the car and fuel level, remove belongings and keep the return receipt.',
     actionLabel: 'Manage SIXT booking',
     actionUrl: 'https://www.sixt.com/account/#/booking-access',
   },
@@ -114,8 +116,11 @@ export const BOOKINGS: BookingItem[] = [
   },
   {
     item: 'ÖBB RJX 13479 dep 14:56 Innsbruck → Vienna Airport (Sept 13)',
+    endDate: '2026-09-13',
     booked: true,
-    note: '1st class · passenger and reservation details are kept with the traveler',
+    note: '1st class and seats recorded as booked. Collect luggage and finish shopping by 14:00; follow the actual train, coach and platform in ÖBB. Arrival ~19:55 is approximate in the saved plan. Keep private ticket details offline.',
+    actionLabel: 'Check live train details',
+    actionUrl: 'https://fahrplan.oebb.at/',
   },
 ]
 
@@ -159,7 +164,7 @@ export const CHECKLIST: { item: string; critical: boolean }[] = [
     critical: false,
   },
   {
-    item: 'Cash: €150–200 total in smaller notes, split between both people for Coburger Hütte, Olpererhütte, and toll backup',
+    item: 'Cash: €150–200 total in smaller notes, split between both people for earlier hut visits, parking and payment backup',
     critical: true,
   },
   {
@@ -199,11 +204,11 @@ export const CHECKLIST: { item: string; critical: boolean }[] = [
   },
   { item: 'Use the ÖBB Scotty/app for live platform and delay updates on long train days', critical: true },
   {
-    item: 'Download offline maps before the Tyrol and Zillertal hike days; replace the Seebensee valley-start reference GPX with a gondola-start route before Sept 10',
+    item: 'Download offline maps before the Tyrol hikes and Achensee day trip; replace the Seebensee valley-start reference GPX with a gondola-start route before Sept 10',
     critical: true,
   },
   {
-    item: 'Schlegeis Alpine Road: buy the €19 passenger-car day ticket online and recheck parking / traffic-control status',
+    item: 'Achensee day trip: save Pertisau parking and navigation, leave at 14:30 for the fixed 17:30 Innsbruck Airport car return',
     critical: true,
   },
   {
@@ -267,13 +272,65 @@ export const LIVE_CHECKS: LiveCheckItem[] = [
     note: 'If the summit is washed out, give the 3-Lake Loop more time and treat Zugspitze as optional.',
   },
   {
-    id: 'olperer-conditions',
-    title: 'Olperer trail conditions and Schlegeis road access',
-    dueDate: '2026-09-09',
-    scope: 'Olpererhütte',
+    id: 'achensee-day-trip',
+    title: 'Achensee day trip · leave Pertisau at 14:30',
+    dueDate: '2026-09-12',
+    scope: 'Pertisau',
     kind: 'Live Check',
-    description: 'Check the alpine road, trail conditions, and weather warnings before the Sept 12 early-start hike.',
-    note: 'This is the highest-risk logistics day. Recheck the 7:00 AM–6:00 PM road window, parking control, and weather. If warnings, wet trail conditions, or poor visibility make the hut unwise, use the reservoir or a lower walk and protect the fixed 5:30 PM rental return.',
+    description:
+      'Check the lakeside weather and current driving time before leaving. Use paid promenade parking, keep the stroll short, and have lunch close to the car.',
+    note: 'Departure target 09:30; return drive 14:30. Allow up to 90 minutes back toward Innsbruck, plus refuelling and the 17:00 return-area target for the fixed 17:30 rental deadline. Shorten the visit if traffic builds.',
+    links: [
+      {
+        label: 'Pertisau lakeside parking',
+        href: 'https://www.achensee.com/de/map-winter/uferpromenade-pertisau-1-17551943/',
+      },
+      { label: 'Achensee weather and webcams', href: 'https://www.achensee.com/de/live/wetter/' },
+    ],
+  },
+  {
+    id: 'return-flight-checkin',
+    title: 'Check in for Monday’s flights',
+    dueDate: '2026-09-13',
+    scope: 'Departure',
+    kind: 'Live Check',
+    description:
+      'Online check-in normally opens Saturday at 09:00 CEST for Monday’s 08:00 OS203. Because this itinerary includes the USA, boarding passes are available no earlier than Sunday at 08:00 CEST.',
+    note: 'Save both legs for both travelers offline on Sunday. If the app requires document checks, allow for the staffed desk at VIE. No check-in has been completed by this plan.',
+    links: [
+      {
+        label: 'Austrian check-in and USA boarding-pass rules',
+        href: 'https://www.austrian.com/at/en/online-check-in',
+      },
+    ],
+  },
+  {
+    id: 'innsbruck-car-return',
+    title: 'Saturday rental return · 17:30',
+    dueDate: '2026-09-12',
+    scope: 'Innsbruck',
+    kind: 'Live Check',
+    description:
+      'Aim to reach the airport return area by 17:00 after refuelling. The saved SIXT return time is 17:30; leave room for finding the bay and completing the handover.',
+    note: 'Photograph condition and fuel level, remove belongings, keep the receipt and follow the branch’s key-return instructions. Take the next posted F bus back to the city, or a taxi if tired.',
+    links: [
+      { label: 'SIXT return directions', href: 'https://www.sixt.com/car-rental/austria/innsbruck/innsbruck-airport/' },
+    ],
+  },
+  {
+    id: 'innsbruck-luggage-rail',
+    title: 'Sunday luggage and airport train',
+    dueDate: '2026-09-13',
+    scope: 'Innsbruck',
+    kind: 'Live Check',
+    description:
+      'Check out and store bags at Innsbruck Hbf before the old-town walk. Lockers are subject to availability; do not assume Urban Inn has a staffed luggage desk.',
+    note: 'Collect bags and finish train-food shopping by 14:00 for the recorded 14:56 service. Check the actual train and destination in ÖBB. If it is disrupted, ask ÖBB staff for a replacement route to Flughafen Wien before committing to another ticket.',
+    links: [
+      { label: 'ÖBB live journey planner', href: 'https://fahrplan.oebb.at/' },
+      { label: 'Station lockers', href: 'https://bahnhofcityinnsbruck.oebb.at/de/services/schliessfaecher' },
+      { label: 'Sunday station food', href: 'https://bahnhof.oebb.at/en/tirol/innsbruck-hauptbahnhof' },
+    ],
   },
   {
     id: 'vie-airport-morning-ops',
@@ -282,8 +339,32 @@ export const LIVE_CHECKS: LiveCheckItem[] = [
     scope: 'Departure',
     kind: 'Live Check',
     description:
-      'Check the VIE departures board and recommended security lead time for Monday, Sept 14 before sleeping.',
-    note: 'If lines are trending long, move wake-up and bag-drop 20–30 minutes earlier.',
+      'At NH on Sunday evening, check OS203 and LH490, save boarding passes, settle checkout arrangements and set two alarms. Arrange an early breakfast or carry food; do not wait for the main buffet.',
+    note: 'Hand luggage: wake 05:00, leave NH 05:15, terminal 05:30. Checked bag: wake 04:30, leave 04:45, terminal 05:00. Follow any earlier airline instructions. Confirm bag routing to SEA and the Frankfurt boarding deadline.',
+    links: [
+      { label: 'Vienna departures', href: 'https://www.viennaairport.com/en/passengers/arrival__departure/departures' },
+      { label: 'Austrian check-in', href: 'https://www.austrian.com/at/en/online-check-in' },
+      {
+        label: 'Airport arrival guidance',
+        href: 'https://viennaairport.com/en/passengers/arrival__departure/tips_for_departure',
+      },
+    ],
+  },
+  {
+    id: 'fra-transfer',
+    title: 'Monday Frankfurt connection · 75 minutes',
+    dueDate: '2026-09-14',
+    scope: 'Departure',
+    kind: 'Live Check',
+    description:
+      'On landing, follow the current LH490 gate and transfer signs directly. Allow for Schengen exit passport control and any additional screening; walking and boarding consume part of the connection.',
+    note: 'Keep passports and both boarding passes in hand. Confirm any checked bag is tagged to SEA at VIE. If the inbound flight is late, tell the crew and use Lufthansa transfer assistance; do not stop for shopping or a lounge.',
+    links: [
+      {
+        label: 'Frankfurt transfer guide',
+        href: 'https://www.frankfurt-airport.com/en/flights-and-transfer/transferring-at-fra.html',
+      },
+    ],
   },
 ]
 
@@ -343,25 +424,45 @@ export const PLANNING_SHORTLIST: PlanningShortlistItem[] = [
   {
     id: 'restaurants-innsbruck',
     endDate: '2026-09-13',
-    title: 'Innsbruck Sunday lunch / dinner shortlist',
+    title: 'Innsbruck: Saturday dinner and Sunday lunch',
     area: 'Altstadt + around Hbf',
-    why: 'You only have a half day in Innsbruck before the long train; pick one fixed meal target.',
-    priority: 'Nice to have',
+    why: 'Saturday dinner at Die Wilderin if a table is available; Sunday lunch at Stiftskeller at 11:30. Finish before the optional Hofkirche visit and 14:56 train. Hours checked Sept 12; no tables reserved.',
+    priority: 'Soon',
     options: [
       {
         label: 'Die Wilderin',
         href: 'https://www.diewilderin.at/',
-        note: 'Regional-focused menu in the old town.',
+        note: 'Saturday dinner target 19:15, subject to a table. Innsbruck Tourism lists weekend opening from 17:00; it cannot serve lunch before Sunday’s train.',
       },
       {
         label: 'Stiftskeller Innsbruck',
-        href: 'https://stiftskeller.eu/',
-        note: 'Traditional Tyrolean setting close to major old-town sights.',
+        href: 'https://www.stiftskeller.eu/en/opening-hours',
+        note: 'Sunday lunch target 11:30; daily kitchen 11:00–22:00. Also a Saturday dinner fallback. Skip Hofkirche if lunch takes longer than expected.',
       },
       {
-        label: 'Breakfast near station (Motel One Bar area)',
-        href: 'https://www.motel-one.com/en/hotels/innsbruck/hotel-innsbruck/',
-        note: 'Practical fallback if timing gets tight before the 14:56 departure.',
+        label: 'Hbf: Ruetz breakfast and MPREIS train food',
+        href: 'https://bahnhof.oebb.at/en/tirol/innsbruck-hauptbahnhof',
+        note: 'ÖBB lists Ruetz daily 05:00–20:00 and MPREIS daily 06:00–21:00, including Sunday. Use for breakfast or takeaway if storage or lunch runs late.',
+      },
+    ],
+  },
+  {
+    id: 'airport-evening',
+    endDate: '2026-09-14',
+    title: 'Sunday airport dinner and Monday breakfast',
+    area: 'NH Vienna Airport Conference Center',
+    why: 'Keep the last night close to the terminal and get to sleep around 21:15. The train’s ~19:55 arrival leaves a short hotel evening; carry food in case of delays.',
+    priority: 'Soon',
+    options: [
+      {
+        label: 'Mundo dinner and early-bird breakfast',
+        href: 'https://www.nh-hotels.com/en/hotel/nh-vienna-airport-conference-center/restaurants',
+        note: 'Aim for dinner around 20:30; the à la carte menu is published until 22:00. Ask reception about early-bird breakfast availability and cost; do not assume it is included.',
+      },
+      {
+        label: 'Walk from the station to NH',
+        href: 'https://www.nh-hotels.com/en/hotel/nh-vienna-airport-conference-center/map',
+        note: 'Einfahrtsstrasse 1–3. Hotel-to-airport walk is published as six minutes; allow 20 minutes from the train platform to reception with luggage.',
       },
     ],
   },

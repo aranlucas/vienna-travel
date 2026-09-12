@@ -85,7 +85,7 @@ export const STAYS: Stay[] = [
     shortLabel: 'grüne Baum',
     bookingLabel: 'der grüne Baum Mountain Boutique Hotel, Ehrwald (Sept 9–11)',
     address: 'Ehrwald, Austria',
-    coordinates: { lat: 47.4009, lng: 10.9160 },
+    coordinates: { lat: 47.4009, lng: 10.916 },
     nights: 2,
     room: 'Standard Double Room',
     guests: '2 adults',
@@ -104,7 +104,7 @@ export const STAYS: Stay[] = [
   {
     id: 'innsbruck',
     phaseId: 'olperer',
-    phaseLabel: 'Phase 4 · Olpererhütte & Return',
+    phaseLabel: 'Phase 4 · Achensee & Return',
     propertyName: 'Urban Inn - Wilten 24/7',
     shortLabel: 'Urban Inn',
     bookingLabel: 'Urban Inn - Wilten 24/7, Innsbruck (Sept 11–13)',
@@ -132,8 +132,8 @@ export const STAYS: Stay[] = [
     propertyName: 'NH Vienna Airport',
     shortLabel: 'NH Airport',
     bookingLabel: 'NH Vienna Airport (Sept 13–14)',
-    address: 'Vienna International Airport',
-    coordinates: { lat: 48.1103, lng: 16.5697 },
+    address: 'Einfahrtsstrasse 1–3, 1300 Vienna Airport, Austria',
+    coordinates: { lat: 48.121717, lng: 16.562893 },
     nights: 1,
     room: '1 room',
     guests: '2 adults',
@@ -148,17 +148,18 @@ export const STAYS: Stay[] = [
       window: '12:00 PM',
     },
     confirmed: true,
-    checkInDetails: ['Steps from Wien Flughafen station'],
+    checkInDetails: [
+      'From Flughafen Wien station, follow signs to the terminal and NH Vienna Airport Conference Center; allow about 20 minutes from train platform to reception with bags.',
+      'The hotel publishes a six-minute airport walk. At check-in, arrange early checkout and ask about early-bird breakfast availability; breakfast inclusion is not confirmed in this trip record.',
+    ],
+    actionLabel: 'Official hotel directions',
+    actionUrl: 'https://www.nh-hotels.com/en/hotel/nh-vienna-airport-conference-center/map',
   },
 ]
 
 /** All confirmed stays. */
 export const CONFIRMED_STAYS = STAYS.filter((s) => s.confirmed)
 
-export const CONFIRMED_STAY_BY_ID: Record<string, Stay> = Object.fromEntries(
-  CONFIRMED_STAYS.map((s) => [s.id, s])
-)
+export const CONFIRMED_STAY_BY_ID: Record<string, Stay> = Object.fromEntries(CONFIRMED_STAYS.map((s) => [s.id, s]))
 
-export const STAYS_BY_ID: Record<string, Stay> = Object.fromEntries(
-  STAYS.map((s) => [s.id, s])
-)
+export const STAYS_BY_ID: Record<string, Stay> = Object.fromEntries(STAYS.map((s) => [s.id, s]))

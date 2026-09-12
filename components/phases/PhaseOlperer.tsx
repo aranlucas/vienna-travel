@@ -4,7 +4,6 @@ import { SectionHeader } from '@/components/ui/SectionHeader'
 import { DayTimeline } from '@/components/timeline/DayTimeline'
 import { DrivingStats } from '@/components/driving/DrivingStats'
 import { TrainStats } from '@/components/driving/TrainStats'
-import { HikeCard } from '@/components/hike/HikeCard'
 import { PhaseMap } from '@/components/map/MapLoader'
 import { SuggestedStopsSection } from '@/components/planning/SuggestedStopsSection'
 
@@ -23,19 +22,16 @@ export function PhaseOlperer({ phase, drivingRoutes, hikingRoutes }: PhaseOlpere
         </div>
 
         <div className="space-y-4">
-          <SectionHeader title="Olpererhütte & Return" subtitle="Phase 4 · Sept 12–14" />
+          <SectionHeader title={phase.title} subtitle="Pertisau · Innsbruck" />
           <p className="text-cream-muted text-base leading-relaxed">
-            Choose an ambitious Olpererhütte day only in good conditions, or enjoy a relaxed Ambras Castle and Innsbruck
-            day. Sunday leaves time for an easy city morning before the airport train.
+            Drive to Pertisau at 9:30 AM for a short 20–30 minute flat lakeside stroll, then settle in for lunch and a
+            café stop. Leave Pertisau at 2:30 PM and allow roughly 90 minutes for the return drive, plus buffer.
           </p>
 
           <div className="bg-dark-card border border-amber/20 rounded-lg p-4">
-            <div className="text-sm text-amber tracking-widest uppercase font-medium mb-2">
-              Choose the mountain day carefully
-            </div>
+            <div className="text-sm text-amber tracking-widest uppercase font-medium mb-2">🌿 Low-walking day</div>
             <p className="text-cream-muted text-base">
-              The hut reports construction noise and possible helicopter flights in summer 2026. Carry cash as a payment
-              backup. The detailed day plan includes a timed city alternative.
+              Keep the lakeside stroll flat and short, with plenty of time seated for lunch and coffee.
             </p>
           </div>
 
@@ -54,20 +50,12 @@ export function PhaseOlperer({ phase, drivingRoutes, hikingRoutes }: PhaseOlpere
               🅿️ Innsbruck Airport Return
             </div>
             <p className="text-cream-muted text-base">
-              Leave Schlegeis no later than 2:30 PM for the confirmed{' '}
-              <strong className="text-cream">5:30 PM airport return</strong>. Passenger cars use parking area A; follow
-              the blue &ldquo;Car rental return&rdquo; signs.
+              Leave Pertisau at 2:30 PM for the estimated 90-minute return drive, keeping buffer for traffic. Refuel by
+              4:30 PM, reach the return area by 5:00 PM, and keep the confirmed{' '}
+              <strong className="text-cream">SIXT airport return fixed at 5:30 PM</strong>. Follow the current branch
+              signs and key-return instructions.
             </p>
           </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 className="font-serif-display text-cream text-xl mb-4">The Hike</h3>
-        <div className="max-w-xl">
-          {phase.hikes.map((hike) => (
-            <HikeCard key={hike.id} hike={hike} />
-          ))}
         </div>
       </div>
 
