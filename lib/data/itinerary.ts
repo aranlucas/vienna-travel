@@ -853,15 +853,15 @@ export const DAYS: Record<string, DayPlan> = {
       },
       {
         time: '7:15 PM',
-        title: 'Dinner at Die Wilderin, with Stiftskeller as backup',
+        title: 'Dinner proposal: Machete burritos or Hagis pizza',
         details: [
-          'Die Wilderin on Seilergasse serves seasonal regional food; the tourism listing gives Saturday opening from 17:00. Check for a table before walking over. Dinner is a suggestion, not a reservation.',
-          'If it is full or you want something simpler, Stiftskeller serves food until 22:00. Keep dinner relaxed and leave energy for packing; there is no need for another sightseeing stop.',
+          'Machete — Burrito Kartell at Anichstraße 29 offers build-your-own burritos, including vegan options. Saturday kitchen hours are 11:30–22:00; walk in or order a burrito to take away. Aim to keep food around €10–12 each, but current burrito prices could not be verified online; check the menu before ordering.',
+          'For a lower food bill, choose Hagis Pizza & Döner at Innstraße 3: its published menu lists dürüm €6.90, a kebab box €6.30 and Margherita pizza €8.60, before drinks. Saturday opening is 11:30–00:00. Keep dinner simple and leave time to pack.',
         ],
         links: [
-          { label: 'Die Wilderin', href: 'https://www.diewilderin.at/' },
-          { label: 'Published Wilderin hours', href: 'https://www.tyrol.com/activities/food/restaurants/die-wilderin' },
-          { label: 'Stiftskeller kitchen hours', href: 'https://www.stiftskeller.eu/en/opening-hours' },
+          { label: 'Machete kitchen hours', href: 'https://www.machete-burritos.com/locationandhours' },
+          { label: 'Machete takeaway and vegan options', href: 'https://www.machete-burritos.com/faq' },
+          { label: 'Hagis prices and hours', href: 'https://xn--hagisdner-57a.at/' },
         ],
         highlight: 'fun',
       },
@@ -887,7 +887,7 @@ export const DAYS: Record<string, DayPlan> = {
     weatherWindow: { label: 'Pertisau lakeside visit', startHour: 10, endHour: 14 },
     accommodation: 'Urban Inn - Wilten 24/7, Innsbruck',
     notes:
-      'A relaxed day trip with a short optional flat stroll, lunch and lake views. Driving times are planning allowances, not live traffic. Leave Pertisau at 14:30, refuel around 16:30 and aim for the airport return area at 17:00. The confirmed car return remains 17:30.',
+      'Post-trip review: dinner choices remain proposals; the selected restaurant has not been confirmed. The original plan was a relaxed day trip with a short optional flat stroll, lunch and lake views. Driving times are planning allowances, not live traffic. Leave Pertisau at 14:30, refuel around 16:30 and aim for the airport return area at 17:00. The confirmed car return remains 17:30.',
     carryToday: [
       'Comfortable everyday shoes',
       'Light warm layer and rain jacket',
@@ -910,23 +910,24 @@ export const DAYS: Record<string, DayPlan> = {
     activities: [
       {
         time: '8:00 AM',
-        title: 'Breakfast and save Monday’s boarding passes',
+        title: 'Save Monday’s boarding passes and finish packing',
         details: [
-          'Allow a relaxed breakfast before checkout. Bäckerei Ruetz at Innsbruck Hbf is a practical fallback; ÖBB lists it open daily 05:00–20:00.',
           'Check Austrian for both travelers and both flight legs now that the USA boarding-pass window has opened. Save passes offline and check whether a staffed document check is still required.',
+          'The main breakfast stop is Ruetz at the station after checkout. If you want to eat first, nearby Wilten Brunch & Bar at Leopoldstraße 24 opens at 08:00 seven days a week. Its linked menu lists Vital Müsli €4.20 plus cappuccino €3.90 (€8.10 total); the Müller breakfast plate is €8.90 before drinks. If you eat here, skip the later station breakfast. No table is reserved.',
         ],
         links: [
-          { label: 'Station food and services', href: 'https://bahnhof.oebb.at/en/tirol/innsbruck-hauptbahnhof' },
           { label: 'Austrian online check-in', href: 'https://www.austrian.com/at/en/online-check-in' },
+          { label: 'Wilten opening information', href: 'https://www.wilten-ibk.at/' },
+          { label: 'Wilten breakfast menu and prices', href: 'https://www.wilten-ibk.at/karte-tag-op/' },
         ],
       },
       {
-        time: '9:00 AM',
+        time: '8:45 AM',
         title: 'Check out Urban Inn and store luggage',
         details: [
-          'Check out by 09:00 as planned; the saved property deadline is 11:00. Allow 20–25 minutes to reach Innsbruck Hbf with bags and another 15 minutes for storage.',
+          'Leave around 08:45 to allow breakfast at the station after dropping the bags; the saved property checkout deadline is 11:00. Allow 20–25 minutes to reach Innsbruck Hbf with bags and another 15 minutes for storage.',
           'ÖBB lists lockers downstairs near the garage, north underpass and WC area. Follow current signs and the posted payment instructions; size, price and availability are checked at booking. Do not assume Urban Inn has a staffed luggage desk.',
-          'If you cannot store both bags by 09:45, simplify to breakfast near Hbf and a short walk with bags. Skip the church and long loop rather than spending the morning searching for storage.',
+          'If you cannot store both bags by 09:30, simplify to breakfast in Hbf and a short walk with bags. Skip the church and long loop rather than spending the morning searching for storage.',
           'Keep passports, rail tickets, medication and valuables in the day bag.',
         ],
         links: [
@@ -937,22 +938,42 @@ export const DAYS: Record<string, DayPlan> = {
         ],
       },
       {
-        time: '10:00 AM',
+        time: '9:30 AM',
+        title: 'Breakfast proposal: Ruetz inside Innsbruck Hbf',
+        details: [
+          'Use Bäckerei-Café Hauptbahnhof EG, Südtiroler Platz 3–5, on the station ground floor. Ruetz’s own branch page lists Sunday 05:30–20:00. Ask for the Kleines Frühstück: one hot drink, one bread roll and two spreads; its chain menu also lists a sweet breakfast with a pastry and hot drink. Branch prices are not published online, so check the counter menu.',
+          'BAGUETTE at Südtiroler Platz 3 is the station backup for bakery food and coffee. Its own branch page lists Sunday 06:00–20:30; current breakfast prices are unverified. Use this specific station branch, since other branches have different Sunday hours. Allow 30–40 minutes for breakfast before the old-town walk.',
+        ],
+        links: [
+          {
+            label: 'Ruetz Hauptbahnhof EG — Sunday hours and address',
+            href: 'https://www.ruetz.at/baeckereien/standorte/hauptbahnhof_innsbruck_tirol',
+          },
+          { label: 'Ruetz breakfast choices', href: 'https://www.ruetz.at/produkte/menuekarte' },
+          {
+            label: 'BAGUETTE Hauptbahnhof — Sunday hours',
+            href: 'https://www.mpreis.at/baguette-filialen/id-6068/baguette-innsbruck/6020-suedtiroler-platz-3',
+          },
+        ],
+      },
+      {
+        time: '10:15 AM',
         title: 'Old town and Inn riverfront stroll',
         details: [
-          'From Hbf: Maria-Theresien-Straße → Golden Roof exterior → Inn bridge views → Hofgarten → lunch in the old town. Allow 75–90 minutes at strolling pace, with café and photo stops; this is a planning allowance.',
+          'From Hbf: Maria-Theresien-Straße → Golden Roof exterior → Hofgarten → Inn bridge views → lunch at Hagis across the bridge on Innstraße. Allow about 75 minutes as a planning target, with short photo stops. Shorten the Hofgarten loop if breakfast runs late.',
           'Keep the morning local. In rain, shorten the river walk and spend longer over coffee; Hofkirche remains the optional indoor stop after lunch. Nordkette and Swarovski do not fit this departure morning.',
         ],
       },
       {
         time: '11:30 AM',
-        title: 'Early Tyrolean lunch at Stiftskeller',
+        title: 'Lunch proposal: kebab or pizza at Hagis',
         details: [
-          'Stiftskeller’s kitchen opens at 11:00 daily, including Sunday. Allow 45–50 minutes and keep lunch to one course if visiting Hofkirche next. No table has been reserved.',
-          'If there is a queue or lunch runs late, skip Hofkirche. Die Wilderin opens at 17:00 on Sundays, after your train, so it is a Saturday dinner choice.',
+          'Hagis Pizza & Döner at Innstraße 3 opens Sunday 11:30–23:00. Choose a dürüm (€6.90), kebab box (€6.30) or Margherita pizza (€8.60) from its published menu; drinks cost extra. Allow about 40 minutes, then 10–15 minutes back across the bridge to Hofkirche as a planning buffer.',
+          'If you ate at Hagis on Saturday, try Machete at Anichstraße 29 for burritos instead; its Sunday kitchen opens at 11:30. Current Machete prices are unverified, so check the menu against the €10–12 food target. Allow 20 minutes to Hofkirche from there. If either lunch runs late, skip the church; Hbf takeaway remains the simple fallback before the 14:48 train.',
         ],
         links: [
-          { label: 'Stiftskeller opening and kitchen hours', href: 'https://www.stiftskeller.eu/en/opening-hours' },
+          { label: 'Hagis prices and Sunday hours', href: 'https://xn--hagisdner-57a.at/' },
+          { label: 'Machete kitchen hours', href: 'https://www.machete-burritos.com/locationandhours' },
         ],
         highlight: 'fun',
       },
@@ -974,14 +995,14 @@ export const DAYS: Record<string, DayPlan> = {
         title: 'Collect bags at Innsbruck Hbf and buy train food',
         details: [
           'Allow 20 minutes back from Hofkirche plus time to collect bags. MPREIS in Hbf is listed open daily 06:00–21:00; buy sandwiches, water and a shelf-stable dinner backup for the five-hour ride. Do not depend on the onboard bistro.',
-          'Finish storage and shopping by 14:00. Check the actual train, destination, platform and coach position; be ready to board around 14:30. Departure is recorded as 14:56, subject to the ticket and live ÖBB information.',
+          'Finish storage and shopping by 14:00. Check the actual train, destination, platform and coach position; be ready to board around 14:30. The September 13 journey preview records scheduled departure at 14:48; actual departure time is unverified.',
         ],
         links: [
           { label: 'ÖBB station shops and services', href: 'https://bahnhof.oebb.at/en/tirol/innsbruck-hauptbahnhof' },
         ],
       },
       {
-        time: '2:56 PM',
+        time: '2:48 PM',
         title: 'Booked RJX 13479 to Vienna Airport',
         type: 'train',
         segmentId: 'innsbruck-vienna-airport-rail',
@@ -997,10 +1018,10 @@ export const DAYS: Record<string, DayPlan> = {
         ],
       },
       {
-        time: '7:55 PM',
+        time: '7:57 PM',
         title: 'Planned arrival at Wien Flughafen; walk to NH Vienna Airport',
         details: [
-          'Arrival is approximate in the existing booking record. Allow 20 minutes from platform to hotel and keep tomorrow’s airport essentials accessible.',
+          'The September 13 journey preview records scheduled arrival at 19:57; actual arrival time is unverified. Allow 20 minutes from platform to hotel and keep tomorrow’s airport essentials accessible.',
         ],
         links: [
           {
@@ -1037,7 +1058,8 @@ export const DAYS: Record<string, DayPlan> = {
     weatherSource: 'historical',
     weatherLocation: { name: 'Innsbruck', coordinates: { lat: 47.2692, lng: 11.4041 } },
     accommodation: 'NH Vienna Airport',
-    notes: 'Seat reservation is recorded as booked for RJX 13479 (14:56). Keep the confirmation handy.',
+    notes:
+      'Post-trip review: the September 13 journey preview confirms the booked RJX 13479 schedule, 14:48–19:57. Actual running times, breakfast, lunch and the optional Hofkirche visit are not yet confirmed; the activities above preserve the final plan.',
     carryToday: [
       'Small old-town day bag',
       'Railjet seat reservation',
