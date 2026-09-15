@@ -307,25 +307,25 @@ export const TRAIN_SEGMENTS: TrainSegmentData[] = [
     isoDate: '2026-09-13',
     operator: 'ÖBB RJX 13479',
     relationId: 20060930, // Bregenz → Flughafen Wien, via DE (Kufstein–Rosenheim–Freilassing)
-    departureTime: '14:56',
-    arrivalTime: '~19:55',
-    durationHours: 5,
+    departureTime: '14:48',
+    arrivalTime: '19:57',
+    durationHours: 5.15,
     distanceKm: 480,
     notes:
-      'Sept 13. RJX 13479 — dep Innsbruck 14:56, direct to Vienna Airport (arr ~19:55, no transfer). 1st class, 2 tickets. Keep passenger and reservation details with the traveler. Scenery tip: eastbound, try a right-side window for the alpine side between Innsbruck and Salzburg.',
+      'Sept 13. RJX 13479 — scheduled dep Innsbruck 14:48, direct to Vienna Airport (arr 19:57, no transfer). 1st class, 2 tickets. Keep passenger and reservation details with the traveler. Scenery tip: eastbound, try a right-side window for the alpine side between Innsbruck and Salzburg.',
     waypoints: [
-      { lat: 47.2636, lng: 11.4009 }, // Innsbruck Hbf 14:56
-      { lat: 47.3903, lng: 11.7714 }, // Jenbach 15:13
-      { lat: 47.4882, lng: 12.0637 }, // Wörgl 15:27
+      { lat: 47.2636, lng: 11.4009 }, // Innsbruck Hbf 14:48
+      { lat: 47.3903, lng: 11.7714 }, // Jenbach
+      { lat: 47.4882, lng: 12.0637 }, // Wörgl
       { lat: 47.5819, lng: 12.1636 }, // Kufstein
       { lat: 47.8558, lng: 12.1222 }, // Rosenheim (DE)
       { lat: 47.837, lng: 12.969 }, // Freilassing (DE/AT border)
-      { lat: 47.8129, lng: 13.0444 }, // Salzburg Hbf 17:07
+      { lat: 47.8129, lng: 13.0444 }, // Salzburg Hbf
       { lat: 48.0121, lng: 13.7214 }, // Attnang-Puchheim
-      { lat: 48.2906, lng: 14.2932 }, // Linz Hbf 18:17
-      { lat: 48.2047, lng: 15.6256 }, // St. Pölten 19:03
-      { lat: 48.1847, lng: 16.3765 }, // Wien Hbf 19:40
-      { lat: 48.1197, lng: 16.5669 }, // Flughafen Wien ~19:55
+      { lat: 48.2906, lng: 14.2932 }, // Linz Hbf
+      { lat: 48.2047, lng: 15.6256 }, // St. Pölten
+      { lat: 48.1847, lng: 16.3765 }, // Wien Hbf
+      { lat: 48.1197, lng: 16.5669 }, // Flughafen Wien 19:57
     ],
     phaseId: 'olperer',
   },
