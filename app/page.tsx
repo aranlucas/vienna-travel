@@ -11,10 +11,7 @@ import { LiveWeatherPage } from '@/components/weather/LiveWeatherProvider'
 import { TripWeatherOutlook } from '@/components/weather/TripWeatherOutlook'
 import { TripWebMcp } from '@/components/webmcp/TripWebMcp'
 import { PhaseNav } from '@/components/phases/PhaseNav'
-import { PhaseVienna } from '@/components/phases/PhaseVienna'
-import { PhaseSalzkammergut } from '@/components/phases/PhaseSalzkammergut'
-import { PhaseTyrol } from '@/components/phases/PhaseTyrol'
-import { PhaseOlperer } from '@/components/phases/PhaseOlperer'
+import { PhasePanel } from '@/components/phases/PhasePanel'
 import { PHASES, TRIP_DATA, BOOKINGS, LIVE_CHECKS, PLANNING_SHORTLIST } from '@/lib/tripData'
 import type { DayPlan } from '@/lib/tripData'
 import type { LatLng } from '@/lib/routingService'
@@ -66,23 +63,9 @@ export default async function Home() {
     }),
   )
 
-  // ── Build phase panels (server JSX) ───────────────────────────
-  const panels = phaseRoutes.map(({ phase, drivingRoutes, hikingRoutes }) => {
-    switch (phase.id) {
-      case 'vienna':
-        return <PhaseVienna key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-      case 'salzkammergut':
-        return (
-          <PhaseSalzkammergut key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-        )
-      case 'tyrol':
-        return <PhaseTyrol key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-      case 'olperer':
-        return <PhaseOlperer key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-      default:
-        return null
-    }
-  })
+  const panels = phaseRoutes.map(({ phase, drivingRoutes, hikingRoutes }) => (
+    <PhasePanel key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
+  ))
 
   // Chronological across all phases — phases are defined in trip order
   const allDays: DayPlan[] = phaseRoutes.flatMap(({ phase }) => phase.days)
@@ -240,36 +223,35 @@ export default async function Home() {
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Booking Status</span>
         </div>
         <div className="space-y-2 max-w-2xl">
-          {BOOKINGS.filter((b) => !b.booked)
-            .map((b, i) => (
-              <ThroughDate key={`${b.item}-${i}`} date={b.endDate ?? '9999-12-31'}>
-                <div
-                  key={`${b.item}-${i}`}
-                  className="flex gap-3 items-start p-3 rounded-lg border text-base bg-amber/5 border-amber/40 border-l-4 border-l-amber"
-                >
-                  <span className="text-base shrink-0 mt-0.5 text-amber/60">○</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="leading-snug text-cream">{b.item}</div>
-                    {(b.note || b.deadline) && (
-                      <div className="flex flex-wrap gap-3 mt-1">
-                        {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
-                        {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
-                      </div>
-                    )}
-                    {b.actionUrl && b.actionLabel && (
-                      <a
-                        href={b.actionUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-colors hover:bg-cream"
-                      >
-                        {b.actionLabel}
-                      </a>
-                    )}
-                  </div>
+          {BOOKINGS.filter((b) => !b.booked).map((b, i) => (
+            <ThroughDate key={`${b.item}-${i}`} date={b.endDate ?? '9999-12-31'}>
+              <div
+                key={`${b.item}-${i}`}
+                className="flex gap-3 items-start p-3 rounded-lg border text-base bg-amber/5 border-amber/40 border-l-4 border-l-amber"
+              >
+                <span className="text-base shrink-0 mt-0.5 text-amber/60">○</span>
+                <div className="flex-1 min-w-0">
+                  <div className="leading-snug text-cream">{b.item}</div>
+                  {(b.note || b.deadline) && (
+                    <div className="flex flex-wrap gap-3 mt-1">
+                      {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
+                      {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
+                    </div>
+                  )}
+                  {b.actionUrl && b.actionLabel && (
+                    <a
+                      href={b.actionUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-colors hover:bg-cream"
+                    >
+                      {b.actionLabel}
+                    </a>
+                  )}
                 </div>
-              </ThroughDate>
-            ))}
+              </div>
+            </ThroughDate>
+          ))}
           <details className="rounded-lg border border-forest-green/25 bg-dark-card px-4 py-3">
             <summary className="cursor-pointer list-none min-h-[44px] flex items-center text-cream-muted text-base">
               {BOOKINGS.filter((b) => b.booked).length} of {BOOKINGS.length} booked ✓ — show all
