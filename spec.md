@@ -164,10 +164,7 @@ app/page.tsx (async server)
 ├── HeroMap via MapLoader
 ├── TripWeatherOutlook
 ├── PhaseNav
-│   ├── PhaseVienna
-│   ├── PhaseSalzkammergut
-│   ├── PhaseTyrol
-│   └── PhaseOlperer
+│   └── PhasePanel
 ├── Booking Status
 ├── Deadlines & Live Checks
 ├── PackingSection
@@ -211,7 +208,7 @@ app/page.tsx (async server)
 | `components/planning/TripChecksTimeline.tsx`    | Deadline and live-check cards with absolute dates                                                                       |
 | `components/planning/SuggestedStopsSection.tsx` | Reusable curated POI grid with Google Maps links                                                                        |
 | `components/packing/PackingSection.tsx`         | Eco Light packing plan UI                                                                                               |
-| `components/phases/PhaseVienna.tsx`             | Vienna panel wiring map, timeline, and suggested stops                                                                  |
+| `components/phases/PhasePanel.tsx`              | Shared phase panel: map, STAYS hotels, unique callouts, timeline, trains/drives/hikes                                   |
 
 ---
 
