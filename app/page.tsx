@@ -11,10 +11,7 @@ import { LiveWeatherPage } from '@/components/weather/LiveWeatherProvider'
 import { TripWeatherOutlook } from '@/components/weather/TripWeatherOutlook'
 import { TripWebMcp } from '@/components/webmcp/TripWebMcp'
 import { PhaseNav } from '@/components/phases/PhaseNav'
-import { PhaseVienna } from '@/components/phases/PhaseVienna'
-import { PhaseSalzkammergut } from '@/components/phases/PhaseSalzkammergut'
-import { PhaseTyrol } from '@/components/phases/PhaseTyrol'
-import { PhaseOlperer } from '@/components/phases/PhaseOlperer'
+import { PhasePanel } from '@/components/phases/PhasePanel'
 import { PHASES, TRIP_DATA, BOOKINGS, LIVE_CHECKS, PLANNING_SHORTLIST } from '@/lib/tripData'
 import type { DayPlan } from '@/lib/tripData'
 import type { LatLng } from '@/lib/routingService'
@@ -68,22 +65,9 @@ export default async function Home() {
     }),
   )
 
-  const panels = phaseRoutes.map(({ phase, drivingRoutes, hikingRoutes }) => {
-    switch (phase.id) {
-      case 'vienna':
-        return <PhaseVienna key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-      case 'salzkammergut':
-        return (
-          <PhaseSalzkammergut key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-        )
-      case 'tyrol':
-        return <PhaseTyrol key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-      case 'olperer':
-        return <PhaseOlperer key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
-      default:
-        return null
-    }
-  })
+  const panels = phaseRoutes.map(({ phase, drivingRoutes, hikingRoutes }) => (
+    <PhasePanel key={phase.id} phase={phase} drivingRoutes={drivingRoutes} hikingRoutes={hikingRoutes} />
+  ))
 
   // Chronological across all phases — phases are defined in trip order
   const allDays: DayPlan[] = phaseRoutes.flatMap(({ phase }) => phase.days)
