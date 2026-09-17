@@ -240,9 +240,7 @@ export default async function Home() {
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Booking Status</span>
         </div>
         <div className="space-y-2 max-w-2xl">
-          {[...BOOKINGS]
-            .sort((a, b) => Number(a.booked) - Number(b.booked))
-            .filter((b) => !b.booked)
+          {BOOKINGS.filter((b) => !b.booked)
             .map((b, i) => (
               <ThroughDate key={`${b.item}-${i}`} date={b.endDate ?? '9999-12-31'}>
                 <div

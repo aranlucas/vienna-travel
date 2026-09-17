@@ -160,6 +160,4 @@ export const STAYS: Stay[] = [
 /** All confirmed stays. */
 export const CONFIRMED_STAYS = STAYS.filter((s) => s.confirmed)
 
-export const CONFIRMED_STAY_BY_ID: Record<string, Stay> = Object.fromEntries(CONFIRMED_STAYS.map((s) => [s.id, s]))
-
 export const STAYS_BY_ID: Record<string, Stay> = Object.fromEntries(STAYS.map((s) => [s.id, s]))

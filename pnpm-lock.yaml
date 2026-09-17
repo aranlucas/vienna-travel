@@ -11,9 +11,6 @@ importers:
       '@mcp-b/webmcp-polyfill':
         specifier: 5.1.0
         version: 5.1.0
-      '@tmcw/togeojson':
-        specifier: ^7.1.2
-        version: 7.1.2
       leaflet:
         specifier: ^1.9.4
         version: 1.9.4
@@ -42,9 +39,6 @@ importers:
       '@tailwindcss/postcss':
         specifier: ^4.3.3
         version: 4.3.3
-      '@types/geojson':
-        specifier: ^7946.0.16
-        version: 7946.0.16
       '@types/leaflet':
         specifier: ^1.9.22
         version: 1.9.22
@@ -690,9 +684,6 @@ packages:
 
   '@tailwindcss/postcss@4.3.3':
     resolution: {integrity: sha512-JTSZZGQi1AyKirbLN3azmjVzef92tcX7h+iSqPdaeStyFpGpDlKvvpxeOE8njhbUanbRwr3z8DyzhICWnMtQeg==}
-
-  '@tmcw/togeojson@7.1.2':
-    resolution: {integrity: sha512-QKnFs9DAuqqBVj4d6c69tV1Dj2TspSBTqffivoN0YoBCVdP/JY1+WaYCJbzU49RkoU5NOSOJ3jtFHCdEUVh21A==}
 
   '@types/d3-array@3.2.2':
     resolution: {integrity: sha512-hOLWVbm7uRza0BYXpIIW5pxfrKe0W+D5lrFiAEYR+pb6w3N2SwSMaJbXdUfSEv+dT4MfHBLtn5js0LAWaO6otw==}
@@ -1616,8 +1607,6 @@ snapshots:
       '@tailwindcss/oxide': 4.3.3
       postcss: 8.5.26
       tailwindcss: 4.3.3
-
-  '@tmcw/togeojson@7.1.2': {}
 
   '@types/d3-array@3.2.2': {}
 

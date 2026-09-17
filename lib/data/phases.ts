@@ -16,7 +16,6 @@ export interface PhaseDefinition {
   mapCenter: Coordinates
   mapZoom: number
   suggestedStopIds?: string[]
-  overviewRoute: Coordinates[]
   dayRoutes?: DayRoute[]
 }
 
@@ -40,15 +39,6 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
       'hofburg',
       'wiener-riesenrad',
       'grinzing',
-    ],
-    overviewRoute: [
-      { lat: 48.2022, lng: 16.3792 },
-      { lat: 48.199, lng: 16.3654 },
-      { lat: 48.1981, lng: 16.3715 },
-      { lat: 48.2029, lng: 16.3687 },
-      { lat: 48.2065, lng: 16.364 },
-      { lat: 48.1845, lng: 16.3122 },
-      { lat: 48.2614, lng: 16.3528 },
     ],
     dayRoutes: [
       {
@@ -176,14 +166,6 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
       'zimmerbraeu',
       'schafberg',
     ],
-    overviewRoute: [
-      { lat: 47.8015, lng: 13.055 },
-      { lat: 47.8556, lng: 13.349 },
-      { lat: 47.9195, lng: 13.5307 },
-      { lat: 47.7668, lng: 13.3664 },
-      { lat: 47.5622, lng: 13.6493 },
-      { lat: 47.7377, lng: 13.4437 },
-    ],
   },
   {
     id: 'tyrol',
@@ -195,13 +177,6 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
     mapCenter: { lat: 47.4009, lng: 10.916 },
     mapZoom: 11,
     suggestedStopIds: ['highline179', 'plansee', 'fernsteinsee', 'blindsee', 'zugspitze'],
-    overviewRoute: [
-      { lat: 47.7377, lng: 13.4437 },
-      { lat: 47.4851, lng: 10.7198 },
-      { lat: 47.4532, lng: 10.7372 },
-      { lat: 47.4009, lng: 10.916 },
-      { lat: 47.4211, lng: 10.9854 },
-    ],
   },
   {
     id: 'olperer',
@@ -213,11 +188,6 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
     mapCenter: { lat: 47.35, lng: 11.52 },
     mapZoom: 10,
     suggestedStopIds: ['pertisau-lakeside', 'innsbruck-golden-roof', 'innsbruck-st-anne', 'innsbruck-hofburg'],
-    overviewRoute: [
-      { lat: 47.2596, lng: 11.3879 },
-      { lat: 47.4407, lng: 11.7025 },
-      { lat: 47.2602, lng: 11.3439 },
-    ],
     dayRoutes: [
       {
         label: 'Innsbruck Old Town Walk',

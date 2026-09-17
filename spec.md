@@ -239,7 +239,6 @@ app/page.tsx (async server)
 - current GPX-backed hikes:
   - `seebensee-drachensee.gpx`
   - `three-lakes-loop.gpx`
-  - `olpererhuette-trail502.gpx`
 
 ---
 

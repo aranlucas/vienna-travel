@@ -36,7 +36,10 @@ export function assertStaticRoutesCurrent(): void {
 
   for (const segment of HERO_TRAIN_SEGMENTS) {
     const waypoints = segment.waypoints.map(({ lat, lng }) => [lat, lng] as LatLng)
-    const sourceKey = `${segment.relationId ?? 'network'}:${routeWaypointKey(waypoints)}`
+    if (segment.relationId == null) {
+      throw new Error(`Missing OSM relationId for ${segment.id}.`)
+    }
+    const sourceKey = `${segment.relationId}:${routeWaypointKey(waypoints)}`
     const route = STATIC_ROUTES.heroTrainRoutes[segment.id]
     if (
       !route ||
