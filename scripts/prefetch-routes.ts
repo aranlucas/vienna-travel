@@ -5,7 +5,7 @@ import { fetchDrivingRoute } from '../lib/routingService'
 import type { LatLng } from '../lib/routingService'
 import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from '../lib/heroRouteData'
 import { routeWaypointKey, STATIC_ROUTES, type StaticRoutes } from '../lib/staticRoutes'
-import { fetchMultiSegmentRailRoute, fetchRelationGeometry } from '../lib/overpassRailService'
+import { fetchRelationGeometry } from '../lib/overpassRailService'
 
 async function main() {
   const trainOnly = process.argv.includes('--train-only')
@@ -50,9 +50,10 @@ async function main() {
     HERO_TRAIN_SEGMENTS.map(async (segment) => {
       const from = segment.waypoints[0]
       const to = segment.waypoints[segment.waypoints.length - 1]
-      const route = segment.relationId
-        ? await fetchRelationGeometry(segment.relationId, from, to)
-        : await fetchMultiSegmentRailRoute(segment.waypoints)
+      if (segment.relationId == null) {
+        throw new Error(`${segment.id}: missing OSM relationId; bbox rail stitcher was removed`)
+      }
+      const route = await fetchRelationGeometry(segment.relationId, from, to)
       if (route.length <= segment.waypoints.length) {
         throw new Error(
           `${segment.id}: OSM did not return rail-following geometry; static routes were not changed`
@@ -79,7 +80,7 @@ async function main() {
     trainRoutes: Object.fromEntries(
       HERO_TRAIN_SEGMENTS.map((segment) => [
         segment.id,
-        `${segment.relationId ?? 'network'}:${routeWaypointKey(
+        `${segment.relationId}:${routeWaypointKey(
           segment.waypoints.map(({ lat, lng }) => [lat, lng] as LatLng)
         )}`,
       ])

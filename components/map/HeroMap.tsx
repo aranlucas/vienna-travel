@@ -15,7 +15,6 @@ import { MapInvalidator } from './MapInvalidator'
 export interface HeroMapProps {
   driveCoords: LatLng[]
   trainRoutes: Record<string, LatLng[]>
-  onPhaseClick?: (phaseId: string) => void
 }
 
 function createPhaseIcon(number: number, compact: boolean) {
@@ -105,7 +104,7 @@ function useIsMobile(breakpoint = 640): boolean {
   )
 }
 
-export default function HeroMap({ driveCoords, trainRoutes, onPhaseClick }: HeroMapProps) {
+export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (L.Icon.Default.prototype as any)._getIconUrl
@@ -169,7 +168,6 @@ export default function HeroMap({ driveCoords, trainRoutes, onPhaseClick }: Hero
             key={phase.id}
             position={[phase.mapCenter.lat, phase.mapCenter.lng]}
             icon={createPhaseIcon(phase.number, isMobile)}
-            eventHandlers={{ click: () => onPhaseClick?.(phase.id) }}
           >
             <Popup>
               <div style={{ fontFamily: 'Georgia, serif', minWidth: '160px' }}>
