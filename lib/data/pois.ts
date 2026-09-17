@@ -1,4 +1,4 @@
-import type { Coordinates } from './trip'
+import { type Coordinates, VIENNA_AIRPORT } from './trip'
 import { STAYS_BY_ID } from './stays'
 
 export interface PointOfInterest {
@@ -378,7 +378,7 @@ export const POIS: Record<string, POIData> = {
   'vie-airport': {
     id: 'vie-airport',
     name: 'Vienna Airport (VIE)',
-    coordinates: { lat: 48.1103, lng: 16.5697 },
+    coordinates: VIENNA_AIRPORT,
     description:
       'Monday flight departs at 08:00. Leave NH at 05:15 with hand luggage only, or 04:45 if checking a bag; follow the airline’s current instructions.',
     icon: 'transport',

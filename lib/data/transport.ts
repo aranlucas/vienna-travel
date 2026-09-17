@@ -1,7 +1,5 @@
 import type { Coordinates } from './trip'
 
-// ── Flight segments ───────────────────────────────────────────────────────────
-
 export interface FlightSegment {
   id: string
   /** Which phase this segment belongs to (arrival/departure legs map to trip phases). */
@@ -69,8 +67,6 @@ export const FLIGHT_SEGMENTS: FlightSegment[] = [
   },
 ]
 
-// ── Layovers ──────────────────────────────────────────────────────────────────
-
 export interface LayoverSegment {
   id: string
   /** Which phase this layover belongs to (same phase as surrounding flight day). */
@@ -104,7 +100,40 @@ export const LAYOVERS: LayoverSegment[] = [
   },
 ]
 
-// ── Driving segments ──────────────────────────────────────────────────────────
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'] as const
+
+function formatDurationMinutes(minutes: number): string {
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
+}
+
+function formatFlightStamp(isoDate: string, time: string): string {
+  const month = Number(isoDate.slice(5, 7))
+  const day = Number(isoDate.slice(8, 10))
+  return `${MONTHS[month - 1]} ${day}, ${time}`
+}
+
+/** Vienna-phase legs plus the connecting layover (SEA → VIE via MUC). */
+export function getOutboundToVie() {
+  const segments = FLIGHT_SEGMENTS.filter((segment) => segment.phaseId === 'vienna')
+  const layover = LAYOVERS.find((segment) => segment.phaseId === 'vienna')
+  const first = segments[0]
+  const last = segments[segments.length - 1]
+  if (!first || !last || !layover) {
+    throw new Error('Outbound SEA→VIE requires vienna-phase flight segments and a layover')
+  }
+  const arrivalStamp = formatFlightStamp(last.date, last.arrivalTime)
+  return {
+    segments,
+    layover,
+    first,
+    last,
+    via: `${segments.map((segment) => segment.flightNumber).join(' + ')} via ${layover.airport} (${formatDurationMinutes(layover.durationMinutes)})`,
+    departureStamp: formatFlightStamp(first.date, first.departureTime),
+    arrivalStamp: last.date === first.date ? arrivalStamp : `${arrivalStamp} (+1)`,
+  }
+}
 
 export interface DrivingSegment {
   id: string
@@ -210,8 +239,6 @@ export const DRIVING_SEGMENTS: DrivingSegmentData[] = [
     phaseId: 'olperer',
   },
 ]
-
-// ── Train segments ────────────────────────────────────────────────────────────
 
 export interface TrainSegment {
   id: string

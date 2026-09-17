@@ -3,12 +3,14 @@
 import { useEffect, useSyncExternalStore } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import L from 'leaflet'
-import { FLIGHT, PHASES } from '@/lib/tripData'
+import { PHASES } from '@/lib/tripData'
 import { CONFIRMED_STAYS } from '@/lib/confirmedStays'
 import type { LatLng } from '@/lib/routingService'
 import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from '@/lib/heroRouteData'
 import { buildGoogleMapsUrl } from '@/lib/mapLinks'
 import { MAP_ATTRIBUTION, MAP_TILE_URL } from '@/lib/mapTiles'
+import { getOutboundToVie } from '@/lib/data/transport'
+import { VIENNA_AIRPORT } from '@/lib/data/trip'
 import { PolylineWithArrows } from './PolylineWithArrows'
 import { MapInvalidator } from './MapInvalidator'
 
@@ -88,7 +90,7 @@ function createCompactIcon(tone: 'flight' | 'stay') {
   })
 }
 
-// Vienna included in bounds even though it's not part of the drive
+const outbound = getOutboundToVie()
 const ALL_BOUND_POINTS: LatLng[] = [[48.2085, 16.3731], ...DRIVE_WAYPOINTS]
 
 function useIsMobile(breakpoint = 640): boolean {
@@ -134,7 +136,6 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
         <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
         <MapInvalidator />
 
-        {/* Driving route — pre-fetched OSRM, neon orange with direction arrows */}
         <PolylineWithArrows
           positions={driveCoords}
           color="#fb923c"
@@ -143,13 +144,9 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
           arrows={{ size: '10px', frequency: '120px', fill: true, yawn: 50 }}
         />
 
-        {/* Train routes — pre-baked Overpass OSM geometry, neon cyan.
-            Dashed pattern reads as "rail" against the solid orange drive line. */}
         {HERO_TRAIN_SEGMENTS.map((seg) => {
           const route = trainRoutes[seg.id]
-          const positions: LatLng[] = route?.length
-            ? route
-            : seg.waypoints.map((c) => [c.lat, c.lng])
+          const positions: LatLng[] = route?.length ? route : seg.waypoints.map((c) => [c.lat, c.lng])
           return (
             <PolylineWithArrows
               key={seg.id}
@@ -171,12 +168,8 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
           >
             <Popup>
               <div style={{ fontFamily: 'Georgia, serif', minWidth: '160px' }}>
-                <div style={{ color: '#d4a853', fontWeight: 'bold', fontSize: '13px' }}>
-                  Phase {phase.number}
-                </div>
-                <div style={{ color: '#222', fontSize: '15px', fontWeight: 'bold' }}>
-                  {phase.title}
-                </div>
+                <div style={{ color: '#d4a853', fontWeight: 'bold', fontSize: '13px' }}>Phase {phase.number}</div>
+                <div style={{ color: '#222', fontSize: '15px', fontWeight: 'bold' }}>{phase.title}</div>
                 <div style={{ color: '#666', fontSize: '11px' }}>{phase.dates}</div>
               </div>
             </Popup>
@@ -191,12 +184,8 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
           >
             <Popup>
               <div style={{ fontFamily: 'Georgia, serif', minWidth: '220px' }}>
-                <div style={{ color: '#1d4d3d', fontWeight: 'bold', fontSize: '13px' }}>
-                  Confirmed Stay
-                </div>
-                <div style={{ color: '#222', fontSize: '15px', fontWeight: 'bold' }}>
-                  {stay.propertyName}
-                </div>
+                <div style={{ color: '#1d4d3d', fontWeight: 'bold', fontSize: '13px' }}>Confirmed Stay</div>
+                <div style={{ color: '#222', fontSize: '15px', fontWeight: 'bold' }}>{stay.propertyName}</div>
                 <div style={{ color: '#666', fontSize: '12px', marginTop: '4px' }}>{stay.address}</div>
                 <div style={{ color: '#666', fontSize: '12px', marginTop: '6px' }}>
                   In: {stay.checkIn.label} · {stay.checkIn.window}
@@ -208,7 +197,13 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
                   href={buildGoogleMapsUrl(stay.propertyName, stay.coordinates)}
                   target="_blank"
                   rel="noreferrer"
-                  style={{ color: '#1d4d3d', fontSize: '12px', fontWeight: 'bold', display: 'inline-block', marginTop: '8px' }}
+                  style={{
+                    color: '#1d4d3d',
+                    fontSize: '12px',
+                    fontWeight: 'bold',
+                    display: 'inline-block',
+                    marginTop: '8px',
+                  }}
                 >
                   Open in Google Maps
                 </a>
@@ -217,29 +212,26 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
           </Marker>
         ))}
 
-        <Marker
-          position={[48.1103, 16.5697]}
-          icon={flightIcon}
-        >
+        <Marker position={[VIENNA_AIRPORT.lat, VIENNA_AIRPORT.lng]} icon={flightIcon}>
           <Popup>
             <div style={{ fontFamily: 'Georgia, serif', minWidth: '220px' }}>
-              <div style={{ color: '#c0626a', fontWeight: 'bold', fontSize: '13px' }}>
-                Flight
-              </div>
+              <div style={{ color: '#c0626a', fontWeight: 'bold', fontSize: '13px' }}>Flight</div>
               <div style={{ color: '#222', fontSize: '15px', fontWeight: 'bold' }}>
-                {FLIGHT.departure.airport} → {FLIGHT.arrival.airport}
+                {outbound.first.from} → {outbound.last.to}
               </div>
-              <div style={{ color: '#666', fontSize: '12px', marginTop: '4px' }}>
-                {FLIGHT.flightNumbers.join(' + ')} via {FLIGHT.layover}
-              </div>
-              <div style={{ color: '#666', fontSize: '12px', marginTop: '6px' }}>
-                Arrive: {FLIGHT.arrival.datetime}
-              </div>
+              <div style={{ color: '#666', fontSize: '12px', marginTop: '4px' }}>{outbound.via}</div>
+              <div style={{ color: '#666', fontSize: '12px', marginTop: '6px' }}>Arrive: {outbound.arrivalStamp}</div>
               <a
-                href={buildGoogleMapsUrl('Vienna Airport', { lat: 48.1103, lng: 16.5697 })}
+                href={buildGoogleMapsUrl('Vienna Airport', VIENNA_AIRPORT)}
                 target="_blank"
                 rel="noreferrer"
-                style={{ color: '#c0626a', fontSize: '12px', fontWeight: 'bold', display: 'inline-block', marginTop: '8px' }}
+                style={{
+                  color: '#c0626a',
+                  fontSize: '12px',
+                  fontWeight: 'bold',
+                  display: 'inline-block',
+                  marginTop: '8px',
+                }}
               >
                 Open in Google Maps
               </a>
@@ -248,25 +240,26 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
         </Marker>
       </MapContainer>
 
-      {/* Legend — compacts on mobile to reclaim screen real estate */}
-      <div style={{
-        position: 'absolute',
-        bottom: isMobile ? '24px' : '32px',
-        left: '10px',
-        zIndex: 1000,
-        background: 'rgba(15,26,15,0.88)',
-        border: '1px solid rgba(212,168,83,0.2)',
-        borderRadius: '6px',
-        padding: isMobile ? '6px 8px' : '8px 12px',
-        fontSize: isMobile ? '10px' : '11px',
-        fontFamily: 'Georgia, serif',
-        color: '#c8c0b0',
-        pointerEvents: 'none',
-        backdropFilter: 'blur(4px)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: isMobile ? '3px' : '5px',
-      }}>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: isMobile ? '24px' : '32px',
+          left: '10px',
+          zIndex: 1000,
+          background: 'rgba(15,26,15,0.88)',
+          border: '1px solid rgba(212,168,83,0.2)',
+          borderRadius: '6px',
+          padding: isMobile ? '6px 8px' : '8px 12px',
+          fontSize: isMobile ? '10px' : '11px',
+          fontFamily: 'Georgia, serif',
+          color: '#c8c0b0',
+          pointerEvents: 'none',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: isMobile ? '3px' : '5px',
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <svg width="24" height="4" viewBox="0 0 24 4">
             <line x1="0" y1="2" x2="24" y2="2" stroke="#fb923c" strokeWidth="2.5" />
@@ -280,7 +273,16 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
           <span>Train (ÖBB)</span>
         </div>
         {isMobile && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#8a8576', fontSize: '9px', marginTop: '2px' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: '#8a8576',
+              fontSize: '9px',
+              marginTop: '2px',
+            }}
+          >
             <span>Tap markers for details</span>
           </div>
         )}

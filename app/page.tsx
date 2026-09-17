@@ -24,17 +24,19 @@ import { CONFIRMED_STAYS } from '@/lib/confirmedStays'
 import { buildGoogleMapsUrl } from '@/lib/mapLinks'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
 import { ThroughDate, TripProgressControl } from '@/components/planning/TripProgress'
+import { getOutboundToVie } from '@/lib/data/transport'
+import { VIENNA_AIRPORT } from '@/lib/data/trip'
+
+const outbound = getOutboundToVie()
 
 export default async function Home() {
   assertStaticRoutesCurrent()
 
-  // ── Hero map data ────────────────────────────────────────────────
   // Drive: pre-baked OSRM coords (run scripts/prefetch-routes.ts to refresh)
   // Train: pre-baked OSM rail-relation geometry (no live map-service dependency).
   const heroDriveCoords = STATIC_ROUTES.heroDriveCoords
   const heroTrainRoutes = STATIC_ROUTES.heroTrainRoutes
 
-  // ── Per-phase route data — GPX hiking routes only (driving from static JSON) ──
   const phaseRoutes = await Promise.all(
     PHASES.map(async (phase) => {
       const staticPhase = STATIC_ROUTES.phaseRoutes[phase.id as keyof typeof STATIC_ROUTES.phaseRoutes]
@@ -66,7 +68,6 @@ export default async function Home() {
     }),
   )
 
-  // ── Build phase panels (server JSX) ───────────────────────────
   const panels = phaseRoutes.map(({ phase, drivingRoutes, hikingRoutes }) => {
     switch (phase.id) {
       case 'vienna':
@@ -135,16 +136,16 @@ export default async function Home() {
         <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-3">
           <ThroughDate date="2026-09-05">
             <div className="rounded-lg border border-slate-blue/25 bg-dark-card px-4 py-3 text-sm scroll-mt-20">
-              <div className="text-[10px] uppercase tracking-[0.22em] text-amber/80 font-medium">Flight · LH489</div>
+              <div className="text-[10px] uppercase tracking-[0.22em] text-amber/80 font-medium">
+                Flight · {outbound.first.flightNumber}
+              </div>
               <div className="mt-1 text-cream font-medium">
-                {TRIP_DATA.flight.departure.airport} → {TRIP_DATA.flight.arrival.airport}
+                {outbound.first.from} → {outbound.last.to}
               </div>
-              <div className="mt-1 text-cream-muted/70 leading-relaxed">
-                {TRIP_DATA.flight.flightNumbers.join(' + ')} via {TRIP_DATA.flight.layover}
-              </div>
+              <div className="mt-1 text-cream-muted/70 leading-relaxed">{outbound.via}</div>
               <div className="mt-2 space-y-1 text-cream-muted/80">
-                <div>Out: {TRIP_DATA.flight.departure.datetime}</div>
-                <div>In: {TRIP_DATA.flight.arrival.datetime}</div>
+                <div>Out: {outbound.departureStamp}</div>
+                <div>In: {outbound.arrivalStamp}</div>
               </div>
               <div className="mt-3 grid grid-cols-1 gap-2">
                 <a
@@ -165,7 +166,7 @@ export default async function Home() {
                 </a>
               </div>
               <a
-                href={buildGoogleMapsUrl('Vienna Airport', { lat: 48.1103, lng: 16.5697 })}
+                href={buildGoogleMapsUrl('Vienna Airport', VIENNA_AIRPORT)}
                 target="_blank"
                 rel="noreferrer"
                 className="mt-2 inline-flex min-h-[44px] items-center text-amber hover:text-cream transition-colors"
@@ -240,36 +241,35 @@ export default async function Home() {
           <span className="text-amber text-sm tracking-[0.3em] uppercase font-medium">Booking Status</span>
         </div>
         <div className="space-y-2 max-w-2xl">
-          {BOOKINGS.filter((b) => !b.booked)
-            .map((b, i) => (
-              <ThroughDate key={`${b.item}-${i}`} date={b.endDate ?? '9999-12-31'}>
-                <div
-                  key={`${b.item}-${i}`}
-                  className="flex gap-3 items-start p-3 rounded-lg border text-base bg-amber/5 border-amber/40 border-l-4 border-l-amber"
-                >
-                  <span className="text-base shrink-0 mt-0.5 text-amber/60">○</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="leading-snug text-cream">{b.item}</div>
-                    {(b.note || b.deadline) && (
-                      <div className="flex flex-wrap gap-3 mt-1">
-                        {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
-                        {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
-                      </div>
-                    )}
-                    {b.actionUrl && b.actionLabel && (
-                      <a
-                        href={b.actionUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-colors hover:bg-cream"
-                      >
-                        {b.actionLabel}
-                      </a>
-                    )}
-                  </div>
+          {BOOKINGS.filter((b) => !b.booked).map((b, i) => (
+            <ThroughDate key={`${b.item}-${i}`} date={b.endDate ?? '9999-12-31'}>
+              <div
+                key={`${b.item}-${i}`}
+                className="flex gap-3 items-start p-3 rounded-lg border text-base bg-amber/5 border-amber/40 border-l-4 border-l-amber"
+              >
+                <span className="text-base shrink-0 mt-0.5 text-amber/60">○</span>
+                <div className="flex-1 min-w-0">
+                  <div className="leading-snug text-cream">{b.item}</div>
+                  {(b.note || b.deadline) && (
+                    <div className="flex flex-wrap gap-3 mt-1">
+                      {b.deadline && <span className="text-sm text-amber/80 font-medium">⏰ {b.deadline}</span>}
+                      {b.note && <span className="text-sm text-cream-muted/50">{b.note}</span>}
+                    </div>
+                  )}
+                  {b.actionUrl && b.actionLabel && (
+                    <a
+                      href={b.actionUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-2 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-amber px-4 py-2 text-sm font-semibold text-dark-surface transition-colors hover:bg-cream"
+                    >
+                      {b.actionLabel}
+                    </a>
+                  )}
                 </div>
-              </ThroughDate>
-            ))}
+              </div>
+            </ThroughDate>
+          ))}
           <details className="rounded-lg border border-forest-green/25 bg-dark-card px-4 py-3">
             <summary className="cursor-pointer list-none min-h-[44px] flex items-center text-cream-muted text-base">
               {BOOKINGS.filter((b) => b.booked).length} of {BOOKINGS.length} booked ✓ — show all

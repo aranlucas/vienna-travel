@@ -3,6 +3,8 @@ export interface Coordinates {
   lng: number
 }
 
+export const VIENNA_AIRPORT: Coordinates = { lat: 48.1103, lng: 16.5697 }
+
 export const TRIP_META = {
   title: 'Austria Expedition',
   subtitle: 'Lakes & Hikes',
