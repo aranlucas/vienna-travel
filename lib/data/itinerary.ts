@@ -1,4 +1,4 @@
-import type { Coordinates } from './trip'
+import { type Coordinates, VIENNA_AIRPORT } from './trip'
 
 export type ActivityType = 'activity' | 'hike' | 'drive' | 'flight' | 'train'
 
@@ -18,11 +18,6 @@ export interface DayActivity {
    * The segment's own loop entry is suppressed when claimed.
    */
   segmentId?: string
-}
-
-export interface DayRoute {
-  label: string
-  coordinates: Coordinates[]
 }
 
 export interface DayWeatherLocation {
@@ -1174,7 +1169,7 @@ export const DAYS: Record<string, DayPlan> = {
       'Vienna Airport mornings are usually cool, around the low-to-mid teens °C, before warming later in the day.',
     weatherNote: 'You only need airport-comfort layers here, but keep the shell accessible in your personal item.',
     weatherSource: 'historical',
-    weatherLocation: { name: 'Vienna Airport', coordinates: { lat: 48.1103, lng: 16.5697 } },
+    weatherLocation: { name: 'Vienna Airport', coordinates: VIENNA_AIRPORT },
     carryToday: [
       'Passport and both boarding passes',
       'Medication and valuables',

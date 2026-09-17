@@ -9,18 +9,14 @@
  * that existing components expect, and re-exports all types for backward compat.
  */
 
-// ── Data imports ──────────────────────────────────────────────────────────────
 import { TRIP_META } from './data/trip'
-import { CONFIRMED_STAYS } from './data/stays'
 import { DRIVING_SEGMENTS, TRAIN_SEGMENTS } from './data/transport'
 import { HIKES } from './data/hikes'
 import { POIS } from './data/pois'
 import { DAYS } from './data/itinerary'
 import { PHASE_DEFINITIONS } from './data/phases'
-import { PACKING_PLAN } from './data/packing'
 import { BOOKINGS, CHECKLIST, LIVE_CHECKS, PLANNING_SHORTLIST } from './data/logistics'
 
-// ── Re-export types for backward compat ──────────────────────────────────────
 export type { Coordinates } from './data/trip'
 export type { Difficulty, ElevationPoint, Hike } from './data/hikes'
 export type { PointOfInterest } from './data/pois'
@@ -29,14 +25,13 @@ export type { DrivingSegment, TrainSegment } from './data/transport'
 export type { PackingPlan } from './data/packing'
 export type { BookingItem, PlanningShortlistItem, LiveCheckItem } from './data/logistics'
 
-// Re-export data constants consumed directly by components/pages
 export { BOOKINGS, LIVE_CHECKS, PLANNING_SHORTLIST }
 
-// ── Phase interface (fat, for backward compat) ────────────────────────────────
 import type { Coordinates } from './data/trip'
 import type { Hike } from './data/hikes'
 import type { PointOfInterest } from './data/pois'
-import type { DayPlan, DayRoute } from './data/itinerary'
+import type { DayPlan } from './data/itinerary'
+import type { DayRoute } from './data/phases'
 import type { DrivingSegment, TrainSegment } from './data/transport'
 
 export interface Phase {
@@ -57,7 +52,6 @@ export interface Phase {
   suggestedStopIds?: string[]
 }
 
-// ── Assemble fat PHASES from thin definitions + flat data ─────────────────────
 function withoutPhaseId<T extends { phaseId: string }>({ phaseId, ...value }: T): Omit<T, 'phaseId'> {
   void phaseId
   return value
@@ -90,36 +84,8 @@ export const PHASES: Phase[] = PHASE_DEFINITIONS.map((def) => {
   }
 })
 
-// ── FlightInfo (backward compat shape used by HeroSection + app/page.tsx) ─────
-export interface FlightInfo {
-  airline: string
-  flightNumbers: string[]
-  departure: { airport: string; datetime: string }
-  arrival: { airport: string; datetime: string }
-  layover: string
-  cost?: string
-  seatTip?: string
-}
-
-export const FLIGHT: FlightInfo = {
-  airline: 'Lufthansa',
-  flightNumbers: ['LH489', 'OS186 (LH6390)'],
-  departure: { airport: 'SEA', datetime: 'Sept 4, 6:50 PM PT' },
-  arrival: { airport: 'VIE', datetime: 'Sept 5, 4:35 PM CEST (+1)' },
-  layover: 'MUC (1h 50m)',
-  seatTip:
-    'Plane views are wind-dependent. If scenery matters, pick any window; a left-side seat is a slight edge departing Seattle, but there is no reliable best side for both Lufthansa legs.',
-}
-
-// ── TRIP_DATA ─────────────────────────────────────────────────────────────────
 export const TRIP_DATA = {
   ...TRIP_META,
-  flight: FLIGHT,
-  hotels: CONFIRMED_STAYS,
   phases: PHASES,
-  bookings: BOOKINGS,
-  planningShortlist: PLANNING_SHORTLIST,
-  liveChecks: LIVE_CHECKS,
-  packing: PACKING_PLAN,
   checklist: CHECKLIST,
 }
