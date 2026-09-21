@@ -1,4 +1,5 @@
 import type { DayPlan, DayWeatherLocation } from './tripData'
+import { describeWeatherCode } from './weatherCodes'
 
 const FORECAST_API = 'https://api.open-meteo.com/v1/forecast'
 const FORECAST_WINDOW_DAYS = 16
@@ -89,19 +90,6 @@ function daysUntil(targetIsoDate: string): number {
   const [targetYear, targetMonth, targetDay] = targetIsoDate.split('-').map(Number)
   const targetUtc = Date.UTC(targetYear, targetMonth - 1, targetDay)
   return Math.round((targetUtc - todayUtc) / 86400000)
-}
-
-function describeWeatherCode(code?: number | null): string | undefined {
-  if (code == null) return undefined
-  if (code === 0) return 'Clear conditions are most likely.'
-  if ([1, 2].includes(code)) return 'Mostly clear to partly cloudy conditions are likely.'
-  if (code === 3) return 'Cloud cover is likely for much of the day.'
-  if ([45, 48].includes(code)) return 'Low cloud or fog is possible.'
-  if ([51, 53, 55, 56, 57].includes(code)) return 'Light rain or drizzle is possible.'
-  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return 'Rain is possible, so keep the shell handy.'
-  if ([71, 73, 75, 77, 85, 86].includes(code)) return 'Cold conditions or even snow are possible at elevation.'
-  if ([95, 96, 99].includes(code)) return 'Storm risk is present; watch the alpine forecast closely.'
-  return undefined
 }
 
 function formatUnlockDate(targetIsoDate: string): string {
