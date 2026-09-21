@@ -1,12 +1,4 @@
-export type WeatherCodeTone =
-  | 'clear'
-  | 'partly-cloudy'
-  | 'overcast'
-  | 'fog'
-  | 'drizzle'
-  | 'rain'
-  | 'snow'
-  | 'storm'
+export type WeatherCodeTone = 'clear' | 'partly-cloudy' | 'overcast' | 'fog' | 'drizzle' | 'rain' | 'snow' | 'storm'
 
 export type WeatherCodeInfo = {
   code: number
