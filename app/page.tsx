@@ -41,18 +41,19 @@ export default async function Home() {
 
       const hikeResults = await Promise.all(
         phase.hikes.map(async (hike) => {
+          if (hike.gpxStatus === 'reference') {
+            return { hike, coords: [] as LatLng[] }
+          }
           const filename = hike.gpxFile.replace('/gpx/', '')
           const track = await readGpxTrackData(filename)
-          const useGpxStats = hike.useGpxStats !== false
           return {
             hike: {
               ...hike,
-              distanceKm: useGpxStats ? track.distanceKm || hike.distanceKm : hike.distanceKm,
-              elevationGainM: useGpxStats ? track.elevationGainM || hike.elevationGainM : hike.elevationGainM,
-              elevationProfile:
-                useGpxStats && track.elevationProfile.length ? track.elevationProfile : hike.elevationProfile,
+              distanceKm: track.distanceKm || hike.distanceKm,
+              elevationGainM: track.elevationGainM || hike.elevationGainM,
+              elevationProfile: track.elevationProfile.length ? track.elevationProfile : hike.elevationProfile,
             },
-            coords: hike.gpxStatus === 'reference' ? [] : track.coords,
+            coords: track.coords,
           }
         }),
       )

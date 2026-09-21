@@ -16,10 +16,11 @@ export interface Hike {
   elevationGainM: number
   difficulty: Difficulty
   gpxFile: string
-  /** Whether the downloadable GPX exactly matches the timed itinerary route. */
-  gpxStatus?: 'verified' | 'reference'
-  /** When false, preserve declared itinerary stats instead of deriving them from the GPX. */
-  useGpxStats?: boolean
+  /**
+   * `reference` is download-only: skip parse, skip the phase-map track, keep declared stats.
+   * `verified` is the itinerary track: parse for map coords and prefer GPX stats.
+   */
+  gpxStatus: 'verified' | 'reference'
   gpxDownloadLabel?: string
   elevationProfile: ElevationPoint[]
   highlights: string[]
@@ -40,7 +41,6 @@ export const HIKES: Record<string, HikeData> = {
     difficulty: 'Medium-Hard',
     gpxFile: '/gpx/seebensee-drachensee.gpx',
     gpxStatus: 'reference',
-    useGpxStats: false,
     gpxDownloadLabel: 'Download valley-start reference GPX',
     elevationProfile: [
       { distance: 0, elevation: 1502 },
@@ -66,6 +66,7 @@ export const HIKES: Record<string, HikeData> = {
     elevationGainM: 350,
     difficulty: 'Medium',
     gpxFile: '/gpx/three-lakes-loop.gpx',
+    gpxStatus: 'verified',
     elevationProfile: [
       { distance: 0, elevation: 993 },
       { distance: 0.5, elevation: 1037 },
