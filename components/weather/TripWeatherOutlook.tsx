@@ -3,6 +3,7 @@
 import { useMemo, useSyncExternalStore } from 'react'
 import type { DayPlan } from '@/lib/tripData'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
+import { getWeatherCode, isRainWeatherCode, isSnowOrStormWeatherCode } from '@/lib/weatherCodes'
 import { WEATHER_REFRESH_MINUTES } from '@/lib/weatherRefresh'
 import { useLiveWeather } from '@/components/weather/LiveWeatherProvider'
 import { useTripProgress } from '@/components/planning/TripProgress'
@@ -30,77 +31,12 @@ function getServerUnit(): Unit {
   return 'F'
 }
 
-const CONDITION_EMOJI: Record<number, string> = {
-  0: '☀️',
-  1: '🌤️',
-  2: '⛅',
-  3: '☁️',
-  45: '🌫️',
-  48: '🌫️',
-  51: '🌦️',
-  53: '🌦️',
-  55: '🌦️',
-  56: '🌧️',
-  57: '🌧️',
-  61: '🌧️',
-  63: '🌧️',
-  65: '🌧️',
-  66: '🌧️',
-  67: '🌧️',
-  71: '🌨️',
-  73: '🌨️',
-  75: '❄️',
-  77: '❄️',
-  80: '🌦️',
-  81: '🌧️',
-  82: '🌧️',
-  85: '🌨️',
-  86: '🌨️',
-  95: '⛈️',
-  96: '⛈️',
-  99: '⛈️',
-}
-
-const CONDITION_LABEL: Record<number, string> = {
-  0: 'Clear',
-  1: 'Mostly clear',
-  2: 'Partly cloudy',
-  3: 'Overcast',
-  45: 'Fog possible',
-  48: 'Fog possible',
-  51: 'Light drizzle',
-  53: 'Drizzle',
-  55: 'Drizzle',
-  56: 'Icy drizzle',
-  57: 'Icy drizzle',
-  61: 'Light rain',
-  63: 'Rain',
-  65: 'Heavy rain',
-  66: 'Icy rain',
-  67: 'Icy rain',
-  71: 'Snow possible',
-  73: 'Snow',
-  75: 'Heavy snow',
-  77: 'Snow grains',
-  80: 'Showers',
-  81: 'Showers',
-  82: 'Violent showers',
-  85: 'Snow showers',
-  86: 'Snow showers',
-  95: 'Thunderstorm risk',
-  96: 'Storm w/ hail risk',
-  99: 'Storm w/ hail risk',
-}
-
 const HINT_STYLES: Record<HintTone, string> = {
   cold: 'border-slate-blue/40 bg-slate-blue/20 text-blue-200',
   wet: 'border-forest-green/40 bg-forest-green/25 text-emerald-200',
   hot: 'border-amber/35 bg-amber/12 text-amber',
   alert: 'border-red-400/40 bg-red-400/10 text-red-300',
 }
-
-const RAIN_CODES = [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82]
-const SNOW_OR_STORM_CODES = [71, 73, 75, 77, 85, 86, 95, 96, 99]
 
 function toDisplay(celsius: number, unit: Unit): number {
   return unit === 'C' ? Math.round(celsius) : Math.round((celsius * 9) / 5 + 32)
@@ -144,13 +80,12 @@ function compassDirection(degrees?: number): string {
 }
 
 function conditionEmoji(code?: number): string {
-  if (code == null) return '🗓️'
-  return CONDITION_EMOJI[code] ?? '🗓️'
+  return getWeatherCode(code)?.emoji ?? '🗓️'
 }
 
 function conditionLabel(code?: number): string {
   if (code == null) return 'Early-autumn mix'
-  return CONDITION_LABEL[code] ?? 'Mixed conditions'
+  return getWeatherCode(code)?.label ?? 'Mixed conditions'
 }
 
 function locationLabel(day: DayPlan): string {
@@ -223,7 +158,6 @@ function formatHour(hour: number): string {
   return hour > 12 ? `${hour - 12} PM` : `${hour} AM`
 }
 
-/** Gear hints tie the forecast back to the day's actual outdoor plan. */
 function gearHints(day: DayPlan): { label: string; tone: HintTone }[] {
   const hints: { label: string; tone: HintTone }[] = []
   const isAlpine = (day.weatherLocation?.elevationM ?? 0) >= 1500
@@ -231,9 +165,9 @@ function gearHints(day: DayPlan): { label: string; tone: HintTone }[] {
   const precipPct = forecastPrecipPct(day)
   const precipMm = forecastPrecipMm(day)
   const gustKph = forecastGustKph(day)
-  const hasRainCode = day.weatherCode != null && RAIN_CODES.includes(day.weatherCode)
+  const hasRainCode = isRainWeatherCode(day.weatherCode)
 
-  if (day.weatherCode != null && SNOW_OR_STORM_CODES.includes(day.weatherCode)) {
+  if (isSnowOrStormWeatherCode(day.weatherCode)) {
     hints.push({ label: 'Recheck trail or lift status', tone: 'alert' })
   }
   if (isAlpine && (day.weatherForecastLeadDays ?? 0) > 7) {
