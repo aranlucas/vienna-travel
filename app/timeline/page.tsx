@@ -33,7 +33,9 @@ export default function TimelinePage() {
       {/* Hero */}
       <div className="mx-auto max-w-2xl px-4 pt-8 pb-4">
         <div className="mb-2">
-          <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-amber">Austria Expedition 2026</span>
+          <span className="text-[10px] font-medium uppercase tracking-[0.25em] text-amber">
+            Austria Expedition 2026
+          </span>
         </div>
         <h2 className="font-serif-display text-3xl sm:text-4xl text-cream mb-2">Austria</h2>
         <p className="text-cream-muted text-base">Fri, Sep 4 &ndash; Mon, Sep 14, 2026</p>

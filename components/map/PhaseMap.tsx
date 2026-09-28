@@ -142,29 +142,19 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
 
         {/* POI markers */}
         {phase.pois.map((poi) => (
-          <Marker
-            key={poi.id}
-            position={[poi.coordinates.lat, poi.coordinates.lng]}
-            icon={createPoiIcon(poi.icon)}
-          >
+          <Marker key={poi.id} position={[poi.coordinates.lat, poi.coordinates.lng]} icon={createPoiIcon(poi.icon)}>
             <Popup>
               <div style={{ fontFamily: 'Georgia, serif', maxWidth: '220px' }}>
                 <div style={{ color: '#d4a853', fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
                   {poi.name}
                 </div>
-                <div style={{ color: '#444', fontSize: '12px', lineHeight: '1.4' }}>
-                  {poi.description}
-                </div>
+                <div style={{ color: '#444', fontSize: '12px', lineHeight: '1.4' }}>{poi.description}</div>
                 {poi.warning && (
                   <div style={{ color: '#c0392b', fontSize: '11px', marginTop: '4px', fontWeight: 'bold' }}>
                     ⚠️ {poi.warning}
                   </div>
                 )}
-                {poi.tip && (
-                  <div style={{ color: '#27ae60', fontSize: '11px', marginTop: '4px' }}>
-                    💡 {poi.tip}
-                  </div>
-                )}
+                {poi.tip && <div style={{ color: '#27ae60', fontSize: '11px', marginTop: '4px' }}>💡 {poi.tip}</div>}
                 <a
                   href={buildGoogleMapsUrl(poi.name, poi.coordinates, poi.googleMapsUrl)}
                   target="_blank"
@@ -186,11 +176,7 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
 
         {/* Hike start markers */}
         {phase.hikes.map((hike) => (
-          <Marker
-            key={`${hike.id}-start`}
-            position={[hike.start.lat, hike.start.lng]}
-            icon={createHikeIcon()}
-          >
+          <Marker key={`${hike.id}-start`} position={[hike.start.lat, hike.start.lng]} icon={createHikeIcon()}>
             <Popup>
               <div style={{ fontFamily: 'Georgia, serif', maxWidth: '220px' }}>
                 <div style={{ color: '#4a7c59', fontWeight: 'bold', fontSize: '13px', marginBottom: '4px' }}>
@@ -208,27 +194,32 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
 
       {/* Map legend */}
       {showLegend && (
-        <div style={{
-          position: 'absolute',
-          bottom: '32px',
-          left: '10px',
-          zIndex: 1000,
-          background: 'rgba(15,26,15,0.88)',
-          border: '1px solid rgba(212,168,83,0.2)',
-          borderRadius: '6px',
-          padding: '8px 12px',
-          fontSize: '11px',
-          fontFamily: 'Georgia, serif',
-          color: '#c8c0b0',
-          pointerEvents: 'none',
-          backdropFilter: 'blur(4px)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '5px',
-        }}>
-          {hasDayRoutes && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '32px',
+            left: '10px',
+            zIndex: 1000,
+            background: 'rgba(15,26,15,0.88)',
+            border: '1px solid rgba(212,168,83,0.2)',
+            borderRadius: '6px',
+            padding: '8px 12px',
+            fontSize: '11px',
+            fontFamily: 'Georgia, serif',
+            color: '#c8c0b0',
+            pointerEvents: 'none',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+          }}
+        >
+          {hasDayRoutes &&
             phase.dayRoutes?.map((route, i) => (
-              <div key={`day-route-legend-${route.label}`} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div
+                key={`day-route-legend-${route.label}`}
+                style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+              >
                 <svg width="24" height="4" viewBox="0 0 24 4">
                   <line
                     x1="0"
@@ -242,17 +233,20 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
                 </svg>
                 <span>{route.label}</span>
               </div>
-            ))
-          )}
+            ))}
           {hasDriving && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <svg width="24" height="4" viewBox="0 0 24 4"><line x1="0" y1="2" x2="24" y2="2" stroke={DRIVING_COLOR} strokeWidth="2.5" strokeDasharray="8 5" /></svg>
+              <svg width="24" height="4" viewBox="0 0 24 4">
+                <line x1="0" y1="2" x2="24" y2="2" stroke={DRIVING_COLOR} strokeWidth="2.5" strokeDasharray="8 5" />
+              </svg>
               <span>Driving</span>
             </div>
           )}
           {hasHiking && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <svg width="24" height="4" viewBox="0 0 24 4"><line x1="0" y1="2" x2="24" y2="2" stroke="#4a7c59" strokeWidth="3" /></svg>
+              <svg width="24" height="4" viewBox="0 0 24 4">
+                <line x1="0" y1="2" x2="24" y2="2" stroke="#4a7c59" strokeWidth="3" />
+              </svg>
               <span>Hiking</span>
             </div>
           )}

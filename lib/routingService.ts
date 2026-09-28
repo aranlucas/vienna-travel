@@ -16,7 +16,7 @@ export async function fetchDrivingRoute(waypoints: LatLng[]): Promise<LatLng[]> 
   try {
     const res = await fetch(url)
     if (!res.ok) return waypoints
-    const data = await res.json() as {
+    const data = (await res.json()) as {
       routes?: Array<{ geometry: { coordinates: [number, number][] } }>
     }
     const coords2d = data.routes?.[0]?.geometry?.coordinates

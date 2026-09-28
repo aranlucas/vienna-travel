@@ -42,8 +42,10 @@ export function PolylineWithArrows({
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const polyline = (L.polyline(positions, { color, weight, opacity, dashArray }) as any)
-      .arrowheads({ ...arrows, color })
+    const polyline = (L.polyline(positions, { color, weight, opacity, dashArray }) as any).arrowheads({
+      ...arrows,
+      color,
+    })
 
     polyline.addTo(map)
     layerRef.current = polyline

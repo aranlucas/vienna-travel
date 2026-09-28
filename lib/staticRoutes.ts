@@ -46,10 +46,7 @@ export function assertStaticRoutesCurrent(): void {
       route.length <= waypoints.length ||
       STATIC_ROUTES.sourceWaypointKeys.trainRoutes[segment.id] !== sourceKey
     ) {
-      throw new Error(
-        `Missing rail-following geometry for ${segment.id}. ` +
-        'Run npx tsx scripts/prefetch-routes.ts.'
-      )
+      throw new Error(`Missing rail-following geometry for ${segment.id}. ` + 'Run npx tsx scripts/prefetch-routes.ts.')
     }
   }
 
@@ -76,21 +73,18 @@ export function assertStaticRoutesCurrent(): void {
     if (!route || route.length <= waypoints.length || sourceKey !== routeWaypointKey(waypoints)) {
       throw new Error(
         `Missing road-following geometry for ${segment.phaseId}/${segment.id}. ` +
-        'Run npx tsx scripts/prefetch-routes.ts.'
+          'Run npx tsx scripts/prefetch-routes.ts.',
       )
     }
   }
 
   for (const [phaseId, phase] of Object.entries(STATIC_ROUTES.phaseRoutes)) {
     const currentIds = new Set(
-      DRIVING_SEGMENTS.filter((segment) => segment.phaseId === phaseId).map((segment) => segment.id)
+      DRIVING_SEGMENTS.filter((segment) => segment.phaseId === phaseId).map((segment) => segment.id),
     )
     for (const routeId of Object.keys(phase.drivingRoutes)) {
       if (!currentIds.has(routeId)) {
-        throw new Error(
-          `Stale road geometry for ${phaseId}/${routeId}. ` +
-          'Run npx tsx scripts/prefetch-routes.ts.'
-        )
+        throw new Error(`Stale road geometry for ${phaseId}/${routeId}. ` + 'Run npx tsx scripts/prefetch-routes.ts.')
       }
     }
   }

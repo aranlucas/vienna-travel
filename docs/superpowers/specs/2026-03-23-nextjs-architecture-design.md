@@ -39,6 +39,7 @@ For waypoint pairs where Overpass still produces wrong geometry after Fix A, add
 This allows targeted manual corrections without touching the stitching algorithm.
 
 **File:** `lib/heroRouteData.ts` — add export:
+
 ```ts
 export const RAIL_SEGMENT_OVERRIDES: Record<string, LatLng[]> = {
   // Key format: "fromLat,fromLng->toLat,toLng"
@@ -47,6 +48,7 @@ export const RAIL_SEGMENT_OVERRIDES: Record<string, LatLng[]> = {
 ```
 
 **File:** `lib/overpassRailService.ts` — `fetchMultiSegmentRailRoute` checks override map:
+
 ```ts
 import { RAIL_SEGMENT_OVERRIDES } from './heroRouteData'
 
@@ -84,6 +86,7 @@ git add lib/staticRoutes.json && git commit -m "chore: refresh static OSRM route
 ```
 
 **Output shape** (`lib/staticRoutes.json`):
+
 ```json
 {
   "heroDriveCoords": [[47.8129, 13.0444], ...],
@@ -171,16 +174,16 @@ This ensures the observer fires regardless of whether the style change originate
 
 ## Files Changed
 
-| File | Change |
-|------|--------|
-| `lib/overpassRailService.ts` | Add `[!"service"]` filter; check override map in `fetchMultiSegmentRailRoute` |
-| `lib/heroRouteData.ts` | Add `RAIL_SEGMENT_OVERRIDES` export |
-| `scripts/prefetch-routes.ts` | New: one-off script to fetch and save OSRM routes |
-| `lib/staticRoutes.json` | New: generated — committed to repo |
-| `lib/staticRoutes.ts` | New: typed re-export of JSON |
-| `app/page.tsx` | Remove OSRM fetch calls; import from `lib/staticRoutes.ts` |
-| `components/phases/PhaseNav.tsx` | Replace `display:none/block` divs with `<Activity>` |
-| `components/map/MapInvalidator.tsx` | Also observe `map.getContainer()` directly (not just ancestors) |
+| File                                | Change                                                                        |
+| ----------------------------------- | ----------------------------------------------------------------------------- |
+| `lib/overpassRailService.ts`        | Add `[!"service"]` filter; check override map in `fetchMultiSegmentRailRoute` |
+| `lib/heroRouteData.ts`              | Add `RAIL_SEGMENT_OVERRIDES` export                                           |
+| `scripts/prefetch-routes.ts`        | New: one-off script to fetch and save OSRM routes                             |
+| `lib/staticRoutes.json`             | New: generated — committed to repo                                            |
+| `lib/staticRoutes.ts`               | New: typed re-export of JSON                                                  |
+| `app/page.tsx`                      | Remove OSRM fetch calls; import from `lib/staticRoutes.ts`                    |
+| `components/phases/PhaseNav.tsx`    | Replace `display:none/block` divs with `<Activity>`                           |
+| `components/map/MapInvalidator.tsx` | Also observe `map.getContainer()` directly (not just ancestors)               |
 
 ---
 

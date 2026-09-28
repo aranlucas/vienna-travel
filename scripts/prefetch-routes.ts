@@ -30,15 +30,15 @@ async function main() {
               const route = await fetchDrivingRoute(wpts)
               if (route.length <= wpts.length) {
                 throw new Error(
-                  `${phase.id}/${s.id}: OSRM did not return road-following geometry; static routes were not changed`
+                  `${phase.id}/${s.id}: OSRM did not return road-following geometry; static routes were not changed`,
                 )
               }
               console.log(`  ${phase.id}/${s.id}: ${route.length} points`)
               return [s.id, route] as [string, LatLng[]]
-            })
+            }),
         )
         return [phase.id, { drivingRoutes: Object.fromEntries(drivingEntries) }] as const
-      })
+      }),
     )
     phaseRoutes = Object.fromEntries(phaseResults) as StaticRoutes['phaseRoutes']
   } else {
@@ -55,13 +55,11 @@ async function main() {
       }
       const route = await fetchRelationGeometry(segment.relationId, from, to)
       if (route.length <= segment.waypoints.length) {
-        throw new Error(
-          `${segment.id}: OSM did not return rail-following geometry; static routes were not changed`
-        )
+        throw new Error(`${segment.id}: OSM did not return rail-following geometry; static routes were not changed`)
       }
       console.log(`  ${segment.id}: ${route.length} points`)
       return [segment.id, route] as [string, LatLng[]]
-    })
+    }),
   )
   const heroTrainRoutes = Object.fromEntries(heroTrainEntries)
 
@@ -74,16 +72,14 @@ async function main() {
           .map((segment) => [
             segment.id,
             routeWaypointKey(segment.waypoints!.map(({ lat, lng }) => [lat, lng] as LatLng)),
-          ])
-      )
+          ]),
+      ),
     ),
     trainRoutes: Object.fromEntries(
       HERO_TRAIN_SEGMENTS.map((segment) => [
         segment.id,
-        `${segment.relationId}:${routeWaypointKey(
-          segment.waypoints.map(({ lat, lng }) => [lat, lng] as LatLng)
-        )}`,
-      ])
+        `${segment.relationId}:${routeWaypointKey(segment.waypoints.map(({ lat, lng }) => [lat, lng] as LatLng))}`,
+      ]),
     ),
   }
 
@@ -100,4 +96,7 @@ async function main() {
   console.log(`Hero: ${heroDriveCoords.length} pts | Phases: ${PHASES.map((p) => p.id).join(', ')}`)
 }
 
-main().catch((err) => { console.error(err); process.exit(1) })
+main().catch((err) => {
+  console.error(err)
+  process.exit(1)
+})

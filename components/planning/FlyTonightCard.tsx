@@ -47,15 +47,13 @@ export function FlyTonightCard() {
   const nextEvent = useMemo(() => {
     if (!viennaNow) return null
     return events.find(
-      (event) =>
-        event.date > viennaNow.date || (event.date === viennaNow.date && event.sortTime >= viennaNow.minutes),
+      (event) => event.date > viennaNow.date || (event.date === viennaNow.date && event.sortTime >= viennaNow.minutes),
     )
   }, [events, viennaNow])
 
   if (!viennaNow || !nextEvent) return null
 
-  const minutesAway =
-    nextEvent.date === viennaNow.date ? Math.max(0, nextEvent.sortTime - viennaNow.minutes) : null
+  const minutesAway = nextEvent.date === viennaNow.date ? Math.max(0, nextEvent.sortTime - viennaNow.minutes) : null
   const urgencyLabel =
     minutesAway !== null && minutesAway <= 120
       ? minutesAway === 0

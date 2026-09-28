@@ -33,12 +33,8 @@ export function TrainStats({ segments }: TrainStatsProps) {
           </div>
 
           <div className="flex flex-wrap gap-4 text-sm text-cream-muted ml-6">
-            {seg.departureTime && (
-              <span className="text-amber font-medium">dep {seg.departureTime}</span>
-            )}
-            {seg.arrivalTime && (
-              <span className="text-amber font-medium">arr {seg.arrivalTime}</span>
-            )}
+            {seg.departureTime && <span className="text-amber font-medium">dep {seg.departureTime}</span>}
+            {seg.arrivalTime && <span className="text-amber font-medium">arr {seg.arrivalTime}</span>}
             <span>⏱ {formatDuration(seg.durationHours)}</span>
             <span>📍 ~{formatMiles(seg.distanceKm, 0)}</span>
           </div>

@@ -47,10 +47,7 @@ export function TripCountdown({ targetIso, label }: TripCountdownProps) {
     }
   }, [])
 
-  const remaining = useMemo(
-    () => nowMs === null ? null : getRemainingTime(targetDate, nowMs),
-    [targetDate, nowMs]
-  )
+  const remaining = useMemo(() => (nowMs === null ? null : getRemainingTime(targetDate, nowMs)), [targetDate, nowMs])
 
   return (
     <div className="rounded-lg border border-amber/25 bg-amber/5 px-4 py-3 text-sm">

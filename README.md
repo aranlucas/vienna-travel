@@ -27,12 +27,12 @@ It is built for the moment you ask, **“What’s the plan today—and what do w
 
 ## Four chapters. One very good excuse to go outside.
 
-| Chapter | The mood | Explore in the app |
-| --- | --- | --- |
-| 🏛️ **Vienna** | Imperial streets and a proper coffee break. | City walking routes, landmarks, and day-by-day stops. |
-| 🩵 **Salzkammergut** | Lakeside villages and water that barely looks real. | A regional map, suggested stops, and the next drive. |
-| 🥾 **Tyrolean Alps** | Big peaks, alpine lakes, and a well-earned hut stop. | Seebensee–Drachensee hike details, the optional three-lake loop, and elevation profiles. |
-| 🌲 **Achensee & Innsbruck** | One more lake. One more mountain view. | The final days around Pertisau and Innsbruck, plus the journey home. |
+| Chapter                     | The mood                                             | Explore in the app                                                                       |
+| --------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 🏛️ **Vienna**               | Imperial streets and a proper coffee break.          | City walking routes, landmarks, and day-by-day stops.                                    |
+| 🩵 **Salzkammergut**        | Lakeside villages and water that barely looks real.  | A regional map, suggested stops, and the next drive.                                     |
+| 🥾 **Tyrolean Alps**        | Big peaks, alpine lakes, and a well-earned hut stop. | Seebensee–Drachensee hike details, the optional three-lake loop, and elevation profiles. |
+| 🌲 **Achensee & Innsbruck** | One more lake. One more mountain view.               | The final days around Pertisau and Innsbruck, plus the journey home.                     |
 
 ## The little details that make a big trip easier
 
@@ -68,14 +68,14 @@ The default maps work without `NEXT_PUBLIC_CARTO_BASEMAP_KEY`; set it to use the
 
 Start in [`lib/data/`](lib/data/README.md):
 
-| Want to change… | Edit… |
-| --- | --- |
-| The trip title and dates | `trip.ts` |
-| The daily adventure | `itinerary.ts` |
-| Regions and map views | `phases.ts` |
-| Where to stay and how to get there | `stays.ts` and `transport.ts` |
-| Hikes and places worth a detour | `hikes.ts` and `pois.ts` |
-| What to pack and what to check | `packing.ts` and `logistics.ts` |
+| Want to change…                    | Edit…                           |
+| ---------------------------------- | ------------------------------- |
+| The trip title and dates           | `trip.ts`                       |
+| The daily adventure                | `itinerary.ts`                  |
+| Regions and map views              | `phases.ts`                     |
+| Where to stay and how to get there | `stays.ts` and `transport.ts`   |
+| Hikes and places worth a detour    | `hikes.ts` and `pois.ts`        |
+| What to pack and what to check     | `packing.ts` and `logistics.ts` |
 
 Trip data flows through `lib/tripData.ts`; timeline events are derived from those records. Keep dates, activities, and bookings in their source files so the views stay in sync.
 

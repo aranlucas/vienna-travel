@@ -30,12 +30,8 @@ export function SuggestedStopsSection({ phase, title = 'Suggested Stops' }: Sugg
               <div className="min-w-0">
                 <div className="text-cream font-medium text-base">{poi.name}</div>
                 <p className="text-sm text-cream-muted mt-1 leading-relaxed">{poi.description}</p>
-                {poi.tip && (
-                  <p className="text-xs text-emerald-300/90 mt-2 leading-relaxed">{poi.tip}</p>
-                )}
-                {poi.warning && (
-                  <p className="text-xs text-amber/85 mt-2 leading-relaxed">{poi.warning}</p>
-                )}
+                {poi.tip && <p className="text-xs text-emerald-300/90 mt-2 leading-relaxed">{poi.tip}</p>}
+                {poi.warning && <p className="text-xs text-amber/85 mt-2 leading-relaxed">{poi.warning}</p>}
               </div>
               <a
                 href={buildGoogleMapsUrl(poi.name, poi.coordinates, poi.googleMapsUrl)}

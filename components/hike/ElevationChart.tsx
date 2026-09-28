@@ -1,15 +1,7 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  type TooltipProps,
-} from 'recharts'
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, type TooltipProps } from 'recharts'
 import type { ElevationPoint } from '@/lib/tripData'
 import { formatFeet, formatMiles, toFeet } from '@/lib/units'
 
@@ -18,7 +10,10 @@ interface ElevationChartProps {
   height?: number
 }
 
-function CustomTooltip({ active, payload }: TooltipProps<number, string> & { payload?: { payload?: { distance?: number } }[] }) {
+function CustomTooltip({
+  active,
+  payload,
+}: TooltipProps<number, string> & { payload?: { payload?: { distance?: number } }[] }) {
   if (!active || !payload?.length) return null
   const dist = payload[0]?.payload?.distance as number
   const elev = (payload[0] as { value?: number })?.value as number
@@ -80,13 +75,7 @@ export function ElevationChart({ data, height = 120 }: ElevationChartProps) {
             domain={[minEle - padding, maxEle + padding]}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
-            dataKey="elevation"
-            stroke="#d4a853"
-            strokeWidth={2}
-            fill="url(#elevGrad)"
-          />
+          <Area type="monotone" dataKey="elevation" stroke="#d4a853" strokeWidth={2} fill="url(#elevGrad)" />
         </AreaChart>
       )}
     </div>
