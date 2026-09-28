@@ -1,83 +1,117 @@
-# Austria Expedition 2026
+<div align="center">
 
-Austria Expedition 2026 is a public-safe Next.js itinerary for a ten-day route
-through Vienna, the Salzkammergut, Tyrol, and Innsbruck. It turns a structured
-trip plan into an interactive route overview, daily timeline, phase maps,
-GPX-backed hikes, weather outlook, packing plan, bookings context, and
-pre-departure checks.
+# 🏔️ Austria Expedition
 
-Open the deployed itinerary at
-[vienna-travel.vercel.app](https://vienna-travel.vercel.app).
+### Coffee in Vienna. Lakes in Salzkammergut. Boots on in the Alps.
 
-## Run locally
+**Ten days of Austria, with the whole adventure at your fingertips.**
 
-Requires Node.js and pnpm.
+[![Explore the itinerary](https://img.shields.io/badge/Explore_the_itinerary-Visit_demo-167D8D?style=for-the-badge)](https://vienna-travel.vercel.app)
+[![Next.js](https://img.shields.io/badge/Next.js-16-111111?style=for-the-badge&logo=nextdotjs)](package.json)
+[![Interactive maps](https://img.shields.io/badge/Maps-Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)](components/map/)
+[![CI](https://github.com/aranlucas/vienna-travel/actions/workflows/ci.yml/badge.svg)](https://github.com/aranlucas/vienna-travel/actions/workflows/ci.yml)
+
+[![Illustrated journey from Vienna's coffeehouses through turquoise lakes to the Austrian Alps](docs/images/austria-expedition-cover.png)](https://vienna-travel.vercel.app)
+
+<sub>Destination-inspired cover illustration. Open the demo to explore the actual itinerary.</sub>
+
+**[Explore the trip ↗](https://vienna-travel.vercel.app) · [See the day-by-day timeline ↗](https://vienna-travel.vercel.app/timeline) · [Make it your own](#make-it-your-own)**
+
+</div>
+
+## A trip worth getting excited about
+
+Start among Vienna’s grand streets, wind through lake country, and trade city shoes for hiking boots beneath the Tyrolean peaks. **Austria Expedition** turns a ten-day trip into a browsable travel companion: follow the route, open a day’s plan, scout a hike, and see what belongs in your bag.
+
+It is built for the moment you ask, **“What’s the plan today—and what do we need before we leave?”** The map, timeline, weather outlook, stays, and practical checks live together, so the next leg of the adventure is easy to find.
+
+## Four chapters. One very good excuse to go outside.
+
+| Chapter | The mood | Explore in the app |
+| --- | --- | --- |
+| 🏛️ **Vienna** | Imperial streets and a proper coffee break. | City walking routes, landmarks, and day-by-day stops. |
+| 🩵 **Salzkammergut** | Lakeside villages and water that barely looks real. | A regional map, suggested stops, and the next drive. |
+| 🥾 **Tyrolean Alps** | Big peaks, alpine lakes, and a well-earned hut stop. | Seebensee–Drachensee hike details, the optional three-lake loop, and elevation profiles. |
+| 🌲 **Achensee & Innsbruck** | One more lake. One more mountain view. | The final days around Pertisau and Innsbruck, plus the journey home. |
+
+## The little details that make a big trip easier
+
+- **🗺️ Get the whole picture.** Interactive Leaflet maps connect the overall route with city walks, drives, points of interest, and hiking details.
+- **📅 Go from “sometime that day” to an actual plan.** Daily cards and the travel timeline bring activities, transport, and accommodation into the same view.
+- **🥾 Know the climb before the climb.** Hike cards show distance, elevation, difficulty, highlights, and GPX downloads. The verified three-lake track powers its route data; the Seebensee file is clearly marked as a separate valley-start reference.
+- **🌦️ Pack for the day ahead.** Weather outlooks, seasonal guidance, and packing recommendations put the practical decisions close to the itinerary.
+- **✅ Keep the logistics in sight.** Booking status, departure checks, and planning reminders sit alongside the fun parts.
+- **🤖 Let an assistant read the plan.** Read-only WebMCP tools expose the same trip overview, day plans, weather, and searchable itinerary data shown in the interface.
+
+**Take a quick tour:** open the [trip](https://vienna-travel.vercel.app), choose a region, look through a day’s activities, and open its map. Then jump to the [timeline](https://vienna-travel.vercel.app/timeline) or [packing plan](https://vienna-travel.vercel.app/packing) to see how the pieces fit together.
+
+## Make it your own
+
+The checked-in itinerary covers **September 5–14, 2026**. It is a concrete example you can explore or adapt by editing structured trip data.
+
+### Run it locally
+
+Use **Node.js 24** (matching CI) and **pnpm 12.4.2** (pinned in `package.json`).
 
 ```bash
-pnpm install
+git clone https://github.com/aranlucas/vienna-travel.git
+cd vienna-travel
+pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [localhost:3000](http://localhost:3000).
 
-```bash
-pnpm lint
-pnpm build
-```
+The default maps work without `NEXT_PUBLIC_CARTO_BASEMAP_KEY`; set it to use the optional CARTO basemap. Weather and route enrichment use external services. When a forecast is unavailable or outside its date range, the interface retains seasonal itinerary guidance.
 
-Near-term weather, OpenStreetMap/Overpass rail geometry, and OSRM route data
-are live network inputs. If a forecast is out of range or unavailable, the UI
-keeps the static seasonal guidance from the itinerary data. `NEXT_PUBLIC_CARTO_BASEMAP_KEY`
-is optional; without it the map uses its configured fallback tiles.
+### Change the journey
 
-## Privacy
+Start in [`lib/data/`](lib/data/README.md):
 
-Keep traveler names, contacts, booking references, ticket or loyalty numbers, payment data, and private provider links out of this repository. See [`SECURITY.md`](SECURITY.md) before changing trip fixtures.
+| Want to change… | Edit… |
+| --- | --- |
+| The trip title and dates | `trip.ts` |
+| The daily adventure | `itinerary.ts` |
+| Regions and map views | `phases.ts` |
+| Where to stay and how to get there | `stays.ts` and `transport.ts` |
+| Hikes and places worth a detour | `hikes.ts` and `pois.ts` |
+| What to pack and what to check | `packing.ts` and `logistics.ts` |
 
-## What is included
+Trip data flows through `lib/tripData.ts`; timeline events are derived from those records. Keep dates, activities, and bookings in their source files so the views stay in sync.
 
-- Four itinerary phases: Vienna, Salzkammergut, Tyrol, and the Olpererhütte /
-  return leg.
-- Day cards with activities, highlights, accommodation, travel segments,
-  carry recommendations, deadlines, and live checks.
-- Leaflet maps for the overall route, drives, city walks, POIs, and hikes.
-- Local GPX files for Seebensee–Drachensee and the three-lakes loop, parsed on
-  the server into distance, elevation gain, and profile data.
-- Forecast weather from Open-Meteo when the date is within range, with
-  historical guidance and explicit alpine-window context otherwise.
-- Read-only WebMCP tools exposing the same redacted trip overview, day plans,
-  weather, and plan-search data rendered by the page.
-
-## Rendering and source map
+<details>
+<summary><strong>Under the hood: maps, weather, and one shared trip model</strong></summary>
 
 ```mermaid
 flowchart LR
-  Data[lib/data/*] --> Assembly[lib/tripData.ts]
-  Assembly --> Page[app/page.tsx]
-  GPX[public/gpx/*.gpx] --> Parser[lib/gpxServer.ts]
-  Weather[Open-Meteo] --> Service[lib/weatherService.ts]
-  Parser --> Page
-  Service --> Page
-  Page --> UI[Maps · timeline · planning panels]
-  Assembly --> MCP[components/webmcp/TripWebMcp.tsx]
+  Data[Structured trip data] --> Trip[Trip assembly]
+  Trip --> Page[Next.js page]
+  GPX[Verified GPX tracks] --> Page
+  Weather[Open-Meteo weather] --> Page
+  Page --> Experience[Maps · timeline · packing · day plans]
+  Trip --> Tools[Read-only WebMCP tools]
 ```
 
-- `lib/data/` is the canonical fixture layer. `trip.ts`, `phases.ts`,
-  `itinerary.ts`, `transport.ts`, `stays.ts`, `hikes.ts`, `pois.ts`,
-  `packing.ts`, and `logistics.ts` own the redacted trip facts.
-- `app/page.tsx` performs server-side route, GPX, and weather enrichment before
-  rendering the page.
-- `components/map/`, `timeline/`, `weather/`, `planning/`, and `phases/` own
-  the user-facing surfaces.
-- `scripts/check-public-data.mjs` is the privacy gate used by CI.
+- `app/page.tsx` enriches the trip with route, GPX, and weather data on the server.
+- `components/map/`, `timeline/`, `weather/`, `planning/`, and `phases/` provide the main views.
+- `lib/gpxServer.ts`, `weatherService.ts`, and `routingService.ts` handle external and geographic data.
+- `components/webmcp/TripWebMcp.tsx` exposes the trip to compatible browser agents.
 
-For the full data conventions and architecture decisions, read
-[`spec.md`](spec.md) and [`lib/data/README.md`](lib/data/README.md).
+See [`spec.md`](spec.md) and the [data guide](lib/data/README.md) for the full architecture.
 
-## Status and data boundary
+</details>
 
-This repository contains a redacted planning demo, not a booking system or a
-source of live travel guarantees. Keep confirmations and traveler-specific
-records in a private system; the checked-in itinerary intentionally omits
-identifying and account-specific values. The current trip fixtures describe the
-September 5–14, 2026 plan and should be treated as editable planning data.
+### Check your changes
+
+```bash
+pnpm check:privacy
+pnpm lint
+pnpm typecheck
+pnpm build
+```
+
+This is a public itinerary demo. Keep personal traveler details and private booking references out of trip fixtures; [`SECURITY.md`](SECURITY.md) explains the boundary. Confirm current conditions and reservations with their providers when adapting the plan.
+
+---
+
+**Ready for the scenic route? [Explore Austria Expedition →](https://vienna-travel.vercel.app)**
