@@ -3,13 +3,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import type { DayPlan } from '@/lib/tripData'
 import { WEATHER_REFRESH_MS } from '@/lib/weatherRefresh'
+import { fetchWeatherSnapshot } from '@/lib/weatherClient'
+import { applyWeatherState, mergeWeatherSnapshot, type WeatherState } from '@/lib/weatherSnapshot'
 
 const FOCUS_REFRESH_AGE_MS = WEATHER_REFRESH_MS
-
-type WeatherApiResponse = {
-  days: DayPlan[]
-  refreshedAt: string
-}
 
 type LiveWeatherContextValue = {
   days: DayPlan[]
@@ -22,42 +19,41 @@ type LiveWeatherContextValue = {
 
 const LiveWeatherContext = createContext<LiveWeatherContextValue | null>(null)
 
-function isWeatherApiResponse(value: unknown): value is WeatherApiResponse {
-  if (!value || typeof value !== 'object') return false
-  const candidate = value as Partial<WeatherApiResponse>
-  return Array.isArray(candidate.days) && typeof candidate.refreshedAt === 'string'
-}
-
 export function LiveWeatherPage({ children, staticDays }: { children: ReactNode; staticDays: DayPlan[] }) {
-  const [weatherDays, setWeatherDays] = useState<DayPlan[] | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [weatherState, setWeatherState] = useState<WeatherState | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  const [refreshedAt, setRefreshedAt] = useState<string | null>(null)
   const inFlightRef = useRef<Promise<void> | null>(null)
-  const lastSuccessfulRefreshRef = useRef(0)
+  const requestController = useRef<AbortController | null>(null)
+  const stateRef = useRef<WeatherState | null>(null)
+  const staticDaysRef = useRef(staticDays)
+  useEffect(() => {
+    staticDaysRef.current = staticDays
+  }, [staticDays])
 
   const refresh = useCallback(async () => {
     if (inFlightRef.current) return inFlightRef.current
 
+    const controller = new AbortController()
+    requestController.current = controller
     const request = (async () => {
       setIsRefreshing(true)
       try {
-        const response = await fetch('/api/weather', { cache: 'no-store' })
-        const payload: unknown = await response.json()
-        if (!response.ok || !isWeatherApiResponse(payload)) {
-          throw new Error('The weather endpoint returned an invalid response.')
-        }
-
-        setWeatherDays(payload.days)
-        setRefreshedAt(payload.refreshedAt)
-        setError(null)
-        lastSuccessfulRefreshRef.current = Date.now()
+        const payload = await fetchWeatherSnapshot(controller.signal)
+        if (controller.signal.aborted) return
+        const next = mergeWeatherSnapshot(staticDaysRef.current, stateRef.current, payload)
+        stateRef.current = next
+        setWeatherState(next)
       } catch {
-        setError('Latest weather is temporarily unavailable. Keeping the last forecast or seasonal guidance.')
+        if (controller.signal.aborted) return
+        const next = mergeWeatherSnapshot(staticDaysRef.current, stateRef.current, null)
+        stateRef.current = next
+        setWeatherState(next)
       } finally {
-        setIsLoading(false)
-        setIsRefreshing(false)
+        if (!controller.signal.aborted) {
+          setIsLoading(false)
+          setIsRefreshing(false)
+        }
       }
     })()
 
@@ -65,7 +61,7 @@ export function LiveWeatherPage({ children, staticDays }: { children: ReactNode;
     try {
       await request
     } finally {
-      inFlightRef.current = null
+      if (inFlightRef.current === request) inFlightRef.current = null
     }
   }, [])
 
@@ -75,24 +71,25 @@ export function LiveWeatherPage({ children, staticDays }: { children: ReactNode;
     const interval = window.setInterval(() => void refresh(), WEATHER_REFRESH_MS)
     const refreshIfStale = () => {
       if (document.visibilityState !== 'visible') return
-      if (Date.now() - lastSuccessfulRefreshRef.current >= FOCUS_REFRESH_AGE_MS) void refresh()
+      const lastSuccess = stateRef.current?.refreshedAt
+      if (Date.now() - (lastSuccess ? Date.parse(lastSuccess) : 0) >= FOCUS_REFRESH_AGE_MS) void refresh()
     }
     const refreshWhenOnline = () => void refresh()
 
     document.addEventListener('visibilitychange', refreshIfStale)
     window.addEventListener('online', refreshWhenOnline)
     return () => {
+      requestController.current?.abort()
+      inFlightRef.current = null
       window.clearInterval(interval)
       document.removeEventListener('visibilitychange', refreshIfStale)
       window.removeEventListener('online', refreshWhenOnline)
     }
   }, [refresh])
 
-  const days = useMemo(() => {
-    if (!weatherDays) return staticDays
-    const weatherByDate = new Map(weatherDays.map((day) => [day.isoDate, day]))
-    return staticDays.map((day) => ({ ...day, ...weatherByDate.get(day.isoDate) }))
-  }, [staticDays, weatherDays])
+  const days = useMemo(() => applyWeatherState(staticDays, weatherState), [staticDays, weatherState])
+  const error = weatherState?.error ?? null
+  const refreshedAt = weatherState?.refreshedAt ?? null
 
   const value = useMemo(
     () => ({ days, error, isLoading, isRefreshing, refreshedAt, refresh }),

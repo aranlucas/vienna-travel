@@ -95,6 +95,12 @@ function locationLabel(day: DayPlan): string {
 }
 
 function forecastHorizon(day: DayPlan): { label: string; className: string } {
+  if (day.weatherStatus === 'stale' || day.weatherStatus === 'unavailable') {
+    return {
+      label: day.weatherStatus === 'stale' ? 'Stale forecast' : 'Unavailable',
+      className: 'border-amber/30 bg-amber/10 text-amber',
+    }
+  }
   const lead = day.weatherForecastLeadDays
   if (lead == null) {
     return {
@@ -280,7 +286,7 @@ export function TripWeatherOutlook() {
           {isLoading
             ? 'Loading the latest forecast…'
             : refreshedAt
-              ? `Checked ${formatRefreshTime(refreshedAt)}`
+              ? `Last forecast ${formatRefreshTime(refreshedAt)}`
               : 'Seasonal guidance loaded'}
         </span>
         {error && <span className="text-cream-muted/70">{error}</span>}
@@ -406,6 +412,13 @@ export function TripWeatherOutlook() {
                       </div>
                     </div>
 
+                    {day.weatherStatus === 'stale' && (
+                      <p className="mt-3 text-xs text-amber leading-relaxed">
+                        Last forecast is stale
+                        {day.weatherFetchedAt ? `, fetched ${formatRefreshTime(day.weatherFetchedAt)}` : ''}. Recheck
+                        before relying on it.
+                      </p>
+                    )}
                     {day.weatherNote && (
                       <p className="mt-3 text-xs text-cream-muted/80 leading-relaxed">{day.weatherNote}</p>
                     )}
@@ -429,6 +442,13 @@ export function TripWeatherOutlook() {
                       Typical September pattern
                     </div>
                     {day.weather && <p className="mt-2 text-sm text-cream-muted leading-relaxed">{day.weather}</p>}
+                    {day.weatherStatus === 'stale' && (
+                      <p className="mt-3 text-xs text-amber leading-relaxed">
+                        Last forecast is stale
+                        {day.weatherFetchedAt ? `, fetched ${formatRefreshTime(day.weatherFetchedAt)}` : ''}. Recheck
+                        before relying on it.
+                      </p>
+                    )}
                     {day.weatherNote && (
                       <p className="mt-2 text-xs text-cream-muted/75 leading-relaxed">{day.weatherNote}</p>
                     )}
