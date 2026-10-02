@@ -60,6 +60,9 @@ export interface DayPlan {
   weather?: string
   weatherNote?: string
   weatherSource?: 'historical' | 'forecast'
+  /** Freshness of the resolved forecast, independent of its source. */
+  weatherStatus?: 'forecast' | 'stale' | 'unavailable' | 'outside-window'
+  weatherFetchedAt?: string
   weatherLocation?: DayWeatherLocation
   /** Hours when the itinerary is actually exposed at weatherLocation. */
   weatherWindow?: DayWeatherWindow

@@ -55,7 +55,13 @@ function DayEntry({ day }: DayEntryProps) {
         {day.weather && (
           <div className="mb-3 rounded-lg border border-slate-blue/30 bg-slate-blue/12 px-3 py-2">
             <div className="text-[10px] uppercase tracking-[0.22em] text-blue-200 font-medium">
-              {day.weatherSource === 'forecast' ? 'Forecast Weather' : 'Typical Weather'}
+              {day.weatherStatus === 'stale'
+                ? 'Stale Forecast Weather'
+                : day.weatherStatus === 'unavailable'
+                  ? 'Saved Weather Guidance'
+                  : day.weatherSource === 'forecast'
+                    ? 'Forecast Weather'
+                    : 'Typical Weather'}
             </div>
             <div className="text-sm text-cream mt-1 leading-snug">{day.weather}</div>
             {day.weatherNote && (

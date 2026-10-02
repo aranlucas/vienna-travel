@@ -10,17 +10,10 @@ const orderedDays = Object.values(DAYS).sort((a, b) => a.isoDate.localeCompare(b
 const weatherDataFingerprint = createHash('sha256').update(JSON.stringify(orderedDays)).digest('hex')
 
 const getCachedWeather = unstable_cache(
-  async () => {
-    const days = await resolveDaysWeather(orderedDays)
-
-    return {
-      days,
-      refreshedAt: new Date().toISOString(),
-    }
-  },
+  () => resolveDaysWeather(orderedDays),
   // The data cache persists across deployments. The fixed-length digest changes
   // whenever the itinerary changes without embedding the full dataset in the key.
-  ['vienna-trip-weather-v2', weatherDataFingerprint],
+  ['vienna-trip-weather-v3', weatherDataFingerprint],
   {
     revalidate: WEATHER_REFRESH_SECONDS,
     tags: ['trip-weather'],

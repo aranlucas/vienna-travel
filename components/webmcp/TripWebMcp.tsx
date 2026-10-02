@@ -106,6 +106,8 @@ function weatherForDay(day: DayPlan) {
     location: day.weatherLocation?.name,
     locationElevationM: day.weatherLocation?.elevationM,
     source: day.weatherSource,
+    status: day.weatherStatus,
+    fetchedAt: day.weatherFetchedAt,
     forecastLeadDays: day.weatherForecastLeadDays,
     plannedWindow: day.weatherWindow,
     plannedExposure: day.weatherExposure,
