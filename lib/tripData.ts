@@ -18,11 +18,17 @@ import { PHASE_DEFINITIONS } from './data/phases'
 import { BOOKINGS, CHECKLIST, LIVE_CHECKS, PLANNING_SHORTLIST } from './data/logistics'
 
 export type { Coordinates } from './data/trip'
+
 export type { Difficulty, ElevationPoint, Hike } from './data/hikes'
+
 export type { PointOfInterest } from './data/pois'
+
 export type { DayActivity, DayPlan, DayWeatherLocation } from './data/itinerary'
+
 export type { DrivingSegment, TrainSegment } from './data/transport'
+
 export type { PackingPlan } from './data/packing'
+
 export type { BookingItem, PlanningShortlistItem, LiveCheckItem } from './data/logistics'
 
 export { BOOKINGS, LIVE_CHECKS, PLANNING_SHORTLIST }
@@ -54,6 +60,7 @@ export interface Phase {
 
 function withoutPhaseId<T extends { phaseId: string }>({ phaseId, ...value }: T): Omit<T, 'phaseId'> {
   void phaseId
+
   return value
 }
 

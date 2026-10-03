@@ -1,4 +1,5 @@
 const KM_TO_MILES = 0.621371
+
 const M_TO_FEET = 3.28084
 
 function trimTrailingZero(value: string): string {

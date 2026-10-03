@@ -6,6 +6,7 @@ export function ActivityDetails({
   label = 'Details & sources',
 }: Pick<DayActivity, 'details' | 'links'> & { label?: string }) {
   if (!details?.length && !links?.length) return null
+
   return (
     <details className="group mt-1 text-sm leading-relaxed text-cream-muted">
       <summary className="flex min-h-[44px] cursor-pointer list-none items-center gap-2 text-xs font-medium text-amber [&::-webkit-details-marker]:hidden">

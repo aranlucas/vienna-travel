@@ -10,12 +10,16 @@ export async function fetchWeatherSnapshot(
   const controller = new AbortController()
   const abort = () => controller.abort()
   signal?.addEventListener('abort', abort, { once: true })
+
   if (signal?.aborted) controller.abort()
   const timeout = setTimeout(abort, WEATHER_REQUEST_TIMEOUT_MS)
+
   try {
     const response = await fetcher('/api/weather', { cache: 'no-store', signal: controller.signal })
     const payload: unknown = await response.json()
+
     if (!response.ok || !isWeatherSnapshot(payload)) throw new Error('Invalid weather response.')
+
     return payload
   } finally {
     clearTimeout(timeout)

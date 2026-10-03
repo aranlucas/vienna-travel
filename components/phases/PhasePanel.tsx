@@ -38,7 +38,7 @@ function StayFacts({ stay }: { stay: Stay }) {
 
 export function PhasePanel({ phase, drivingRoutes, hikingRoutes, children }: PhasePanelProps) {
   const stays = STAYS.filter((stay) => stay.phaseId === phase.id)
-  const copy = PHASE_COPY[phase.id]
+  const copy = PHASE_COPY.get(phase.id)
   const callouts = children ?? copy?.callouts
   const title = copy?.title ?? phase.title
   const subtitle = copy?.subtitle ?? `Phase ${phase.number} · ${phase.dates}`

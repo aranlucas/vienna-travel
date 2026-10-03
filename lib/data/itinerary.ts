@@ -93,7 +93,9 @@ export interface DayPlan {
 }
 
 /** All trip days, keyed by ISO date. */
-export const DAYS: Record<string, DayPlan> = {
+type Itinerary = Record<string, DayPlan>
+
+export const DAYS = {
   '2026-09-05': {
     isoDate: '2026-09-05',
     date: 'Sept 5',
@@ -1184,4 +1186,4 @@ export const DAYS: Record<string, DayPlan> = {
     notes:
       'All times are CEST until the explicitly labeled Seattle arrival in PDT. Boarding deadlines, desks and gates come from the airline on the day. The saved 75-minute FRA connection is not a guarantee against delay.',
   },
-}
+} satisfies Itinerary

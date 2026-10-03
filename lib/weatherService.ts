@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import type { DayPlan, DayWeatherLocation } from './tripData'
 import { describeWeatherCode } from './weatherCodes'
 import {
@@ -10,44 +11,54 @@ import {
 } from './weatherSnapshot'
 
 const FORECAST_API = 'https://api.open-meteo.com/v1/forecast'
+
 const TRIP_TIME_ZONE = 'Europe/Vienna'
+
 const FORECAST_FETCH_ATTEMPTS = 2
+
 const FORECAST_RETRY_DELAY_MS = 250
+
 // Keep both attempts and their retry delay comfortably below six seconds per location.
 const FORECAST_FETCH_TIMEOUT_MS = 2_500
 
-type OpenMeteoDaily = {
-  time: string[]
-  temperature_2m_max?: (number | null)[]
-  temperature_2m_min?: (number | null)[]
-  apparent_temperature_max?: (number | null)[]
-  apparent_temperature_min?: (number | null)[]
-  precipitation_probability_max?: (number | null)[]
-  precipitation_sum?: (number | null)[]
-  precipitation_hours?: (number | null)[]
-  weather_code?: (number | null)[]
-  wind_speed_10m_max?: (number | null)[]
-  wind_gusts_10m_max?: (number | null)[]
-  wind_direction_10m_dominant?: (number | null)[]
-  uv_index_max?: (number | null)[]
-  sunrise?: (string | null)[]
-  sunset?: (string | null)[]
-}
+const numberSeries = z.array(z.number().nullable().catch(null)).nullish().catch(null)
 
-type OpenMeteoHourly = {
-  time: string[]
-  temperature_2m?: (number | null)[]
-  apparent_temperature?: (number | null)[]
-  precipitation_probability?: (number | null)[]
-  precipitation?: (number | null)[]
-  wind_speed_10m?: (number | null)[]
-  wind_gusts_10m?: (number | null)[]
-}
+const textSeries = z.array(z.string().nullable().catch(null)).nullish().catch(null)
 
-type OpenMeteoResponse = {
-  daily?: OpenMeteoDaily
-  hourly?: OpenMeteoHourly
-}
+const responseContract = z.object({
+  daily: z
+    .object({
+      time: z.array(z.string().nullable().catch(null)),
+      temperature_2m_max: numberSeries,
+      temperature_2m_min: numberSeries,
+      apparent_temperature_max: numberSeries,
+      apparent_temperature_min: numberSeries,
+      precipitation_probability_max: numberSeries,
+      precipitation_sum: numberSeries,
+      precipitation_hours: numberSeries,
+      weather_code: numberSeries,
+      wind_speed_10m_max: numberSeries,
+      wind_gusts_10m_max: numberSeries,
+      wind_direction_10m_dominant: numberSeries,
+      uv_index_max: numberSeries,
+      sunrise: textSeries,
+      sunset: textSeries,
+    })
+    .nullish()
+    .catch(null),
+  hourly: z
+    .object({
+      time: z.array(z.string().nullable().catch(null)),
+      temperature_2m: numberSeries,
+      apparent_temperature: numberSeries,
+      precipitation_probability: numberSeries,
+      precipitation: numberSeries,
+      wind_speed_10m: numberSeries,
+      wind_gusts_10m: numberSeries,
+    })
+    .nullish()
+    .catch(null),
+})
 
 export type ForecastEntry = {
   maxC: number
@@ -82,6 +93,7 @@ type LocationForecast = {
 
 function locationKey(location: DayWeatherLocation): string {
   const elevation = location.elevationM == null ? 'auto' : Math.round(location.elevationM)
+
   return `${location.coordinates.lat},${location.coordinates.lng}@${elevation}`
 }
 
@@ -94,6 +106,7 @@ async function fetchLocationForecast(location: DayWeatherLocation, fetcher: type
   const byHour = new Map<string, HourlyForecastEntry>()
   const { lat, lng } = location.coordinates
   const elevation = location.elevationM == null ? '' : `&elevation=${Math.round(location.elevationM)}`
+
   const url =
     `${FORECAST_API}?latitude=${lat}&longitude=${lng}` +
     `&daily=temperature_2m_max,temperature_2m_min,apparent_temperature_max,apparent_temperature_min,` +
@@ -106,8 +119,10 @@ async function fetchLocationForecast(location: DayWeatherLocation, fetcher: type
   for (let attempt = 0; attempt < FORECAST_FETCH_ATTEMPTS; attempt += 1) {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), FORECAST_FETCH_TIMEOUT_MS)
+
     try {
       const headers = attempt === 0 ? undefined : { 'x-vienna-weather-attempt': String(attempt + 1) }
+
       const res = await fetcher(url, {
         cache: 'no-store',
         headers,
@@ -115,22 +130,17 @@ async function fetchLocationForecast(location: DayWeatherLocation, fetcher: type
       })
 
       if (res.ok) {
-        const data = (await res.json()) as OpenMeteoResponse
+        const data = responseContract.parse(await res.json())
         const daily = data.daily
         const hourly = data.hourly
 
-        if (Array.isArray(daily?.time))
+        if (daily != null)
           daily.time.forEach((isoDate, i) => {
-            if (typeof isoDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return
+            if (isoDate === null || !/^\d{4}-\d{2}-\d{2}$/.test(isoDate)) return
             const maxC = daily.temperature_2m_max?.[i]
             const minC = daily.temperature_2m_min?.[i]
-            if (
-              typeof maxC !== 'number' ||
-              !Number.isFinite(maxC) ||
-              typeof minC !== 'number' ||
-              !Number.isFinite(minC)
-            )
-              return
+
+            if (maxC == null || !Number.isFinite(maxC) || minC == null || !Number.isFinite(minC)) return
             byDate.set(isoDate, {
               maxC,
               minC,
@@ -149,11 +159,12 @@ async function fetchLocationForecast(location: DayWeatherLocation, fetcher: type
             })
           })
 
-        if (Array.isArray(hourly?.time))
+        if (hourly != null)
           hourly.time.forEach((localDateTime, i) => {
-            if (typeof localDateTime !== 'string' || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(localDateTime)) return
+            if (localDateTime === null || !/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(localDateTime)) return
             const temperatureC = hourly.temperature_2m?.[i]
-            if (typeof temperatureC !== 'number' || !Number.isFinite(temperatureC)) return
+
+            if (temperatureC == null || !Number.isFinite(temperatureC)) return
             byHour.set(localDateTime, {
               temperatureC,
               feelsC: finiteNumber(hourly.apparent_temperature?.[i]),
@@ -180,45 +191,51 @@ async function fetchLocationForecast(location: DayWeatherLocation, fetcher: type
   return { byDate, byHour }
 }
 
-function finiteNumber(value: unknown): number | null {
-  return typeof value === 'number' && Number.isFinite(value) ? value : null
+function finiteNumber(value: number | null | undefined): number | null {
+  return value != null && Number.isFinite(value) ? value : null
 }
 
-function optionalText(value: unknown): string | null {
-  return typeof value === 'string' ? value : null
+function optionalText(value: string | null | undefined): string | null {
+  return value ?? null
 }
 
 function maxValue(values: (number | null)[]): number | undefined {
   const present = values.filter((value): value is number => value != null)
+
   return present.length ? Math.max(...present) : undefined
 }
 
 function minValue(values: (number | null)[]): number | undefined {
   const present = values.filter((value): value is number => value != null)
+
   return present.length ? Math.min(...present) : undefined
 }
 
 function sumValue(values: (number | null)[]): number | undefined {
   const present = values.filter((value): value is number => value != null)
+
   if (!present.length) return undefined
+
   return Math.round(present.reduce((sum, value) => sum + value, 0) * 100) / 100
 }
 
 function resolveExposure(day: DayPlan, forecast: LocationForecast): DayPlan['weatherExposure'] {
   const window = day.weatherWindow
+
   if (!window) return undefined
 
-  const entries = [...forecast.byHour.entries()]
-    .filter(([localDateTime]) => {
-      if (!localDateTime.startsWith(`${day.isoDate}T`)) return false
-      const hour = Number(localDateTime.slice(11, 13))
-      return hour >= window.startHour && hour <= window.endHour
-    })
-    .map(([, entry]) => entry)
+  const entries = [...forecast.byHour.entries()].flatMap(([localDateTime, entry]) => {
+    if (!localDateTime.startsWith(`${day.isoDate}T`)) return []
+    const hour = Number(localDateTime.slice(11, 13))
+
+    return hour >= window.startHour && hour <= window.endHour ? [entry] : []
+  })
+
   if (!entries.length) return undefined
 
   const highC = maxValue(entries.map((entry) => entry.temperatureC))
   const lowC = minValue(entries.map((entry) => entry.temperatureC))
+
   if (highC == null || lowC == null) return undefined
 
   const feelsHighC = maxValue(entries.map((entry) => entry.feelsC))
@@ -258,8 +275,10 @@ export async function resolveDaysWeather(
   const checkedAt = now.toISOString()
   const deltas = new Map(days.map((day) => [day.isoDate, forecastLeadDays(day.isoDate, now)]))
   const locations = new Map<string, DayWeatherLocation>()
+
   for (const day of days) {
     const delta = deltas.get(day.isoDate)
+
     if (day.weatherLocation && delta != null && delta >= 0 && delta < FORECAST_WINDOW_DAYS) {
       locations.set(locationKey(day.weatherLocation), day.weatherLocation)
     }
@@ -270,58 +289,63 @@ export async function resolveDaysWeather(
       async ([key, location]) => [key, await fetchLocationForecast(location, fetcher)] as const,
     ),
   )
+
   const forecasts = new Map(entries)
 
-  const snapshots = days
-    .filter((day) => day.weatherLocation)
-    .map((day): WeatherDaySnapshot => {
-      const identity = { isoDate: day.isoDate, scope: weatherScope(day) }
-      const delta = deltas.get(day.isoDate)!
-      if (delta < 0 || delta >= FORECAST_WINDOW_DAYS) return { ...identity, status: 'outside-window' }
+  const snapshots = days.flatMap<WeatherDaySnapshot>((day) => {
+    if (!day.weatherLocation) return []
+    const identity = { isoDate: day.isoDate, scope: weatherScope(day) }
+    const delta = deltas.get(day.isoDate)!
 
-      const forecast = forecasts.get(locationKey(day.weatherLocation!))
-      const entry = forecast?.byDate.get(day.isoDate)
+    if (delta < 0 || delta >= FORECAST_WINDOW_DAYS) return { ...identity, status: 'outside-window' }
 
-      if (forecast && entry && delta < FORECAST_WINDOW_DAYS) {
-        const precipParts = [
-          entry.precipPct == null ? null : `${Math.round(entry.precipPct)}% max precip chance`,
-          entry.precipMm == null || entry.precipMm <= 0 ? null : `${entry.precipMm.toFixed(1)} mm modeled`,
-        ].filter(Boolean)
-        const precipText = precipParts.length ? `, ${precipParts.join(', ')}` : ''
-        const name = day.weatherLocation!.name
-        const conditionNote = describeWeatherCode(entry.code)
-        const weatherExposure = resolveExposure(day, forecast)
-        const exposureText = weatherExposure
-          ? ` ${weatherExposure.label}: about ${weatherExposure.highC}°C / ${weatherExposure.lowC}°C.`
-          : ''
-        return {
-          ...identity,
-          status: 'forecast',
-          fetchedAt: checkedAt,
-          values: weatherValues({
-            weatherHighC: Math.round(entry.maxC),
-            weatherLowC: Math.round(entry.minC),
-            weatherFeelsHighC: entry.feelsMaxC == null ? undefined : Math.round(entry.feelsMaxC),
-            weatherFeelsLowC: entry.feelsMinC == null ? undefined : Math.round(entry.feelsMinC),
-            weatherPrecipPct: entry.precipPct == null ? undefined : Math.round(entry.precipPct),
-            weatherPrecipMm: entry.precipMm == null ? undefined : entry.precipMm,
-            weatherPrecipHours: entry.precipHours == null ? undefined : entry.precipHours,
-            weatherCode: entry.code ?? undefined,
-            weatherWindKph: entry.windKph == null ? undefined : Math.round(entry.windKph),
-            weatherGustKph: entry.gustKph == null ? undefined : Math.round(entry.gustKph),
-            weatherWindDirectionDeg: entry.windDirectionDeg == null ? undefined : Math.round(entry.windDirectionDeg),
-            weatherUvMax: entry.uvMax == null ? undefined : entry.uvMax,
-            weatherSunrise: entry.sunrise ?? undefined,
-            weatherSunset: entry.sunset ?? undefined,
-            weatherForecastLeadDays: delta,
-            weatherExposure,
-            weather: `${name} full-day forecast: about ${Math.round(entry.maxC)}°C / ${Math.round(entry.minC)}°C${precipText}.${exposureText}`,
-            weatherNote: [day.weatherNote, conditionNote].filter(Boolean).join(' '),
-          }),
-        }
+    const forecast = forecasts.get(locationKey(day.weatherLocation!))
+    const entry = forecast?.byDate.get(day.isoDate)
+
+    if (forecast && entry && delta < FORECAST_WINDOW_DAYS) {
+      const precipParts = [
+        entry.precipPct == null ? null : `${Math.round(entry.precipPct)}% max precip chance`,
+        entry.precipMm == null || entry.precipMm <= 0 ? null : `${entry.precipMm.toFixed(1)} mm modeled`,
+      ].filter(Boolean)
+
+      const precipText = precipParts.length ? `, ${precipParts.join(', ')}` : ''
+      const name = day.weatherLocation!.name
+      const conditionNote = describeWeatherCode(entry.code)
+      const weatherExposure = resolveExposure(day, forecast)
+
+      const exposureText = weatherExposure
+        ? ` ${weatherExposure.label}: about ${weatherExposure.highC}°C / ${weatherExposure.lowC}°C.`
+        : ''
+
+      return {
+        ...identity,
+        status: 'forecast',
+        fetchedAt: checkedAt,
+        values: weatherValues({
+          weatherHighC: Math.round(entry.maxC),
+          weatherLowC: Math.round(entry.minC),
+          weatherFeelsHighC: entry.feelsMaxC == null ? undefined : Math.round(entry.feelsMaxC),
+          weatherFeelsLowC: entry.feelsMinC == null ? undefined : Math.round(entry.feelsMinC),
+          weatherPrecipPct: entry.precipPct == null ? undefined : Math.round(entry.precipPct),
+          weatherPrecipMm: entry.precipMm == null ? undefined : entry.precipMm,
+          weatherPrecipHours: entry.precipHours == null ? undefined : entry.precipHours,
+          weatherCode: entry.code ?? undefined,
+          weatherWindKph: entry.windKph == null ? undefined : Math.round(entry.windKph),
+          weatherGustKph: entry.gustKph == null ? undefined : Math.round(entry.gustKph),
+          weatherWindDirectionDeg: entry.windDirectionDeg == null ? undefined : Math.round(entry.windDirectionDeg),
+          weatherUvMax: entry.uvMax == null ? undefined : entry.uvMax,
+          weatherSunrise: entry.sunrise ?? undefined,
+          weatherSunset: entry.sunset ?? undefined,
+          weatherForecastLeadDays: delta,
+          weatherExposure,
+          weather: `${name} full-day forecast: about ${Math.round(entry.maxC)}°C / ${Math.round(entry.minC)}°C${precipText}.${exposureText}`,
+          weatherNote: [day.weatherNote, conditionNote].filter(Boolean).join(' '),
+        }),
       }
+    }
 
-      return { ...identity, status: 'unavailable' }
-    })
+    return { ...identity, status: 'unavailable' }
+  })
+
   return { days: snapshots, checkedAt }
 }

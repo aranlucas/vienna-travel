@@ -38,24 +38,32 @@ export interface TimelineEvent {
 /** Parses "3:30 PM", "6:45 AM", "14:56", or "2:56 PM" into minutes from midnight. */
 function timeToMinutes(timeStr: string): number {
   const match12 = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i)
+
   if (match12) {
     let hours = parseInt(match12[1], 10)
     const minutes = parseInt(match12[2], 10)
     const ampm = match12[3].toUpperCase()
+
     if (ampm === 'PM' && hours !== 12) hours += 12
+
     if (ampm === 'AM' && hours === 12) hours = 0
+
     return hours * 60 + minutes
   }
+
   const match24 = timeStr.match(/(\d{1,2}):(\d{2})/)
+
   if (match24) {
     return parseInt(match24[1], 10) * 60 + parseInt(match24[2], 10)
   }
+
   return 0
 }
 
 /** Extract the first time token from a window string like "3:00 PM - 6:00 PM". */
 function parseTimeFromWindow(window: string): string {
   const match = window.match(/\d{1,2}:\d{2}\s*(?:AM|PM)/i)
+
   return match ? match[0] : '3:00 PM'
 }
 
@@ -66,6 +74,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
   // A claimed segment is suppressed in its own loop; the activity generates the
   // consolidated event instead (activity title + segment metadata).
   const claimedSegmentIds = new Set<string>()
+
   for (const phase of PHASES) {
     for (const day of phase.days) {
       for (const activity of day.activities) {
@@ -148,6 +157,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
   // ── Train segments ────────────────────────────────────────────────────────
   for (const phase of PHASES) {
     if (!phase.trainSegments) continue
+
     for (const train of phase.trainSegments) {
       if (claimedSegmentIds.has(train.id)) continue
       events.push({
@@ -206,6 +216,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
 
         if (activity.segmentId) {
           const train = trainById.get(activity.segmentId)
+
           if (train) {
             events.push({
               id: `train-${train.id}`,
@@ -226,8 +237,10 @@ export function buildTimelineEvents(): TimelineEvent[] {
             })
             continue
           }
+
           // ── Consolidated drive event ──────────────────────────────────────
           const drive = driveById.get(activity.segmentId)
+
           if (drive) {
             events.push({
               id: `drive-${drive.id}`,
@@ -248,8 +261,10 @@ export function buildTimelineEvents(): TimelineEvent[] {
             })
             continue
           }
+
           // ── Consolidated flight event ─────────────────────────────────────
           const flight = flightById.get(activity.segmentId)
+
           if (flight) {
             events.push({
               id: `flight-${flight.id}`,
@@ -287,7 +302,9 @@ export function buildTimelineEvents(): TimelineEvent[] {
   // ── Sort: by date, then by time within each day ───────────────────────────
   events.sort((a, b) => {
     const dateCompare = a.date.localeCompare(b.date)
+
     if (dateCompare !== 0) return dateCompare
+
     return a.sortTime - b.sortTime
   })
 
@@ -300,5 +317,6 @@ function formatDateLabel(isoDate: string): string {
   const date = new Date(isoDate + 'T12:00:00')
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
   return `${days[date.getUTCDay()]}, ${months[date.getUTCMonth()]} ${String(date.getUTCDate()).padStart(2, '0')}`
 }

@@ -12,7 +12,8 @@
     "format": "oxfmt .",
     "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "lint:plugin": "node tools/oxlint/verify-anti-slop.mjs"
   },
   "dependencies": {
     "@mcp-b/webmcp-polyfill": "5.1.0",
@@ -23,9 +24,11 @@
     "react-dom": "^19.3.0",
     "react-leaflet": "^5.0.0",
     "recharts": "^3.10.1",
-    "usewebmcp": "5.1.0"
+    "usewebmcp": "5.1.0",
+    "zod": "4.6.5"
   },
   "devDependencies": {
+    "@oxlint/plugins": "1.85.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^26.6.3",
@@ -33,7 +36,7 @@
     "@types/react-dom": "^19.3.0",
     "jsdom": "^30.1.1",
     "oxfmt": "0.70.0",
-    "oxlint": "^1.85.0",
+    "oxlint": "1.85.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^7",
     "vitest": "^5.0.3"

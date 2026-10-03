@@ -1,5 +1,14 @@
 {
-  "ignorePatterns": [".next/**"],
+  "ignorePatterns": [
+    ".next/**",
+    "tools/oxlint/anti-slop/**",
+    "node_modules/**",
+    "build/**",
+    "dist/**",
+    "coverage/**",
+    ".snapshot*",
+    "_site/**"
+  ],
   "objectWrap": "preserve",
   "printWidth": 120,
   "proseWrap": "preserve",

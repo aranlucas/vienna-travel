@@ -22,6 +22,7 @@ export interface HeroMapProps {
 function createPhaseIcon(number: number, compact: boolean) {
   const size = compact ? 26 : 32
   const fontSize = compact ? 12 : 14
+
   return L.divIcon({
     className: '',
     html: `<div style="
@@ -75,6 +76,7 @@ function createCompactIcon(tone: 'flight' | 'stay') {
     tone === 'flight'
       ? { bg: '#c0626a', border: '#f5d0d4', glyph: '✈' }
       : { bg: '#1d4d3d', border: '#d8e9df', glyph: '●' }
+
   return L.divIcon({
     className: '',
     html: `<div style="
@@ -91,14 +93,17 @@ function createCompactIcon(tone: 'flight' | 'stay') {
 }
 
 const outbound = getOutboundToVie()
+
 const ALL_BOUND_POINTS: LatLng[] = [[48.2085, 16.3731], ...DRIVE_WAYPOINTS]
 
 function useIsMobile(breakpoint = 640): boolean {
   const query = `(max-width: ${breakpoint - 1}px)`
+
   return useSyncExternalStore(
     (onChange) => {
       const mql = window.matchMedia(query)
       mql.addEventListener('change', onChange)
+
       return () => mql.removeEventListener('change', onChange)
     },
     () => window.matchMedia(query).matches,
@@ -108,8 +113,8 @@ function useIsMobile(breakpoint = 640): boolean {
 
 export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (L.Icon.Default.prototype as any)._getIconUrl
+    // Leaflet 1.9 uses this prototype hook; remove it before setting bundled icon URLs.
+    delete L.Icon.Default.prototype._getIconUrl
     L.Icon.Default.mergeOptions({
       iconUrl: '/leaflet/marker-icon.png',
       iconRetinaUrl: '/leaflet/marker-icon-2x.png',
@@ -147,6 +152,7 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
         {HERO_TRAIN_SEGMENTS.map((seg) => {
           const route = trainRoutes[seg.id]
           const positions: LatLng[] = route?.length ? route : seg.waypoints.map((c) => [c.lat, c.lng])
+
           return (
             <PolylineWithArrows
               key={seg.id}

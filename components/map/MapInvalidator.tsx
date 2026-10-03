@@ -12,6 +12,7 @@ export function MapInvalidator() {
 
   useEffect(() => {
     const id = setTimeout(() => map.invalidateSize({ animate: false }), 50)
+
     return () => clearTimeout(id)
   }, [map])
 

@@ -13,10 +13,13 @@ interface ElevationChartProps {
 function CustomTooltip({
   active,
   payload,
-}: TooltipProps<number, string> & { payload?: { payload?: { distance?: number } }[] }) {
+}: TooltipProps<number, string> & { payload?: { value?: number; payload?: { distance?: number } }[] }) {
   if (!active || !payload?.length) return null
-  const dist = payload[0]?.payload?.distance as number
-  const elev = (payload[0] as { value?: number })?.value as number
+  const dist = payload[0]?.payload?.distance
+  const elev = payload[0]?.value
+
+  if (dist === undefined || elev === undefined) return null
+
   return (
     <div className="bg-dark-card border border-amber/30 rounded px-3 py-2 text-xs shadow-lg">
       <div className="text-cream-muted">{formatMiles(dist)}</div>
@@ -31,13 +34,16 @@ export function ElevationChart({ data, height = 120 }: ElevationChartProps) {
 
   useEffect(() => {
     const el = containerRef.current
+
     if (!el) return
 
     const ro = new ResizeObserver((entries) => {
       const w = entries[0]?.contentRect.width ?? 0
       setWidth(w)
     })
+
     ro.observe(el)
+
     return () => ro.disconnect()
   }, [])
 

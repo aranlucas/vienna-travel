@@ -11,9 +11,10 @@ import type { LatLng } from './routingService'
  * segments so the overview cannot silently retain an old pickup, stop, or return.
  */
 export const DRIVE_WAYPOINTS: LatLng[] = DRIVING_SEGMENTS.flatMap((segment) =>
-  (segment.waypoints ?? []).map(({ lat, lng }) => [lat, lng] as LatLng),
+  (segment.waypoints ?? []).map(({ lat, lng }) => [lat, lng] satisfies LatLng),
 ).filter(([lat, lng], index, points) => {
   const previous = points[index - 1]
+
   return !previous || previous[0] !== lat || previous[1] !== lng
 })
 

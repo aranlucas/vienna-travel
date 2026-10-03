@@ -4,5 +4,6 @@ export function buildGoogleMapsUrl(_name: string, coordinates: Coordinates, goog
   if (googleMapsUrl) return googleMapsUrl
 
   const query = encodeURIComponent(`${coordinates.lat},${coordinates.lng}`)
+
   return `https://www.google.com/maps/search/?api=1&query=${query}`
 }

@@ -1,20 +1,21 @@
 import { afterEach, expect, it, vi } from 'vitest'
 
-// Synthetic itinerary and transparent cache adapter keep this route test offline.
-vi.mock('next/cache', () => ({ unstable_cache: (fn: () => unknown) => fn }))
-vi.mock('../lib/data/itinerary', () => ({
-  DAYS: {
-    '2026-10-02': {
-      isoDate: '2026-10-02',
-      date: 'Test day',
-      title: 'Private static title',
-      phaseId: 'test',
-      activities: [],
-      weatherLocation: { name: 'Synthetic point', coordinates: { lat: 1, lng: 2 } },
-    },
-  },
-}))
-import { GET } from '../app/api/weather/route'
+import type { DayPlan } from '../lib/tripData'
+import { createWeatherHandler } from '../lib/weatherRoute'
+import { resolveDaysWeather } from '../lib/weatherService'
+
+const syntheticDay: DayPlan = {
+  isoDate: '2026-10-02',
+  date: 'Test day',
+  dayLabel: 'Test',
+  title: 'Private static title',
+  phaseId: 'test',
+  activities: [],
+  weatherLocation: { name: 'Synthetic point', coordinates: { lat: 1, lng: 2 } },
+}
+
+const GET = createWeatherHandler(() => resolveDaysWeather([syntheticDay]))
+
 import { isWeatherSnapshot } from '../lib/weatherSnapshot'
 
 afterEach(() => {

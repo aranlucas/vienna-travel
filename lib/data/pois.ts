@@ -14,7 +14,9 @@ export interface PointOfInterest {
 
 type POIData = PointOfInterest & { phaseId: string }
 
-export const POIS: Record<string, POIData> = {
+type PointOfInterestCatalog = Record<string, POIData>
+
+export const POIS = {
   // ── Vienna ──────────────────────────────────────────────────────────────────
   almanac: {
     id: 'almanac',
@@ -384,4 +386,4 @@ export const POIS: Record<string, POIData> = {
     icon: 'transport',
     phaseId: 'olperer',
   },
-}
+} satisfies PointOfInterestCatalog

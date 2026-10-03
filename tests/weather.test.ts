@@ -5,13 +5,16 @@ import {
   applyWeatherState,
   forecastLeadDays,
   isWeatherSnapshot,
+  type WeatherSnapshot,
   mergeWeatherSnapshot,
   weatherScope,
 } from '../lib/weatherSnapshot'
 import { fetchWeatherSnapshot, WEATHER_REQUEST_TIMEOUT_MS } from '../lib/weatherClient'
 
 const now = new Date('2026-10-02T08:00:00Z')
+
 const later = new Date('2026-10-02T08:31:00Z')
+
 function day(isoDate = '2026-10-02', lat = 1): DayPlan {
   return {
     isoDate,
@@ -27,22 +30,32 @@ function day(isoDate = '2026-10-02', lat = 1): DayPlan {
     weatherWindow: { label: 'Synthetic exposure', startHour: 9, endHour: 11 },
   }
 }
+
 function fixture(dates = ['2026-10-02'], high = 22) {
   return {
     daily: { time: dates, temperature_2m_max: dates.map(() => high), temperature_2m_min: dates.map(() => 12) },
     hourly: { time: ['2026-10-02T09:00', '2026-10-02T10:00', '2026-10-03T09:00'], temperature_2m: [15, 18, 99] },
   }
 }
-function mockFetch(data: unknown = fixture()) {
+
+type ProviderFixture = {
+  daily: { time: string[]; temperature_2m_max: (number | string)[]; temperature_2m_min: number[] }
+  hourly?: ReturnType<typeof fixture>['hourly']
+}
+
+function mockFetch(data: ProviderFixture | WeatherSnapshot = fixture()) {
   return vi.fn<typeof fetch>().mockImplementation(async () => Response.json(data))
 }
+
 async function failSnapshot(days: DayPlan[]) {
   vi.useFakeTimers()
   const fetcher = vi.fn<typeof fetch>().mockRejectedValue(new Error('Synthetic outage'))
   const pending = resolveDaysWeather(days, { now: later, fetcher })
   await vi.runAllTimersAsync()
+
   return { snapshot: await pending, fetcher }
 }
+
 afterEach(() => {
   vi.useRealTimers()
   vi.restoreAllMocks()
@@ -72,17 +85,22 @@ describe('weather resolver and last-good merge', () => {
 
   it('updates successful locations while retaining only the failed location’s old forecast', async () => {
     const days = [day(), day('2026-10-03', 3)]
+
     const original = mergeWeatherSnapshot(
       days,
       null,
       await resolveDaysWeather(days, { now, fetcher: mockFetch(fixture(days.map((d) => d.isoDate))) }),
       now,
     )
+
     vi.useFakeTimers()
+
     const fetcher = vi.fn<typeof fetch>().mockImplementation(async (url) => {
       if (String(url).includes('latitude=3&')) throw new Error('Synthetic partial outage')
+
       return Response.json(fixture(['2026-10-02'], 28))
     })
+
     const pending = resolveDaysWeather(days, { now: later, fetcher })
     await vi.runAllTimersAsync()
     const state = mergeWeatherSnapshot(days, original, await pending, later)
@@ -171,12 +189,14 @@ describe('weather resolver and last-good merge', () => {
     expect(forecastLeadDays('2026-10-18', before)).toBe(16)
     expect(forecastLeadDays('2026-10-18', midnight)).toBe(15)
     const days = [day()]
+
     const state = mergeWeatherSnapshot(
       days,
       null,
       await resolveDaysWeather(days, { now: before, fetcher: mockFetch() }),
       before,
     )
+
     const expired = mergeWeatherSnapshot(days, state, null, midnight)
     expect(expired.days[0].status).toBe('outside-window')
     expect(applyWeatherState(days, expired, midnight)[0].weatherHighC).toBeUndefined()
@@ -198,9 +218,11 @@ describe('weather resolver and last-good merge', () => {
 
   it('reports missing target dates and malformed daily temperatures as unavailable', async () => {
     vi.useFakeTimers()
+
     const fetcher = mockFetch({
       daily: { time: ['2026-10-02'], temperature_2m_max: ['NaN'], temperature_2m_min: [12] },
     })
+
     const pending = resolveDaysWeather([day()], { now, fetcher })
     await vi.runAllTimersAsync()
     expect((await pending).days[0].status).toBe('unavailable')
@@ -214,8 +236,11 @@ describe('weather resolver and last-good merge', () => {
       daily: { ...fixture().daily, precipitation_sum: ['bad'], wind_speed_10m_max: [Infinity], sunrise: [3] },
       hourly: { time: ['2026-10-02T09:00', '2026-10-02T10:00'], temperature_2m: [NaN, 15], precipitation: [1, 'bad'] },
     }
+
     // Keep non-finite values intact to exercise the parser rather than JSON's NaN->null conversion.
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValue({ ok: true, json: async () => data } as Response)
+    const response = new Response()
+    response.json = async () => data
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(response)
     const snapshot = await resolveDaysWeather([day()], { now, fetcher })
     expect(snapshot.days[0].status).toBe('forecast')
     expect(snapshot.days[0].values).toMatchObject({ weatherHighC: 22, weatherExposure: { highC: 15, lowC: 15 } })
@@ -239,12 +264,14 @@ describe('browser weather transport', () => {
 
   it('times out stalled requests, then permits a successful retry', async () => {
     vi.useFakeTimers()
+
     const stalled = vi.fn<typeof fetch>().mockImplementation(
       (_url, init) =>
         new Promise((_resolve, reject) => {
           init?.signal?.addEventListener('abort', () => reject(new Error('Aborted')), { once: true })
         }),
     )
+
     const rejected = expect(fetchWeatherSnapshot(undefined, stalled)).rejects.toThrow('Aborted')
     await vi.advanceTimersByTimeAsync(WEATHER_REQUEST_TIMEOUT_MS)
     await rejected
@@ -257,12 +284,14 @@ describe('browser weather transport', () => {
 
   it('cancels requests on provider cleanup', async () => {
     const controller = new AbortController()
+
     const fetcher = vi.fn<typeof fetch>().mockImplementation(
       (_url, init) =>
         new Promise((_resolve, reject) => {
           init?.signal?.addEventListener('abort', () => reject(new Error('Aborted')), { once: true })
         }),
     )
+
     const rejected = expect(fetchWeatherSnapshot(controller.signal, fetcher)).rejects.toThrow('Aborted')
     controller.abort()
     await rejected
@@ -275,11 +304,13 @@ describe('browser weather transport', () => {
     const previous = mergeWeatherSnapshot(days, null, loaded, now)
     const fetcher = vi.fn<typeof fetch>().mockResolvedValue(new Response('Service unavailable', { status: 503 }))
     let incoming = null
+
     try {
       incoming = await fetchWeatherSnapshot(undefined, fetcher)
     } catch {
       /* Provider failure path. */
     }
+
     const state = mergeWeatherSnapshot(days, previous, incoming, later)
     expect(state.days[0].scope).toBe(weatherScope(days[0]))
     expect(state.days[0].status).toBe('stale')
