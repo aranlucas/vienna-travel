@@ -26,7 +26,9 @@ export interface Hike {
 
 type HikeData = Hike & { phaseId: string }
 
-export const HIKES: Record<string, HikeData> = {
+type HikeCatalog = Record<string, HikeData>
+
+export const HIKES = {
   seebensee: {
     id: 'seebensee',
     name: 'Seebensee & Drachensee',
@@ -80,4 +82,4 @@ export const HIKES: Record<string, HikeData> = {
     highlights: ['Blindsee "ghost trees"', 'Mittersee', 'Weißensee', 'Zugspitze reflections'],
     phaseId: 'tyrol',
   },
-}
+} satisfies HikeCatalog

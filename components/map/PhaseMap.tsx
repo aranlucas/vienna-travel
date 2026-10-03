@@ -20,16 +20,21 @@ export interface PhaseMapProps {
   hikingRoutes: Record<string, LatLng[]>
 }
 
-const POI_COLORS: Record<string, string> = {
-  culture: '#8b9ed4',
-  food: '#d4a853',
-  nature: '#4a7c59',
-  hotel: '#c9856a',
-  transport: '#8e8e8e',
-}
+type PointOfInterestPalette = Record<string, string>
+
+const POI_COLORS = new Map(
+  Object.entries({
+    culture: '#8b9ed4',
+    food: '#d4a853',
+    nature: '#4a7c59',
+    hotel: '#c9856a',
+    transport: '#8e8e8e',
+  } satisfies PointOfInterestPalette),
+)
 
 function createPoiIcon(type = 'nature') {
-  const color = POI_COLORS[type] ?? '#d4a853'
+  const color = POI_COLORS.get(type) ?? '#d4a853'
+
   return L.divIcon({
     className: '',
     html: `<div style="
@@ -64,8 +69,8 @@ const DRIVING_COLOR = '#fb923c'
 
 export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikingRoutes }: PhaseMapProps) {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    delete (L.Icon.Default.prototype as any)._getIconUrl
+    // Leaflet 1.9 uses this prototype hook; remove it before setting bundled icon URLs.
+    delete L.Icon.Default.prototype._getIconUrl
     L.Icon.Default.mergeOptions({
       iconUrl: '/leaflet/marker-icon.png',
       iconRetinaUrl: '/leaflet/marker-icon-2x.png',
@@ -95,7 +100,9 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
         {/* Per-segment OSRM driving routes */}
         {phase.drivingSegments.map((seg) => {
           const route = drivingRoutes[seg.id]
+
           if (!route?.length) return null
+
           return (
             <PolylineWithArrows
               key={seg.id}
@@ -113,7 +120,7 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
         {phase.dayRoutes?.map((route, i) => (
           <PolylineWithArrows
             key={`day-route-${route.label}`}
-            positions={route.coordinates.map((c) => [c.lat, c.lng] as LatLng)}
+            positions={route.coordinates.map((c) => [c.lat, c.lng] satisfies LatLng)}
             color={DAY_ROUTE_COLORS[i % DAY_ROUTE_COLORS.length]}
             weight={3}
             opacity={0.8}
@@ -127,7 +134,9 @@ export default function PhaseMap({ phase, height = '400px', drivingRoutes, hikin
         {/* Pre-fetched hiking routes */}
         {phase.hikes.map((hike) => {
           const route = hikingRoutes[hike.id]
+
           if (!route?.length) return null
+
           return (
             <PolylineWithArrows
               key={hike.id}

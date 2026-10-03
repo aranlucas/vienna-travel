@@ -123,6 +123,7 @@ interface DayTimelineProps {
 export function DayTimeline({ days }: DayTimelineProps) {
   const liveDays = useLiveWeatherDays(days)
   const { today, showPast } = useTripProgress()
+
   if (!liveDays.length) return null
 
   return (

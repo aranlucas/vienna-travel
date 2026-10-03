@@ -4,7 +4,7 @@ import { PHASES } from '../lib/tripData'
 import { fetchDrivingRoute } from '../lib/routingService'
 import type { LatLng } from '../lib/routingService'
 import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from '../lib/heroRouteData'
-import { routeWaypointKey, STATIC_ROUTES, type StaticRoutes } from '../lib/staticRoutes'
+import { routeWaypointKey, STATIC_ROUTES, phaseRoutesSchema, type StaticRoutes } from '../lib/staticRoutes'
 import { fetchRelationGeometry } from '../lib/overpassRailService'
 
 async function main() {
@@ -15,11 +15,13 @@ async function main() {
   if (!trainOnly) {
     console.log('Fetching hero driving route...')
     heroDriveCoords = await fetchDrivingRoute(DRIVE_WAYPOINTS)
+
     if (heroDriveCoords.length <= DRIVE_WAYPOINTS.length) {
       throw new Error('Hero drive: OSRM did not return road-following geometry; static routes were not changed')
     }
 
     console.log('Fetching per-phase driving routes...')
+
     const phaseResults = await Promise.all(
       PHASES.map(async (phase) => {
         const drivingEntries = await Promise.all(
@@ -28,39 +30,51 @@ async function main() {
             .map(async (s) => {
               const wpts: LatLng[] = s.waypoints!.map((c) => [c.lat, c.lng])
               const route = await fetchDrivingRoute(wpts)
+
               if (route.length <= wpts.length) {
                 throw new Error(
                   `${phase.id}/${s.id}: OSRM did not return road-following geometry; static routes were not changed`,
                 )
               }
+
               console.log(`  ${phase.id}/${s.id}: ${route.length} points`)
-              return [s.id, route] as [string, LatLng[]]
+
+              return [s.id, route] satisfies [string, LatLng[]]
             }),
         )
+
         return [phase.id, { drivingRoutes: Object.fromEntries(drivingEntries) }] as const
       }),
     )
-    phaseRoutes = Object.fromEntries(phaseResults) as StaticRoutes['phaseRoutes']
+
+    phaseRoutes = phaseRoutesSchema.parse(Object.fromEntries(phaseResults))
   } else {
     console.log('Keeping existing static driving routes (--train-only)')
   }
 
   console.log('Fetching hero train routes...')
+
   const heroTrainEntries = await Promise.all(
     HERO_TRAIN_SEGMENTS.map(async (segment) => {
       const from = segment.waypoints[0]
       const to = segment.waypoints[segment.waypoints.length - 1]
+
       if (segment.relationId == null) {
         throw new Error(`${segment.id}: missing OSM relationId; bbox rail stitcher was removed`)
       }
+
       const route = await fetchRelationGeometry(segment.relationId, from, to)
+
       if (route.length <= segment.waypoints.length) {
         throw new Error(`${segment.id}: OSM did not return rail-following geometry; static routes were not changed`)
       }
+
       console.log(`  ${segment.id}: ${route.length} points`)
-      return [segment.id, route] as [string, LatLng[]]
+
+      return [segment.id, route] satisfies [string, LatLng[]]
     }),
   )
+
   const heroTrainRoutes = Object.fromEntries(heroTrainEntries)
 
   const sourceWaypointKeys = {
@@ -71,14 +85,14 @@ async function main() {
           .filter((segment) => segment.waypoints && segment.waypoints.length >= 2)
           .map((segment) => [
             segment.id,
-            routeWaypointKey(segment.waypoints!.map(({ lat, lng }) => [lat, lng] as LatLng)),
+            routeWaypointKey(segment.waypoints!.map(({ lat, lng }) => [lat, lng] satisfies LatLng)),
           ]),
       ),
     ),
     trainRoutes: Object.fromEntries(
       HERO_TRAIN_SEGMENTS.map((segment) => [
         segment.id,
-        `${segment.relationId}:${routeWaypointKey(segment.waypoints.map(({ lat, lng }) => [lat, lng] as LatLng))}`,
+        `${segment.relationId}:${routeWaypointKey(segment.waypoints.map(({ lat, lng }) => [lat, lng] satisfies LatLng))}`,
       ]),
     ),
   }

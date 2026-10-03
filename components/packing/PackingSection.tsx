@@ -53,6 +53,7 @@ export function PackingSection({ packing }: PackingSectionProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 mt-6">
         {packing.groups.map((group) => {
           const tone = group.tone ?? 'default'
+
           return (
             <details key={group.title} className={`rounded-xl border p-4 ${TONE_STYLES[tone]}`}>
               <summary className="cursor-pointer list-none min-h-[44px]">

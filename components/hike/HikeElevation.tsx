@@ -18,5 +18,6 @@ interface HikeElevationProps {
 
 export function HikeElevation({ data, height = 110 }: HikeElevationProps) {
   if (!data.length) return null
+
   return <ElevationChart data={data} height={height} />
 }

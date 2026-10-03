@@ -5,13 +5,7 @@ import { useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet-arrowheads'
 
-export interface ArrowOptions {
-  size?: string
-  frequency?: string
-  fill?: boolean
-  yawn?: number
-  color?: string
-}
+export type ArrowOptions = Parameters<L.Polyline['arrowheads']>[0]
 
 interface PolylineWithArrowsProps {
   positions: [number, number][]
@@ -41,8 +35,7 @@ export function PolylineWithArrows({
       layerRef.current = null
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const polyline = (L.polyline(positions, { color, weight, opacity, dashArray }) as any).arrowheads({
+    const polyline = L.polyline(positions, { color, weight, opacity, dashArray }).arrowheads({
       ...arrows,
       color,
     })

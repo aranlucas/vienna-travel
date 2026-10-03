@@ -3,7 +3,9 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const repositoryRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
+
 const dataRoot = path.join(repositoryRoot, 'lib', 'data')
+
 const checkedExtensions = new Set(['.ts', '.tsx', '.json'])
 
 const checks = [
@@ -41,6 +43,7 @@ async function sourceFiles(directory) {
       } else {
         files.push(...(await sourceFiles(absolutePath)))
       }
+
       continue
     }
 
@@ -55,6 +58,7 @@ async function sourceFiles(directory) {
 }
 
 const failures = []
+
 for (const file of await sourceFiles(dataRoot)) {
   if (file.privatePath) {
     failures.push(`${file.privatePath}: private data path must not be present in the public tree`)
@@ -62,8 +66,10 @@ for (const file of await sourceFiles(dataRoot)) {
   }
 
   const source = await readFile(file.absolutePath, 'utf8')
+
   for (const check of checks) {
     const match = check.pattern.exec(source)
+
     if (!match) continue
     const line = source.slice(0, match.index).split('\n').length
     failures.push(`${file.relativePath}:${line}: ${check.reason}`)
@@ -72,6 +78,7 @@ for (const file of await sourceFiles(dataRoot)) {
 
 if (failures.length > 0) {
   console.error('Public-data privacy check failed:')
+
   for (const failure of failures) console.error(`- ${failure}`)
   process.exitCode = 1
 } else {

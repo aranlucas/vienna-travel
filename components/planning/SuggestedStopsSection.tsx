@@ -11,6 +11,7 @@ function getSuggestedStops(phase: Phase): PointOfInterest[] {
 
   return phase.suggestedStopIds.flatMap((id) => {
     const poi = phase.pois.find((entry) => entry.id === id)
+
     return poi ? [poi] : []
   })
 }

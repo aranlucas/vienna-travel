@@ -53,20 +53,24 @@ const WEATHER_CODE_NOTES: Record<WeatherCodeTone, string> = {
 
 export function getWeatherCode(code?: number | null): WeatherCodeInfo | undefined {
   if (code == null) return undefined
+
   return WEATHER_CODE_BY_CODE.get(code)
 }
 
 export function describeWeatherCode(code?: number | null): string | undefined {
   const entry = getWeatherCode(code)
+
   return entry ? WEATHER_CODE_NOTES[entry.tone] : undefined
 }
 
 export function isRainWeatherCode(code?: number | null): boolean {
   const tone = getWeatherCode(code)?.tone
+
   return tone === 'drizzle' || tone === 'rain'
 }
 
 export function isSnowOrStormWeatherCode(code?: number | null): boolean {
   const tone = getWeatherCode(code)?.tone
+
   return tone === 'snow' || tone === 'storm'
 }

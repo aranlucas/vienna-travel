@@ -8,6 +8,7 @@ import type { DayPlan } from '../lib/tripData'
 import { WEATHER_REQUEST_TIMEOUT_MS } from '../lib/weatherClient'
 
 const now = new Date('2026-10-02T08:00:00Z')
+
 const day: DayPlan = {
   isoDate: '2026-10-02',
   date: 'Test day',
@@ -19,6 +20,7 @@ const day: DayPlan = {
   weatherSource: 'historical',
   weatherLocation: { name: 'Synthetic location', coordinates: { lat: 1, lng: 2 } },
 }
+
 const good = {
   checkedAt: now.toISOString(),
   days: [
@@ -31,12 +33,16 @@ const good = {
     },
   ],
 }
+
 const unavailable = {
   checkedAt: now.toISOString(),
   days: [{ isoDate: day.isoDate, scope: weatherScope(day), status: 'unavailable' }],
 }
+
 let current: ReturnType<typeof useLiveWeather>
+
 let root: Root
+
 let container: HTMLDivElement
 
 function Consumer() {
@@ -44,12 +50,14 @@ function Consumer() {
   useEffect(() => {
     current = value
   }, [value])
+
   return (
     <output>
       {value.days[0].weatherStatus}: {value.days[0].weatherHighC}
     </output>
   )
 }
+
 beforeEach(() => {
   vi.useFakeTimers({ now })
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
@@ -57,12 +65,14 @@ beforeEach(() => {
   document.body.append(container)
   root = createRoot(container)
 })
+
 afterEach(async () => {
   await act(async () => root.unmount())
   container.remove()
   vi.useRealTimers()
   vi.unstubAllGlobals()
 })
+
 async function mount() {
   await act(async () => {
     root.render(
@@ -98,6 +108,7 @@ it('releases in-flight deduplication after a timeout so the next refresh can rec
         }),
     )
     .mockResolvedValueOnce(Response.json(good))
+
   vi.stubGlobal('fetch', fetcher)
   await mount()
   expect(current.isRefreshing).toBe(true)

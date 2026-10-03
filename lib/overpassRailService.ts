@@ -3,6 +3,7 @@ import type { Coordinates } from './tripData'
 export type LatLng = [number, number]
 
 const OVERPASS_HEADERS = { 'User-Agent': 'vienna-travel-route-prefetch/1.0' }
+
 const OSM_API_URL = 'https://api.openstreetmap.org/api/0.6'
 
 interface OverpassNode {
@@ -45,28 +46,36 @@ function assembleRelationGeometry(relation: OverpassRelation, from: Coordinates)
     (m): m is OverpassRelationMember & { geometry: OverpassNode[] } =>
       m.type === 'way' && Array.isArray(m.geometry) && m.geometry.length > 0,
   )
+
   if (wayMembers.length === 0) return []
 
   const fromNode: OverpassNode = { lat: from.lat, lon: from.lng }
   const firstGeom = wayMembers[0].geometry
   const lastGeom = wayMembers[wayMembers.length - 1].geometry
+
   const members =
     dist(fromNode, lastGeom[lastGeom.length - 1]) < dist(fromNode, firstGeom[0])
       ? [...wayMembers].reverse()
       : wayMembers
 
   const result: LatLng[] = []
+
   for (const member of members) {
     let geom = member.role === 'backward' ? [...member.geometry].reverse() : member.geometry
+
     if (result.length > 0) {
       const tail: OverpassNode = { lat: result[result.length - 1][0], lon: result[result.length - 1][1] }
       const dFwd = dist(tail, geom[0])
       const dRev = dist(tail, geom[geom.length - 1])
+
       if (dRev < dFwd && dFwd > 0.0005) geom = [...geom].reverse()
     }
+
     const startAt = result.length === 0 ? 0 : 1
+
     for (let i = startAt; i < geom.length; i++) result.push([geom[i].lat, geom[i].lon])
   }
+
   return result
 }
 
@@ -83,14 +92,17 @@ function trimToSegment(pts: LatLng[], from: Coordinates, to: Coordinates): LatLn
     startDist = Infinity,
     endIdx = pts.length - 1,
     endDist = Infinity
+
   for (let i = 0; i < pts.length; i++) {
     const p: OverpassNode = { lat: pts[i][0], lon: pts[i][1] }
     const df = dist(p, fromNode)
     const dt = dist(p, toNode)
+
     if (df < startDist) {
       startDist = df
       startIdx = i
     }
+
     if (dt < endDist) {
       endDist = dt
       endIdx = i
@@ -98,6 +110,7 @@ function trimToSegment(pts: LatLng[], from: Coordinates, to: Coordinates): LatLn
   }
 
   if (startIdx > endIdx) return pts.slice(endIdx, startIdx + 1).reverse()
+
   return pts.slice(startIdx, endIdx + 1)
 }
 
@@ -110,12 +123,15 @@ export async function fetchRelationGeometry(relationId: number, from: Coordinate
     const res = await fetch(`${OSM_API_URL}/relation/${relationId}/full.json`, {
       headers: OVERPASS_HEADERS,
     })
+
     if (!res.ok) return []
     const data: OsmFullResponse = await res.json()
     const nodes = new Map<number, OverpassNode>()
     const ways = new Map<number, number[]>()
+
     for (const element of data.elements) {
       if (element.type === 'node') nodes.set(element.id, { lat: element.lat, lon: element.lon })
+
       if (element.type === 'way') ways.set(element.id, element.nodes)
     }
 
@@ -123,6 +139,7 @@ export async function fetchRelationGeometry(relationId: number, from: Coordinate
       (element): element is Extract<OsmFullResponse['elements'][number], { type: 'relation' }> =>
         element.type === 'relation' && element.id === relationId,
     )
+
     if (!sourceRelation) return []
 
     const relation: OverpassRelation = {
@@ -139,7 +156,9 @@ export async function fetchRelationGeometry(relationId: number, from: Coordinate
             : undefined,
       })),
     }
+
     const assembled = assembleRelationGeometry(relation, from)
+
     return trimToSegment(assembled, from, to)
   } catch {
     return []

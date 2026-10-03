@@ -11,17 +11,21 @@ interface PhaseNavProps {
 export function PhaseNav({ panels }: PhaseNavProps) {
   const phases = TRIP_DATA.phases
   const { today, showPast } = useTripProgress()
+
   const visiblePhases = phases
     .map((phase, index) => ({ phase, index }))
     .filter(({ phase }) => showPast || phase.days.some((day) => day.isoDate >= today))
+
   const currentIndex = phases.findIndex((phase) => phase.days.some((day) => day.isoDate === today))
   const [selection, setSelection] = useState<{ index: number; date: string } | null>(null)
   const selectedIndex = selection?.date === today ? selection.index : null
+
   const activeIndex = visiblePhases.some(({ index }) => index === selectedIndex)
     ? selectedIndex!
     : currentIndex >= 0
       ? currentIndex
       : (visiblePhases[0]?.index ?? -1)
+
   const activePanel = panels[activeIndex] ?? null
 
   return (
@@ -43,6 +47,7 @@ export function PhaseNav({ panels }: PhaseNavProps) {
       >
         {visiblePhases.map(({ phase, index: i }) => {
           const isActive = i === activeIndex
+
           return (
             <button
               key={phase.id}

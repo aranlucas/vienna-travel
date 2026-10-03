@@ -37,6 +37,7 @@ export function TripCountdown({ targetIso, label }: TripCountdownProps) {
 
   useEffect(() => {
     const initialTimer = window.setTimeout(() => setNowMs(Date.now()), 0)
+
     const timer = window.setInterval(() => {
       setNowMs(Date.now())
     }, 1000)

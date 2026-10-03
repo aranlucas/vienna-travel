@@ -9,14 +9,17 @@ import { useLiveWeather } from '@/components/weather/LiveWeatherProvider'
 import { useTripProgress } from '@/components/planning/TripProgress'
 
 type Unit = 'F' | 'C'
+
 type HintTone = 'cold' | 'wet' | 'hot' | 'alert'
 
 const UNIT_STORAGE_KEY = 'weather-unit'
+
 const UNIT_EVENT = 'weather-unit-change'
 
 function subscribeToUnit(onChange: () => void): () => void {
   window.addEventListener('storage', onChange)
   window.addEventListener(UNIT_EVENT, onChange)
+
   return () => {
     window.removeEventListener('storage', onChange)
     window.removeEventListener(UNIT_EVENT, onChange)
@@ -52,15 +55,19 @@ function formatPrecip(mm: number, unit: Unit): string {
 
 function formatLocalTime(isoLocal?: string): string {
   const match = isoLocal?.match(/T(\d{2}):(\d{2})/)
+
   if (!match) return '—'
   const hour = Number(match[1])
   const suffix = hour >= 12 ? 'PM' : 'AM'
+
   return `${hour % 12 || 12}:${match[2]} ${suffix}`
 }
 
 function formatHours(hours?: number): string {
   if (hours == null) return '—'
+
   if (hours < 0.1) return 'Dry signal'
+
   return `${hours.toFixed(hours < 10 ? 1 : 0)} hr${hours === 1 ? '' : 's'}`
 }
 
@@ -76,6 +83,7 @@ function formatRefreshTime(isoDateTime: string): string {
 function compassDirection(degrees?: number): string {
   if (degrees == null) return ''
   const points = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+
   return points[Math.round(degrees / 45) % points.length]
 }
 
@@ -85,41 +93,50 @@ function conditionEmoji(code?: number): string {
 
 function conditionLabel(code?: number): string {
   if (code == null) return 'Early-autumn mix'
+
   return getWeatherCode(code)?.label ?? 'Mixed conditions'
 }
 
 function locationLabel(day: DayPlan): string {
   const name = day.weatherLocation?.name ?? 'Forecast point'
   const elevation = day.weatherLocation?.elevationM
+
   return elevation == null ? name : `${name} · ${elevation.toLocaleString('en-US')} m`
 }
 
-function forecastHorizon(day: DayPlan): { label: string; className: string } {
+type ForecastHorizon = { label: string; className: string }
+
+function forecastHorizon(day: DayPlan): ForecastHorizon {
   if (day.weatherStatus === 'stale' || day.weatherStatus === 'unavailable') {
     return {
       label: day.weatherStatus === 'stale' ? 'Stale forecast' : 'Unavailable',
       className: 'border-amber/30 bg-amber/10 text-amber',
     }
   }
+
   const lead = day.weatherForecastLeadDays
+
   if (lead == null) {
     return {
       label: 'Forecast',
       className: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-300',
     }
   }
+
   if (lead <= 3) {
     return {
       label: lead === 0 ? 'Today' : `${lead}-day short range`,
       className: 'border-emerald-500/25 bg-emerald-500/10 text-emerald-300',
     }
   }
+
   if (lead <= 7) {
     return {
       label: `${lead}-day planning range`,
       className: 'border-slate-blue/40 bg-slate-blue/20 text-blue-200',
     }
   }
+
   return {
     label: `${lead}-day early outlook`,
     className: 'border-amber/30 bg-amber/10 text-amber',
@@ -160,7 +177,9 @@ function forecastGustKph(day: DayPlan): number | undefined {
 
 function formatHour(hour: number): string {
   if (hour === 0) return '12 AM'
+
   if (hour === 12) return '12 PM'
+
   return hour > 12 ? `${hour - 12} PM` : `${hour} AM`
 }
 
@@ -176,14 +195,19 @@ function gearHints(day: DayPlan): { label: string; tone: HintTone }[] {
   if (isSnowOrStormWeatherCode(day.weatherCode)) {
     hints.push({ label: 'Recheck trail or lift status', tone: 'alert' })
   }
+
   if (isAlpine && (day.weatherForecastLeadDays ?? 0) > 7) {
     hints.push({ label: 'Recheck mountain forecast 24–48h ahead', tone: 'alert' })
   }
+
   if (isAlpine && (precipMm >= 5 || (gustKph ?? 0) >= 50)) {
     hints.push({ label: 'Keep the lower-elevation fallback ready', tone: 'alert' })
   }
+
   if ((gustKph ?? 0) >= 40) hints.push({ label: 'Exposed-route wind check', tone: 'alert' })
+
   if (coldestFeels <= 7) hints.push({ label: 'Insulation + hat + gloves', tone: 'cold' })
+
   if (
     hasRainCode ||
     (precipPct ?? 0) >= 35 ||
@@ -192,13 +216,17 @@ function gearHints(day: DayPlan): { label: string; tone: HintTone }[] {
   ) {
     hints.push({ label: 'Waterproof shell + pack liner', tone: 'wet' })
   }
+
   if (isAlpine && (hasRainCode || precipMm >= 2)) {
     hints.push({ label: 'Pack rain pants', tone: 'wet' })
   }
+
   if (forecastHigh(day) >= 27) hints.push({ label: 'Breathable layer + extra water', tone: 'hot' })
+
   if (isAlpine || (day.weatherUvMax ?? 0) >= 5 || forecastHigh(day) >= 25) {
     hints.push({ label: 'Sunscreen + sunglasses', tone: 'hot' })
   }
+
   return hints
 }
 
@@ -226,6 +254,7 @@ export function TripWeatherOutlook() {
     () => days.filter((day) => showPast || day.isoDate >= today).sort((a, b) => a.isoDate.localeCompare(b.isoDate)),
     [days, today, showPast],
   )
+
   const unitButton = (value: Unit) => (
     <button
       type="button"

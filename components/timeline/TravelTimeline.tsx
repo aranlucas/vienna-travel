@@ -9,6 +9,8 @@ import type { TimelineEvent, TimelineEventType } from '@/lib/timelineEvents'
 
 // ── Icon components ──
 
+const daysByDate = new Map<string, import('@/lib/tripData').DayPlan>(Object.entries(DAYS))
+
 function FlightIcon() {
   return (
     <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" stroke="currentColor" strokeWidth={1.8}>
@@ -167,11 +169,13 @@ function formatSortTime(sortTime: number): string {
   const minutes = normalizedMinutes % 60
   const ampm = hours24 >= 12 ? 'PM' : 'AM'
   const hours12 = hours24 % 12 === 0 ? 12 : hours24 % 12
+
   return `${hours12}:${minutes.toString().padStart(2, '0')} ${ampm}`
 }
 
 function parseTimeInput(value: string): number {
   const [hours, minutes] = value.split(':').map(Number)
+
   return hours * 60 + minutes
 }
 
@@ -238,6 +242,7 @@ function TimelineSummary({ events }: { events: TimelineEvent[] }) {
   const hotels = events.filter((e) => e.type === 'hotel-checkin').length
   const trains = events.filter((e) => e.type === 'train').length
   const drives = events.filter((e) => e.type === 'drive').length
+
   const items = [
     { label: 'Events', value: events.length },
     { label: 'Flights', value: flights },
@@ -287,11 +292,13 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
   const viennaNow = useMemo(() => getViennaNow(), [])
   const todayIso = viennaNow.date
   const currentMinutes = parseTimeInput(viennaNow.time)
+
   const nextEvent = useMemo(
     () =>
       events.find((event) => event.date > todayIso || (event.date === todayIso && event.sortTime >= currentMinutes)),
     [events, todayIso, currentMinutes],
   )
+
   const [jumpDate, setJumpDate] = useState(viennaNow.date)
   const [jumpTime, setJumpTime] = useState(viennaNow.time)
 
@@ -300,6 +307,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
       ? events
       : events.filter((e) => {
           if (filter === 'hotel-checkin') return e.type === 'hotel-checkin' || e.type === 'hotel-checkout'
+
           return e.type === filter
         })
 
@@ -307,11 +315,13 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
 
   const jumpToTime = (date = jumpDate, time = jumpTime) => {
     const targetMinutes = parseTimeInput(time)
+
     const target =
       typeFiltered.find((event) => event.date > date || (event.date === date && event.sortTime >= targetMinutes)) ??
       typeFiltered[typeFiltered.length - 1]
 
     if (!target) return
+
     if (target.date < today) flushSync(() => setShowPast(true))
     window.requestAnimationFrame(() =>
       document.getElementById(`timeline-event-${target.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
@@ -326,8 +336,10 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
   }
 
   const grouped: { date: string; label: string; events: TimelineEvent[] }[] = []
+
   for (const event of filtered) {
     const last = grouped[grouped.length - 1]
+
     if (last && last.date === event.date) {
       last.events.push(event)
     } else {
@@ -428,26 +440,27 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
         commitments. Hotel windows are shown separately from planned arrivals.
       </p>
       {/* Timeline */}
-      {grouped.map((group) => (
-        <div key={group.date} id={`timeline-day-${group.date}`} className="mb-6 scroll-mt-24">
-          <DateHeader label={group.label} />
-          {DAYS[group.date]?.recommendation && (
-            <div className="mb-4 rounded-xl border border-amber/30 p-4 text-sm leading-relaxed text-cream">
-              <strong className="text-amber">Best experience: </strong>
-              {DAYS[group.date].recommendation}
-              <ActivityDetails
-                label="Alternative plan"
-                details={DAYS[group.date].alternative ? [DAYS[group.date].alternative!] : []}
-              />
+      {grouped.map((group) => {
+        const plan = daysByDate.get(group.date)
+
+        return (
+          <div key={group.date} id={`timeline-day-${group.date}`} className="mb-6 scroll-mt-24">
+            <DateHeader label={group.label} />
+            {plan?.recommendation && (
+              <div className="mb-4 rounded-xl border border-amber/30 p-4 text-sm leading-relaxed text-cream">
+                <strong className="text-amber">Best experience: </strong>
+                {plan.recommendation}
+                <ActivityDetails label="Alternative plan" details={plan.alternative ? [plan.alternative] : []} />
+              </div>
+            )}
+            <div className="pb-2">
+              {group.events.map((event, eventIndex) => (
+                <TimelineCard key={event.id} event={event} isLast={eventIndex === group.events.length - 1} />
+              ))}
             </div>
-          )}
-          <div className="pb-2">
-            {group.events.map((event, eventIndex) => (
-              <TimelineCard key={event.id} event={event} isLast={eventIndex === group.events.length - 1} />
-            ))}
           </div>
-        </div>
-      ))}
+        )
+      })}
 
       {filtered.length === 0 && (
         <div className="text-center py-12 text-cream-muted/70">

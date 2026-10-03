@@ -16,7 +16,7 @@ import { PHASES, TRIP_DATA, BOOKINGS, LIVE_CHECKS, PLANNING_SHORTLIST } from '@/
 import type { DayPlan } from '@/lib/tripData'
 import type { LatLng } from '@/lib/routingService'
 import { readGpxTrackData } from '@/lib/gpxServer'
-import { assertStaticRoutesCurrent, STATIC_ROUTES } from '@/lib/staticRoutes'
+import { assertStaticRoutesCurrent, STATIC_ROUTES, getStaticPhaseRoutes } from '@/lib/staticRoutes'
 import { CONFIRMED_STAYS } from '@/lib/confirmedStays'
 import { buildGoogleMapsUrl } from '@/lib/mapLinks'
 import { HOME_SECTION_IDS } from '@/lib/homeAnchors'
@@ -36,17 +36,20 @@ export default async function Home() {
 
   const phaseRoutes = await Promise.all(
     PHASES.map(async (phase) => {
-      const staticPhase = STATIC_ROUTES.phaseRoutes[phase.id as keyof typeof STATIC_ROUTES.phaseRoutes]
+      const staticPhase = getStaticPhaseRoutes(phase.id)
+
+      if (!staticPhase) throw new Error(`Missing static route group for phase: ${phase.id}`)
       const drivingRoutes = staticPhase.drivingRoutes
 
       const hikeResults = await Promise.all(
         phase.hikes.map(async (hike) => {
           if (hike.gpxStatus === 'reference') {
-            return { hike, coords: [] as LatLng[] }
+            return { hike, coords: [] satisfies LatLng[] }
           }
 
           const filename = hike.gpxFile.replace('/gpx/', '')
           const track = await readGpxTrackData(filename)
+
           return {
             hike: {
               ...hike,
@@ -58,9 +61,11 @@ export default async function Home() {
           }
         }),
       )
+
       const hikingRoutes = Object.fromEntries(
-        hikeResults.map(({ hike, coords }) => [hike.id, coords] as [string, LatLng[]]),
-      ) as Record<string, LatLng[]>
+        hikeResults.map(({ hike, coords }) => [hike.id, coords] satisfies [string, LatLng[]]),
+      )
+
       const hikes = hikeResults.map(({ hike }) => hike)
 
       return { phase: { ...phase, hikes }, drivingRoutes, hikingRoutes }

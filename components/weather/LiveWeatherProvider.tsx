@@ -36,10 +36,13 @@ export function LiveWeatherPage({ children, staticDays }: { children: ReactNode;
 
     const controller = new AbortController()
     requestController.current = controller
+
     const request = (async () => {
       setIsRefreshing(true)
+
       try {
         const payload = await fetchWeatherSnapshot(controller.signal)
+
         if (controller.signal.aborted) return
         const next = mergeWeatherSnapshot(staticDaysRef.current, stateRef.current, payload)
         stateRef.current = next
@@ -58,6 +61,7 @@ export function LiveWeatherPage({ children, staticDays }: { children: ReactNode;
     })()
 
     inFlightRef.current = request
+
     try {
       await request
     } finally {
@@ -69,15 +73,19 @@ export function LiveWeatherPage({ children, staticDays }: { children: ReactNode;
     void refresh()
 
     const interval = window.setInterval(() => void refresh(), WEATHER_REFRESH_MS)
+
     const refreshIfStale = () => {
       if (document.visibilityState !== 'visible') return
       const lastSuccess = stateRef.current?.refreshedAt
+
       if (Date.now() - (lastSuccess ? Date.parse(lastSuccess) : 0) >= FOCUS_REFRESH_AGE_MS) void refresh()
     }
+
     const refreshWhenOnline = () => void refresh()
 
     document.addEventListener('visibilitychange', refreshIfStale)
     window.addEventListener('online', refreshWhenOnline)
+
     return () => {
       requestController.current?.abort()
       inFlightRef.current = null
@@ -105,14 +113,18 @@ export function LiveWeatherPage({ children, staticDays }: { children: ReactNode;
 
 export function useLiveWeather(): LiveWeatherContextValue {
   const context = useContext(LiveWeatherContext)
+
   if (!context) throw new Error('useLiveWeather must be used inside LiveWeatherPage.')
+
   return context
 }
 
 export function useLiveWeatherDays(staticDays: DayPlan[]): DayPlan[] {
   const { days } = useLiveWeather()
+
   return useMemo(() => {
     const liveByDate = new Map(days.map((day) => [day.isoDate, day]))
+
     return staticDays.map((day) => liveByDate.get(day.isoDate) ?? day)
   }, [days, staticDays])
 }

@@ -21,7 +21,9 @@ function priorityClass(priority: PlanningShortlistItem['priority']) {
 export function PlanningShortlistSection({ items }: PlanningShortlistSectionProps) {
   const { today, showPast } = useTripProgress()
   const visibleItems = items.filter((item) => showPast || !item.endDate || item.endDate >= today)
+
   if (!visibleItems.length) return null
+
   return (
     <section className="px-6 pb-16 max-w-6xl mx-auto">
       <details className="rounded-xl border border-forest-green/25 bg-dark-card px-4 py-2">

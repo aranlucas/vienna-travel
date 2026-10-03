@@ -21,16 +21,19 @@ export function TripProgressProvider({ children }: { children: ReactNode }) {
           day: '2-digit',
         }).format(new Date()),
       )
+
     refresh()
     const interval = window.setInterval(refresh, 60_000)
     window.addEventListener('focus', refresh)
     document.addEventListener('visibilitychange', refresh)
+
     return () => {
       window.clearInterval(interval)
       window.removeEventListener('focus', refresh)
       document.removeEventListener('visibilitychange', refresh)
     }
   }, [])
+
   return (
     <TripProgressContext.Provider value={{ today, showPast, setShowPast }}>{children}</TripProgressContext.Provider>
   )
@@ -40,6 +43,7 @@ export const useTripProgress = () => useContext(TripProgressContext)
 
 export function TripProgressControl() {
   const { today, showPast, setShowPast } = useTripProgress()
+
   return (
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-forest-green/30 bg-dark-card p-4 text-sm">
       <div>
@@ -62,5 +66,6 @@ export function TripProgressControl() {
 /** Keep dated content recoverable through the shared full-trip control. */
 export function ThroughDate({ date, children }: { date: string; children: ReactNode }) {
   const { today, showPast } = useTripProgress()
+
   return !today || showPast || date >= today ? <>{children}</> : null
 }

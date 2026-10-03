@@ -1,5 +1,7 @@
 'use client'
 
+import { z } from 'zod'
+
 import { useMemo, useState, useSyncExternalStore } from 'react'
 
 interface ChecklistItem {
@@ -8,6 +10,7 @@ interface ChecklistItem {
 }
 
 const STORAGE_KEY = 'predeparture-checklist-v1'
+
 const STORAGE_EVENT = 'predeparture-checklist-change'
 
 // Items that matter most on departure eve — matched by stable prefixes.
@@ -30,6 +33,7 @@ function isTonightItem(item: string): boolean {
 function subscribe(onChange: () => void): () => void {
   window.addEventListener('storage', onChange)
   window.addEventListener(STORAGE_EVENT, onChange)
+
   return () => {
     window.removeEventListener('storage', onChange)
     window.removeEventListener(STORAGE_EVENT, onChange)
@@ -46,11 +50,11 @@ function getServerSnapshot(): string {
 
 function parseChecked(snapshot: string): Record<number, boolean> {
   try {
-    const parsed: unknown = JSON.parse(snapshot)
-    if (parsed && typeof parsed === 'object') return parsed as Record<number, boolean>
+    return z.record(z.string().regex(/^\d+$/), z.boolean()).parse(JSON.parse(snapshot))
   } catch {
     // Corrupted storage — treat as empty rather than crashing.
   }
+
   return {}
 }
 
@@ -60,6 +64,7 @@ function writeChecked(next: Record<number, boolean>): void {
   } catch {
     // Storage unavailable — checklist still works for the session.
   }
+
   window.dispatchEvent(new Event(STORAGE_EVENT))
 }
 
@@ -72,6 +77,7 @@ export function PreDepartureChecklist({ items }: { items: ChecklistItem[] }) {
     () => items.map((item, index) => ({ ...item, index })).filter((entry) => !tonightOnly || isTonightItem(entry.item)),
     [items, tonightOnly],
   )
+
   const doneCount = items.filter((_, index) => checked[index]).length
 
   const toggle = (index: number) => {
@@ -107,6 +113,7 @@ export function PreDepartureChecklist({ items }: { items: ChecklistItem[] }) {
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {visible.map(({ item, critical, index }) => {
           const done = !!checked[index]
+
           return (
             <label
               key={index}

@@ -105,12 +105,14 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 
 function formatDurationMinutes(minutes: number): string {
   const hours = Math.floor(minutes / 60)
   const mins = minutes % 60
+
   return mins > 0 ? `${hours}h ${mins}m` : `${hours}h`
 }
 
 function formatFlightStamp(isoDate: string, time: string): string {
   const month = Number(isoDate.slice(5, 7))
   const day = Number(isoDate.slice(8, 10))
+
   return `${MONTHS[month - 1]} ${day}, ${time}`
 }
 
@@ -120,10 +122,13 @@ export function getOutboundToVie() {
   const layover = LAYOVERS.find((segment) => segment.phaseId === 'vienna')
   const first = segments[0]
   const last = segments[segments.length - 1]
+
   if (!first || !last || !layover) {
     throw new Error('Outbound SEA→VIE requires vienna-phase flight segments and a layover')
   }
+
   const arrivalStamp = formatFlightStamp(last.date, last.arrivalTime)
+
   return {
     segments,
     layover,

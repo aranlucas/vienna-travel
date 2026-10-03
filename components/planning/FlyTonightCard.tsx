@@ -19,6 +19,7 @@ function getViennaNow() {
   }).formatToParts(new Date())
 
   const values = Object.fromEntries(parts.map((part) => [part.type, part.value]))
+
   return {
     date: `${values.year}-${values.month}-${values.day}`,
     minutes: Number(values.hour) * 60 + Number(values.minute),
@@ -30,6 +31,7 @@ function formatEventTime(sortTime: number) {
   const minutes = sortTime % 60
   const suffix = hours24 >= 12 ? 'PM' : 'AM'
   const hours12 = hours24 % 12 || 12
+
   return `${hours12}:${minutes.toString().padStart(2, '0')} ${suffix}`
 }
 
@@ -41,11 +43,13 @@ export function FlyTonightCard() {
     const updateNow = () => setViennaNow(getViennaNow())
     updateNow()
     const interval = window.setInterval(updateNow, 60_000)
+
     return () => window.clearInterval(interval)
   }, [])
 
   const nextEvent = useMemo(() => {
     if (!viennaNow) return null
+
     return events.find(
       (event) => event.date > viennaNow.date || (event.date === viennaNow.date && event.sortTime >= viennaNow.minutes),
     )
@@ -54,6 +58,7 @@ export function FlyTonightCard() {
   if (!viennaNow || !nextEvent) return null
 
   const minutesAway = nextEvent.date === viennaNow.date ? Math.max(0, nextEvent.sortTime - viennaNow.minutes) : null
+
   const urgencyLabel =
     minutesAway !== null && minutesAway <= 120
       ? minutesAway === 0

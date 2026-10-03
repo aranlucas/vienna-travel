@@ -90,8 +90,10 @@ function normalize(value: string): string {
 
 function findDay(days: DayPlan[], input: string): DayPlan | undefined {
   const query = normalize(input)
+
   return days.find((day) => {
     const dayNumber = day.dayLabel.match(/Day\s+(\d+)/i)?.[1]
+
     return [day.isoDate, day.date, day.dayLabel, day.title, dayNumber ? `day ${dayNumber}` : '']
       .map(normalize)
       .some((candidate) => candidate === query || candidate.includes(query))
@@ -156,11 +158,13 @@ export function TripWebMcp({ trip, phases, days: staticDays, bookings, liveCheck
     annotations: READ_ONLY_ANNOTATIONS,
     execute: async ({ date_or_day }) => {
       const day = findDay(days, date_or_day)
+
       if (!day) {
         throw new Error(
           `No trip day matched "${date_or_day}". Available dates are ${days.map((item) => item.isoDate).join(', ')}.`,
         )
       }
+
       return day
     },
   })
@@ -174,11 +178,13 @@ export function TripWebMcp({ trip, phases, days: staticDays, bookings, liveCheck
     execute: async ({ date_or_day }) => {
       if (!date_or_day) return days.map(weatherForDay)
       const day = findDay(days, date_or_day)
+
       if (!day) {
         throw new Error(
           `No trip day matched "${date_or_day}". Available dates are ${days.map((item) => item.isoDate).join(', ')}.`,
         )
       }
+
       return weatherForDay(day)
     },
   })
@@ -191,6 +197,7 @@ export function TripWebMcp({ trip, phases, days: staticDays, bookings, liveCheck
     annotations: READ_ONLY_ANNOTATIONS,
     execute: async ({ query }) => {
       const normalizedQuery = normalize(query)
+
       if (normalizedQuery.length < 2) throw new Error('Search query must contain at least two characters.')
 
       const records = [
