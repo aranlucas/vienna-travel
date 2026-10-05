@@ -28,7 +28,7 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
-    "@oxlint/plugins": "1.85.0",
+    "@oxlint/plugins": "1.86.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/leaflet": "^1.9.22",
     "@types/node": "^26.6.3",
