@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import React, { act, useEffect } from 'react'
-import { createRoot, type Root } from 'react-dom/client'
+import { cleanup, render } from '@testing-library/react'
 import { afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { LiveWeatherPage, useLiveWeather } from '../components/weather/LiveWeatherProvider'
 import { weatherScope } from '../lib/weatherSnapshot'
@@ -41,9 +41,7 @@ const unavailable = {
 
 let current: ReturnType<typeof useLiveWeather>
 
-let root: Root
-
-let container: HTMLDivElement
+let container: HTMLElement
 
 function Consumer() {
   const value = useLiveWeather()
@@ -61,25 +59,21 @@ function Consumer() {
 beforeEach(() => {
   vi.useFakeTimers({ now })
   vi.stubGlobal('IS_REACT_ACT_ENVIRONMENT', true)
-  container = document.createElement('div')
-  document.body.append(container)
-  root = createRoot(container)
 })
 
 afterEach(async () => {
-  await act(async () => root.unmount())
-  container.remove()
+  cleanup()
   vi.useRealTimers()
   vi.unstubAllGlobals()
 })
 
 async function mount() {
   await act(async () => {
-    root.render(
+    container = render(
       <LiveWeatherPage staticDays={[day]}>
         <Consumer />
       </LiveWeatherPage>,
-    )
+    ).container
   })
 }
 
