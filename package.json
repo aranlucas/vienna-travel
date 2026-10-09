@@ -3,8 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:portless": "portless",
-    "dev": "next dev",
+    "dev": "portless",
     "build": "next build",
     "check:privacy": "node scripts/check-public-data.mjs",
     "start": "next start",
@@ -14,7 +13,8 @@
     "format:check": "oxfmt --check .",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "lint:plugin": "node tools/oxlint/verify-anti-slop.mjs"
+    "lint:plugin": "node tools/oxlint/verify-anti-slop.mjs",
+    "dev:direct": "next dev"
   },
   "dependencies": {
     "@mcp-b/webmcp-polyfill": "5.1.0",
@@ -45,6 +45,6 @@
   "packageManager": "pnpm@12.9.1",
   "portless": {
     "name": "vienna-travel",
-    "script": "dev"
+    "script": "dev:direct"
   }
 }

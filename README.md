@@ -57,10 +57,11 @@ Use **Node.js 24** (matching CI) and **pnpm 12.4.2** (pinned in `package.json`).
 git clone https://github.com/aranlucas/vienna-travel.git
 cd vienna-travel
 pnpm install --frozen-lockfile
+npm install -g portless@0.15.7
 pnpm dev
 ```
 
-Open [localhost:3000](http://localhost:3000).
+Open [vienna-travel.localhost](https://vienna-travel.localhost).
 
 The default maps work without `NEXT_PUBLIC_CARTO_BASEMAP_KEY`; set it to use the optional CARTO basemap. Weather and route enrichment use external services. When a forecast is unavailable or outside its date range, the interface retains seasonal itinerary guidance.
 
@@ -116,7 +117,7 @@ This is a public itinerary demo. Keep personal traveler details and private book
 
 **Ready for the scenic route? [Explore Austria Expedition →](https://vienna-travel.vercel.app)**
 
-### Named local URL with Portless (optional)
+### Named local URL with Portless
 
 After the normal project setup, use [Portless](https://github.com/vercel-labs/portless/tree/v0.15.7)
 to run this app alongside other repositories without choosing a port. Use Node.js
@@ -124,7 +125,7 @@ to run this app alongside other repositories without choosing a port. Use Node.j
 
 ```sh
 npm install -g portless@0.15.7
-pnpm dev:portless
+pnpm dev
 ```
 
 With default proxy settings, the primary checkout is available at
@@ -138,5 +139,5 @@ to trust a local certificate authority and request administrator access for port
 443 and local hostname entries. Use `portless list` to see routes and
 `portless doctor` for connection or certificate problems.
 
-Use `pnpm dev` for the original localhost workflow.
+Use `pnpm dev:direct` for the localhost workflow.
 
