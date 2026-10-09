@@ -60,7 +60,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open [localhost:3000](http://localhost:3000).
+Open [vienna-travel.localhost](https://vienna-travel.localhost). `pnpm dev` runs through [Portless](https://github.com/vercel-labs/portless) (a dev dependency); its first run may ask for `sudo` to bind port 443 and trust a local certificate.
 
 The default maps work without `NEXT_PUBLIC_CARTO_BASEMAP_KEY`; set it to use the optional CARTO basemap. Weather and route enrichment use external services. When a forecast is unavailable or outside its date range, the interface retains seasonal itinerary guidance.
 
