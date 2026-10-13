@@ -1,7 +1,6 @@
 {
   "ignorePatterns": [
     ".next/**",
-    "tools/oxlint/anti-slop/**",
     "node_modules/**",
     "build/**",
     "dist/**",
