@@ -1,13 +1,5 @@
 {
-  "ignorePatterns": [
-    ".next/**",
-    "node_modules/**",
-    "build/**",
-    "dist/**",
-    "coverage/**",
-    ".snapshot*",
-    "_site/**"
-  ],
+  "ignorePatterns": [".next/**", "node_modules/**", "build/**", "dist/**", "coverage/**", ".snapshot*", "_site/**"],
   "objectWrap": "preserve",
   "printWidth": 120,
   "proseWrap": "preserve",
