@@ -29,7 +29,7 @@
     "zod": "4.6.5"
   },
   "devDependencies": {
-    "@oxlint/plugins": "1.87.0",
+    "@aranlucas/oxlint-plugin-anti-slop": "0.1.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
