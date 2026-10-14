@@ -2,11 +2,11 @@
 import React, { act, useEffect } from "react";
 import { cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { LiveWeatherPage } from "../components/weather/live-weather-provider";
-import { useLiveWeather } from "../components/weather/live-weather-context";
-import { weatherScope } from "../lib/weather-snapshot";
-import type { DayPlan } from "../lib/tripData";
-import { WEATHER_REQUEST_TIMEOUT_MS } from "../lib/weather-client";
+import { LiveWeatherPage } from "@/components/weather/live-weather-provider";
+import { useLiveWeather } from "@/components/weather/live-weather-context";
+import { weatherScope } from "@/lib/weather-snapshot";
+import type { DayPlan } from "@/lib/tripData";
+import { WEATHER_REQUEST_TIMEOUT_MS } from "@/lib/weather-client";
 
 const now = new Date("2026-10-02T08:00:00Z");
 

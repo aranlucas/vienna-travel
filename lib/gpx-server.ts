@@ -49,7 +49,7 @@ function parseTrackPoints(content: string): TrackPoint[] {
     const lat = extractAttr(attrs, "lat");
     const lon = extractAttr(attrs, "lon");
 
-    if (lat == null || lon == null) {
+    if (lat === null || lat === undefined || lon === null || lon === undefined) {
       return [];
     }
 

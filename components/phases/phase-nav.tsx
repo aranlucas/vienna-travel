@@ -64,8 +64,8 @@ export function PhaseNav({ panels }: PhaseNavProps) {
               }}
               className={`-mbe-px flex min-h-touch items-center gap-2 rounded-t border-be-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                 isActive
-                  ? "text-amber border-amber bg-amber/5"
-                  : "text-cream-muted border-transparent hover:text-cream hover:border-forest-green/50"
+                  ? "border-amber bg-amber/5 text-amber"
+                  : "border-transparent text-cream-muted hover:border-forest-green/50 hover:text-cream"
               }`}
             >
               <span>{phase.emoji}</span>

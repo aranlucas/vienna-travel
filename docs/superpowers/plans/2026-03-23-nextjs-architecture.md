@@ -555,17 +555,17 @@ export function PhaseNav({ panels }: PhaseNavProps) {
   return (
     <div>
       {/* Tab bar */}
-      <div className="flex overflow-x-auto gap-1 pb-1 mb-8 border-b border-forest-green/30 scrollbar-hide">
+      <div className="scrollbar-hide mb-8 flex gap-1 overflow-x-auto border-b border-forest-green/30 pb-1">
         {phases.map((phase, i) => {
           const isActive = i === activeIndex;
           return (
             <button
               key={phase.id}
               onClick={() => setActiveIndex(i)}
-              className={`flex items-center gap-2 px-4 py-3 rounded-t text-sm font-medium whitespace-nowrap transition-all duration-200 border-b-2 -mb-px ${
+              className={`-mb-px flex items-center gap-2 rounded-t border-b-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                 isActive
-                  ? "text-amber border-amber bg-amber/5"
-                  : "text-cream-muted border-transparent hover:text-cream hover:border-forest-green/50"
+                  ? "border-amber bg-amber/5 text-amber"
+                  : "border-transparent text-cream-muted hover:border-forest-green/50 hover:text-cream"
               }`}
             >
               <span>{phase.emoji}</span>

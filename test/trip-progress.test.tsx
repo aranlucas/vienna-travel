@@ -5,10 +5,10 @@ import {
   TripProgressProvider,
   TripProgressControl,
   ThroughDate,
-} from "../components/planning/trip-progress";
-import { PreDepartureChecklist } from "../components/planning/pre-departure-checklist";
-import { PhaseNav } from "../components/phases/phase-nav";
-import { TRIP_DATA } from "../lib/tripData";
+} from "@/components/planning/trip-progress";
+import { PreDepartureChecklist } from "@/components/planning/pre-departure-checklist";
+import { PhaseNav } from "@/components/phases/phase-nav";
+import { TRIP_DATA } from "@/lib/tripData";
 
 beforeEach(() => {
   window.localStorage.clear();

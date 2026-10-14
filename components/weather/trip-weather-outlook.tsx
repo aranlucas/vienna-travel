@@ -67,7 +67,7 @@ function formatLocalTime(isoLocal?: string): string {
 }
 
 function formatHours(hours?: number): string {
-  if (hours == null) {
+  if (hours === null || hours === undefined) {
     return "—";
   }
 
@@ -88,7 +88,7 @@ function formatRefreshTime(isoDateTime: string): string {
 }
 
 function compassDirection(degrees?: number): string {
-  if (degrees == null) {
+  if (degrees === null || degrees === undefined) {
     return "";
   }
 
@@ -102,7 +102,7 @@ function conditionEmoji(code?: number): string {
 }
 
 function conditionLabel(code?: number): string {
-  if (code == null) {
+  if (code === null || code === undefined) {
     return "Early-autumn mix";
   }
 
@@ -113,7 +113,9 @@ function locationLabel(day: DayPlan): string {
   const name = day.weatherLocation?.name ?? "Forecast point";
   const elevation = day.weatherLocation?.elevationM;
 
-  return elevation == null ? name : `${name} · ${elevation.toLocaleString("en-US")} m`;
+  return elevation === null || elevation === undefined
+    ? name
+    : `${name} · ${elevation.toLocaleString("en-US")} m`;
 }
 
 type ForecastHorizon = { label: string; className: string };
@@ -128,7 +130,7 @@ function forecastHorizon(day: DayPlan): ForecastHorizon {
 
   const lead = day.weatherForecastLeadDays;
 
-  if (lead == null) {
+  if (lead === null || lead === undefined) {
     return {
       label: "Forecast",
       className: "border-emerald-500/25 bg-emerald-500/10 text-emerald-300",
@@ -360,7 +362,11 @@ export function TripWeatherOutlook() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
         {orderedDays.map((day) => {
-          const isLive = day.weatherSource === "forecast" && day.weatherHighC != null;
+          const isLive =
+            day.weatherSource === "forecast" &&
+            day.weatherHighC !== null &&
+            day.weatherHighC !== undefined;
+
           const hints = isLive ? gearHints(day) : [];
           const windDirection = compassDirection(day.weatherWindDirectionDeg);
           const horizon = forecastHorizon(day);
@@ -378,8 +384,8 @@ export function TripWeatherOutlook() {
               key={day.isoDate}
               className={`rounded-xl border px-4 py-3 ${
                 isLive
-                  ? "bg-dark-card border-slate-blue/30"
-                  : "bg-dark-card/50 border-forest-green/15"
+                  ? "border-slate-blue/30 bg-dark-card"
+                  : "border-forest-green/15 bg-dark-card/50"
               }`}
             >
               <summary className="flex min-h-touch cursor-pointer list-none items-center justify-between gap-3">
@@ -428,7 +434,7 @@ export function TripWeatherOutlook() {
                       <WeatherMetric
                         label="Feels like"
                         value={
-                          feelsHighC == null
+                          feelsHighC === null || feelsHighC === undefined
                             ? "—"
                             : `${toDisplay(feelsHighC, unit)}° / ${toDisplay(feelsLowC ?? feelsHighC, unit)}°`
                         }
@@ -440,7 +446,7 @@ export function TripWeatherOutlook() {
                       />
                       <WeatherMetric
                         label="Precipitation"
-                        value={`${precipPct == null ? "Chance n/a" : `${precipPct}%`} · ${formatPrecip(precipMm, unit)}`}
+                        value={`${precipPct === null || precipPct === undefined ? "Chance n/a" : `${precipPct}%`} · ${formatPrecip(precipMm, unit)}`}
                         detail={
                           day.weatherExposure
                             ? "Planned-window total"
@@ -450,23 +456,27 @@ export function TripWeatherOutlook() {
                       <WeatherMetric
                         label="Wind"
                         value={
-                          windKph == null
+                          windKph === null || windKph === undefined
                             ? "—"
                             : `${day.weatherExposure || !windDirection ? "" : `${windDirection} `}${formatWind(windKph, unit)}`
                         }
                         detail={
                           day.weatherExposure
-                            ? gustKph == null
+                            ? gustKph === null || gustKph === undefined
                               ? "Peak in planned window"
                               : `Peak window · gusts ${formatWind(gustKph, unit)}`
-                            : gustKph == null
+                            : gustKph === null || gustKph === undefined
                               ? undefined
                               : `Gusts ${formatWind(gustKph, unit)}`
                         }
                       />
                       <WeatherMetric
                         label="UV max"
-                        value={day.weatherUvMax == null ? "—" : day.weatherUvMax.toFixed(1)}
+                        value={
+                          day.weatherUvMax === null || day.weatherUvMax === undefined
+                            ? "—"
+                            : day.weatherUvMax.toFixed(1)
+                        }
                         detail={
                           (day.weatherUvMax ?? 0) >= 5 ||
                           (day.weatherLocation?.elevationM ?? 0) >= 1500
@@ -475,8 +485,10 @@ export function TripWeatherOutlook() {
                         }
                       />
                       {day.weatherExposure &&
-                        day.weatherHighC != null &&
-                        day.weatherLowC != null && (
+                        day.weatherHighC !== null &&
+                        day.weatherHighC !== undefined &&
+                        day.weatherLowC !== null &&
+                        day.weatherLowC !== undefined && (
                           <WeatherMetric
                             label="Full-day range"
                             value={`${toDisplay(day.weatherHighC, unit)}° / ${toDisplay(day.weatherLowC, unit)}°`}

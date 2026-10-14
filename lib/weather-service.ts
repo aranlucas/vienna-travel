@@ -97,7 +97,7 @@ function collectDailyForecast(
   daily: WeatherResponse["daily"],
   byDate: Map<string, ForecastEntry>,
 ): void {
-  if (daily == null) {
+  if (daily === null || daily === undefined) {
     return;
   }
 
@@ -109,7 +109,14 @@ function collectDailyForecast(
     const maxC = daily.temperature_2m_max?.[i];
     const minC = daily.temperature_2m_min?.[i];
 
-    if (maxC == null || !Number.isFinite(maxC) || minC == null || !Number.isFinite(minC)) {
+    if (
+      maxC === null ||
+      maxC === undefined ||
+      !Number.isFinite(maxC) ||
+      minC === null ||
+      minC === undefined ||
+      !Number.isFinite(minC)
+    ) {
       continue;
     }
 
@@ -136,7 +143,7 @@ function collectHourlyForecast(
   hourly: WeatherResponse["hourly"],
   byHour: Map<string, HourlyForecastEntry>,
 ): void {
-  if (hourly == null) {
+  if (hourly === null || hourly === undefined) {
     return;
   }
 
@@ -147,7 +154,7 @@ function collectHourlyForecast(
 
     const temperatureC = hourly.temperature_2m?.[i];
 
-    if (temperatureC == null || !Number.isFinite(temperatureC)) {
+    if (temperatureC === null || temperatureC === undefined || !Number.isFinite(temperatureC)) {
       continue;
     }
 
@@ -163,7 +170,10 @@ function collectHourlyForecast(
 }
 
 function locationKey(location: DayWeatherLocation): string {
-  const elevation = location.elevationM == null ? "auto" : Math.round(location.elevationM);
+  const elevation =
+    location.elevationM === null || location.elevationM === undefined
+      ? "auto"
+      : Math.round(location.elevationM);
 
   return `${location.coordinates.lat},${location.coordinates.lng}@${elevation}`;
 }
@@ -181,7 +191,9 @@ async function fetchLocationForecast(
   const { lat, lng } = location.coordinates;
 
   const elevation =
-    location.elevationM == null ? "" : `&elevation=${Math.round(location.elevationM)}`;
+    location.elevationM === null || location.elevationM === undefined
+      ? ""
+      : `&elevation=${Math.round(location.elevationM)}`;
 
   const url =
     `${FORECAST_API}?latitude=${lat}&longitude=${lng}` +
@@ -239,7 +251,7 @@ async function fetchLocationForecast(
 }
 
 function finiteNumber(value: number | null | undefined): number | null {
-  return value != null && Number.isFinite(value) ? value : null;
+  return value !== null && value !== undefined && Number.isFinite(value) ? value : null;
 }
 
 function optionalText(value: string | null | undefined): string | null {
@@ -247,19 +259,19 @@ function optionalText(value: string | null | undefined): string | null {
 }
 
 function maxValue(values: (number | null)[]): number | undefined {
-  const present = values.filter((value): value is number => value != null);
+  const present = values.filter((value): value is number => value !== null && value !== undefined);
 
   return present.length ? Math.max(...present) : undefined;
 }
 
 function minValue(values: (number | null)[]): number | undefined {
-  const present = values.filter((value): value is number => value != null);
+  const present = values.filter((value): value is number => value !== null && value !== undefined);
 
   return present.length ? Math.min(...present) : undefined;
 }
 
 function sumValue(values: (number | null)[]): number | undefined {
-  const present = values.filter((value): value is number => value != null);
+  const present = values.filter((value): value is number => value !== null && value !== undefined);
 
   if (!present.length) {
     return undefined;
@@ -292,7 +304,7 @@ function resolveExposure(day: DayPlan, forecast: LocationForecast): DayPlan["wea
   const highC = maxValue(entries.map((entry) => entry.temperatureC));
   const lowC = minValue(entries.map((entry) => entry.temperatureC));
 
-  if (highC == null || lowC == null) {
+  if (highC === null || highC === undefined || lowC === null || lowC === undefined) {
     return undefined;
   }
 
@@ -307,12 +319,13 @@ function resolveExposure(day: DayPlan, forecast: LocationForecast): DayPlan["wea
     ...window,
     highC: Math.round(highC),
     lowC: Math.round(lowC),
-    feelsHighC: feelsHighC == null ? undefined : Math.round(feelsHighC),
-    feelsLowC: feelsLowC == null ? undefined : Math.round(feelsLowC),
-    precipPct: precipPct == null ? undefined : Math.round(precipPct),
+    feelsHighC:
+      feelsHighC === null || feelsHighC === undefined ? undefined : Math.round(feelsHighC),
+    feelsLowC: feelsLowC === null || feelsLowC === undefined ? undefined : Math.round(feelsLowC),
+    precipPct: precipPct === null || precipPct === undefined ? undefined : Math.round(precipPct),
     precipMm,
-    windKph: windKph == null ? undefined : Math.round(windKph),
-    gustKph: gustKph == null ? undefined : Math.round(gustKph),
+    windKph: windKph === null || windKph === undefined ? undefined : Math.round(windKph),
+    gustKph: gustKph === null || gustKph === undefined ? undefined : Math.round(gustKph),
   };
 }
 
@@ -337,7 +350,13 @@ export async function resolveDaysWeather(
   for (const day of days) {
     const delta = deltas.get(day.isoDate);
 
-    if (day.weatherLocation && delta != null && delta >= 0 && delta < FORECAST_WINDOW_DAYS) {
+    if (
+      day.weatherLocation &&
+      delta !== null &&
+      delta !== undefined &&
+      delta >= 0 &&
+      delta < FORECAST_WINDOW_DAYS
+    ) {
       locations.set(locationKey(day.weatherLocation), day.weatherLocation);
     }
   }
@@ -367,8 +386,10 @@ export async function resolveDaysWeather(
 
     if (forecast && entry && delta < FORECAST_WINDOW_DAYS) {
       const precipParts = [
-        entry.precipPct == null ? null : `${Math.round(entry.precipPct)}% max precip chance`,
-        entry.precipMm == null || entry.precipMm <= 0
+        entry.precipPct === null || entry.precipPct === undefined
+          ? null
+          : `${Math.round(entry.precipPct)}% max precip chance`,
+        entry.precipMm === null || entry.precipMm === undefined || entry.precipMm <= 0
           ? null
           : `${entry.precipMm.toFixed(1)} mm modeled`,
       ].filter(Boolean);
@@ -389,16 +410,33 @@ export async function resolveDaysWeather(
         values: weatherValues({
           weatherHighC: Math.round(entry.maxC),
           weatherLowC: Math.round(entry.minC),
-          weatherFeelsHighC: entry.feelsMaxC == null ? undefined : Math.round(entry.feelsMaxC),
-          weatherFeelsLowC: entry.feelsMinC == null ? undefined : Math.round(entry.feelsMinC),
-          weatherPrecipPct: entry.precipPct == null ? undefined : Math.round(entry.precipPct),
+          weatherFeelsHighC:
+            entry.feelsMaxC === null || entry.feelsMaxC === undefined
+              ? undefined
+              : Math.round(entry.feelsMaxC),
+          weatherFeelsLowC:
+            entry.feelsMinC === null || entry.feelsMinC === undefined
+              ? undefined
+              : Math.round(entry.feelsMinC),
+          weatherPrecipPct:
+            entry.precipPct === null || entry.precipPct === undefined
+              ? undefined
+              : Math.round(entry.precipPct),
           weatherPrecipMm: entry.precipMm ?? undefined,
           weatherPrecipHours: entry.precipHours ?? undefined,
           weatherCode: entry.code ?? undefined,
-          weatherWindKph: entry.windKph == null ? undefined : Math.round(entry.windKph),
-          weatherGustKph: entry.gustKph == null ? undefined : Math.round(entry.gustKph),
+          weatherWindKph:
+            entry.windKph === null || entry.windKph === undefined
+              ? undefined
+              : Math.round(entry.windKph),
+          weatherGustKph:
+            entry.gustKph === null || entry.gustKph === undefined
+              ? undefined
+              : Math.round(entry.gustKph),
           weatherWindDirectionDeg:
-            entry.windDirectionDeg == null ? undefined : Math.round(entry.windDirectionDeg),
+            entry.windDirectionDeg === null || entry.windDirectionDeg === undefined
+              ? undefined
+              : Math.round(entry.windDirectionDeg),
           weatherUvMax: entry.uvMax ?? undefined,
           weatherSunrise: entry.sunrise ?? undefined,
           weatherSunset: entry.sunset ?? undefined,

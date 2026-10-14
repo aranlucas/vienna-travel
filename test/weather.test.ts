@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { DayPlan } from "../lib/tripData";
-import { resolveDaysWeather } from "../lib/weather-service";
+import type { DayPlan } from "@/lib/tripData";
+import { resolveDaysWeather } from "@/lib/weather-service";
 import {
   applyWeatherState,
   forecastLeadDays,
@@ -8,8 +8,8 @@ import {
   type WeatherSnapshot,
   mergeWeatherSnapshot,
   weatherScope,
-} from "../lib/weather-snapshot";
-import { fetchWeatherSnapshot, WEATHER_REQUEST_TIMEOUT_MS } from "../lib/weather-client";
+} from "@/lib/weather-snapshot";
+import { fetchWeatherSnapshot, WEATHER_REQUEST_TIMEOUT_MS } from "@/lib/weather-client";
 
 const now = new Date("2026-10-02T08:00:00Z");
 
@@ -393,7 +393,7 @@ describe("browser weather transport", () => {
 });
 
 function required<T>(value: T | null | undefined): T {
-  if (value == null) {
+  if (value === null || value === undefined) {
     throw new Error("Required fixture value is missing");
   }
 

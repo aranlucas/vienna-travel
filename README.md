@@ -106,7 +106,6 @@ See [`spec.md`](spec.md) and the [data guide](lib/data/README.md) for the full a
 ```bash
 pnpm check:privacy
 pnpm lint
-pnpm lint:plugin
 pnpm format:check
 pnpm typecheck
 pnpm test:run

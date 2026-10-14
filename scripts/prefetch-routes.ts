@@ -71,7 +71,7 @@ async function main() {
       const from = segment.waypoints[0];
       const to = segment.waypoints.at(-1);
 
-      if (segment.relationId == null || !from || !to) {
+      if (segment.relationId === null || segment.relationId === undefined || !from || !to) {
         throw new Error(`${segment.id}: missing OSM relationId; bbox rail stitcher was removed`);
       }
 
