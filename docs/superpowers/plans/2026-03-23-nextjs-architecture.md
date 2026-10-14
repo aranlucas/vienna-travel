@@ -42,10 +42,10 @@ In `lib/overpassRailService.ts`, find the `query` string at line 109 and change:
 
 ```ts
 // Before
-const query = `[out:json][timeout:25];way["railway"="rail"]["usage"="main"](${south},${west},${north},${east});out geom;`
+const query = `[out:json][timeout:25];way["railway"="rail"]["usage"="main"](${south},${west},${north},${east});out geom;`;
 
 // After
-const query = `[out:json][timeout:25];way["railway"="rail"]["usage"="main"][!"service"](${south},${west},${north},${east});out geom;`
+const query = `[out:json][timeout:25];way["railway"="rail"]["usage"="main"][!"service"](${south},${west},${north},${east});out geom;`;
 ```
 
 - [ ] **Step 2: Add `RAIL_SEGMENT_OVERRIDES` to `lib/heroRouteData.ts`**
@@ -53,7 +53,7 @@ const query = `[out:json][timeout:25];way["railway"="rail"]["usage"="main"][!"se
 Add this import and export at the top of the file (after the existing imports):
 
 ```ts
-import type { LatLng } from './routingService'
+import type { LatLng } from "./routingService";
 
 /**
  * Static coordinate overrides for Overpass segments that still stitch incorrectly.
@@ -66,7 +66,7 @@ import type { LatLng } from './routingService'
 export const RAIL_SEGMENT_OVERRIDES: Record<string, LatLng[]> = {
   // Example entry (uncomment and populate if a segment misbehaves):
   // '48.1598,14.0285->48.0121,13.7214': [[48.1598, 14.0285], [48.0121, 13.7214]],
-}
+};
 ```
 
 - [ ] **Step 3: Wire the override map into `fetchMultiSegmentRailRoute`**
@@ -75,24 +75,26 @@ In `lib/overpassRailService.ts`, add the import and the override check:
 
 ```ts
 // Add at top with other imports:
-import { RAIL_SEGMENT_OVERRIDES } from './heroRouteData'
+import { RAIL_SEGMENT_OVERRIDES } from "./heroRouteData";
 ```
 
 In `fetchMultiSegmentRailRoute`, change the per-segment `Promise.all` mapping to check overrides first:
 
 ```ts
 // Before (line 131–133):
-const segments = await Promise.all(waypoints.slice(0, -1).map((from, i) => fetchRailRoute(from, waypoints[i + 1])))
+const segments = await Promise.all(
+  waypoints.slice(0, -1).map((from, i) => fetchRailRoute(from, waypoints[i + 1])),
+);
 
 // After:
 const segments = await Promise.all(
   waypoints.slice(0, -1).map((from, i) => {
-    const to = waypoints[i + 1]
-    const key = `${from.lat},${from.lng}->${to.lat},${to.lng}`
-    if (RAIL_SEGMENT_OVERRIDES[key]) return Promise.resolve(RAIL_SEGMENT_OVERRIDES[key])
-    return fetchRailRoute(from, to)
+    const to = waypoints[i + 1];
+    const key = `${from.lat},${from.lng}->${to.lat},${to.lng}`;
+    if (RAIL_SEGMENT_OVERRIDES[key]) return Promise.resolve(RAIL_SEGMENT_OVERRIDES[key]);
+    return fetchRailRoute(from, to);
   }),
-)
+);
 ```
 
 - [ ] **Step 4: Type-check**
@@ -142,16 +144,16 @@ GPX hiking routes (`readGpxFile`) are **not** pre-baked — they read local `fs`
 - [ ] **Step 1: Create `lib/staticRoutes.ts`** (type definition only — JSON import comes after script runs)
 
 ```ts
-import type { LatLng } from './routingService'
+import type { LatLng } from "./routingService";
 
 export interface StaticRoutes {
-  heroDriveCoords: LatLng[]
+  heroDriveCoords: LatLng[];
   phaseRoutes: {
-    vienna: { drivingRoutes: Record<string, LatLng[]> }
-    salzkammergut: { drivingRoutes: Record<string, LatLng[]> }
-    tyrol: { drivingRoutes: Record<string, LatLng[]> }
-    olperer: { drivingRoutes: Record<string, LatLng[]> }
-  }
+    vienna: { drivingRoutes: Record<string, LatLng[]> };
+    salzkammergut: { drivingRoutes: Record<string, LatLng[]> };
+    tyrol: { drivingRoutes: Record<string, LatLng[]> };
+    olperer: { drivingRoutes: Record<string, LatLng[]> };
+  };
 }
 ```
 
@@ -162,50 +164,52 @@ Note: phase IDs are a closed set — no index signature. This gives type-safe ac
 Use relative imports (not `@/` aliases) — this script runs outside the Next.js bundler via `npx tsx`.
 
 ```ts
-import { writeFile } from 'fs/promises'
-import { resolve } from 'path'
-import { PHASES } from '../lib/tripData'
-import { fetchDrivingRoute } from '../lib/routingService'
-import type { LatLng } from '../lib/routingService'
-import { DRIVE_WAYPOINTS } from '../lib/heroRouteData'
-import type { StaticRoutes } from '../lib/staticRoutes'
+import { writeFile } from "fs/promises";
+import { resolve } from "path";
+import { PHASES } from "../lib/tripData";
+import { fetchDrivingRoute } from "../lib/routingService";
+import type { LatLng } from "../lib/routingService";
+import { DRIVE_WAYPOINTS } from "../lib/heroRouteData";
+import type { StaticRoutes } from "../lib/staticRoutes";
 
 async function main() {
-  console.log('Fetching hero driving route...')
-  const heroDriveCoords = await fetchDrivingRoute(DRIVE_WAYPOINTS)
+  console.log("Fetching hero driving route...");
+  const heroDriveCoords = await fetchDrivingRoute(DRIVE_WAYPOINTS);
 
-  console.log('Fetching per-phase driving routes...')
+  console.log("Fetching per-phase driving routes...");
   const phaseResults = await Promise.all(
     PHASES.map(async (phase) => {
       const drivingEntries = await Promise.all(
         phase.drivingSegments
           .filter((s) => s.waypoints && s.waypoints.length >= 2)
           .map(async (s) => {
-            const wpts: LatLng[] = s.waypoints!.map((c) => [c.lat, c.lng])
-            const route = await fetchDrivingRoute(wpts)
-            console.log(`  ${phase.id}/${s.id}: ${route.length} points`)
-            return [s.id, route] as [string, LatLng[]]
+            const wpts: LatLng[] = s.waypoints!.map((c) => [c.lat, c.lng]);
+            const route = await fetchDrivingRoute(wpts);
+            console.log(`  ${phase.id}/${s.id}: ${route.length} points`);
+            return [s.id, route] as [string, LatLng[]];
           }),
-      )
-      return [phase.id, { drivingRoutes: Object.fromEntries(drivingEntries) }] as const
+      );
+      return [phase.id, { drivingRoutes: Object.fromEntries(drivingEntries) }] as const;
     }),
-  )
+  );
 
   const data: StaticRoutes = {
     heroDriveCoords,
-    phaseRoutes: Object.fromEntries(phaseResults) as StaticRoutes['phaseRoutes'],
-  }
+    phaseRoutes: Object.fromEntries(phaseResults) as StaticRoutes["phaseRoutes"],
+  };
 
-  const outPath = resolve(process.cwd(), 'lib/staticRoutes.json')
-  await writeFile(outPath, JSON.stringify(data, null, 2))
-  console.log(`\nWritten ${outPath}`)
-  console.log(`Hero: ${heroDriveCoords.length} pts | Phases: ${PHASES.map((p) => p.id).join(', ')}`)
+  const outPath = resolve(process.cwd(), "lib/staticRoutes.json");
+  await writeFile(outPath, JSON.stringify(data, null, 2));
+  console.log(`\nWritten ${outPath}`);
+  console.log(
+    `Hero: ${heroDriveCoords.length} pts | Phases: ${PHASES.map((p) => p.id).join(", ")}`,
+  );
 }
 
 main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+  console.error(err);
+  process.exit(1);
+});
 ```
 
 - [ ] **Step 3: Run the script to generate `lib/staticRoutes.json`**
@@ -231,20 +235,20 @@ If this fails with "Cannot find module" errors, confirm the relative import path
 - [ ] **Step 4: Update `lib/staticRoutes.ts`** to add the JSON import and `STATIC_ROUTES` export
 
 ```ts
-import type { LatLng } from './routingService'
-import data from './staticRoutes.json'
+import type { LatLng } from "./routingService";
+import data from "./staticRoutes.json";
 
 export interface StaticRoutes {
-  heroDriveCoords: LatLng[]
+  heroDriveCoords: LatLng[];
   phaseRoutes: {
-    vienna: { drivingRoutes: Record<string, LatLng[]> }
-    salzkammergut: { drivingRoutes: Record<string, LatLng[]> }
-    tyrol: { drivingRoutes: Record<string, LatLng[]> }
-    olperer: { drivingRoutes: Record<string, LatLng[]> }
-  }
+    vienna: { drivingRoutes: Record<string, LatLng[]> };
+    salzkammergut: { drivingRoutes: Record<string, LatLng[]> };
+    tyrol: { drivingRoutes: Record<string, LatLng[]> };
+    olperer: { drivingRoutes: Record<string, LatLng[]> };
+  };
 }
 
-export const STATIC_ROUTES = data as StaticRoutes
+export const STATIC_ROUTES = data as StaticRoutes;
 ```
 
 `resolveJsonModule: true` is already set in `tsconfig.json` so this import works.
@@ -483,10 +487,10 @@ git commit -m "feat: pre-bake OSRM driving routes as static JSON, eliminate buil
 Replace the full file:
 
 ```tsx
-'use client'
+"use client";
 
-import { useEffect } from 'react'
-import { useMap } from 'react-leaflet'
+import { useEffect } from "react";
+import { useMap } from "react-leaflet";
 
 /**
  * Fixes Leaflet blank-map bug when the map is inside a hidden container.
@@ -498,34 +502,34 @@ import { useMap } from 'react-leaflet'
  * 2. Up to 6 ancestor elements — needed for any legacy display:none wrapper pattern.
  */
 export function MapInvalidator() {
-  const map = useMap()
+  const map = useMap();
 
   useEffect(() => {
     const handle = () => {
       // Small delay lets the browser apply layout before measuring tiles
-      setTimeout(() => map.invalidateSize({ animate: false }), 50)
-    }
+      setTimeout(() => map.invalidateSize({ animate: false }), 50);
+    };
 
     // Fire once on mount — covers the case where this tab is already active
-    handle()
+    handle();
 
-    const container = map.getContainer()
-    const observer = new MutationObserver(handle)
+    const container = map.getContainer();
+    const observer = new MutationObserver(handle);
 
     // Observe the container itself (for <Activity> which mutates the host node directly)
-    observer.observe(container, { attributes: true, attributeFilter: ['style'] })
+    observer.observe(container, { attributes: true, attributeFilter: ["style"] });
 
     // Also walk up to 6 ancestors (legacy wrapper pattern fallback)
-    let el = container.parentElement
+    let el = container.parentElement;
     for (let i = 0; i < 6 && el; i++) {
-      observer.observe(el, { attributes: true, attributeFilter: ['style'] })
-      el = el.parentElement
+      observer.observe(el, { attributes: true, attributeFilter: ["style"] });
+      el = el.parentElement;
     }
 
-    return () => observer.disconnect()
-  }, [map])
+    return () => observer.disconnect();
+  }, [map]);
 
-  return null
+  return null;
 }
 ```
 
@@ -534,52 +538,54 @@ export function MapInvalidator() {
 Replace the full file:
 
 ```tsx
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { Activity } from 'react'
-import { TRIP_DATA } from '@/lib/tripData'
+import { useState } from "react";
+import { Activity } from "react";
+import { TRIP_DATA } from "@/lib/tripData";
 
 interface PhaseNavProps {
-  panels: React.ReactNode[]
+  panels: React.ReactNode[];
 }
 
 export function PhaseNav({ panels }: PhaseNavProps) {
-  const phases = TRIP_DATA.phases
-  const [activeIndex, setActiveIndex] = useState(0)
+  const phases = TRIP_DATA.phases;
+  const [activeIndex, setActiveIndex] = useState(0);
 
   return (
     <div>
       {/* Tab bar */}
       <div className="flex overflow-x-auto gap-1 pb-1 mb-8 border-b border-forest-green/30 scrollbar-hide">
         {phases.map((phase, i) => {
-          const isActive = i === activeIndex
+          const isActive = i === activeIndex;
           return (
             <button
               key={phase.id}
               onClick={() => setActiveIndex(i)}
               className={`flex items-center gap-2 px-4 py-3 rounded-t text-sm font-medium whitespace-nowrap transition-all duration-200 border-b-2 -mb-px ${
                 isActive
-                  ? 'text-amber border-amber bg-amber/5'
-                  : 'text-cream-muted border-transparent hover:text-cream hover:border-forest-green/50'
+                  ? "text-amber border-amber bg-amber/5"
+                  : "text-cream-muted border-transparent hover:text-cream hover:border-forest-green/50"
               }`}
             >
               <span>{phase.emoji}</span>
               <span>{phase.title}</span>
-              <span className={`text-sm ${isActive ? 'text-amber/70' : 'text-cream-muted/50'}`}>{phase.dates}</span>
+              <span className={`text-sm ${isActive ? "text-amber/70" : "text-cream-muted/50"}`}>
+                {phase.dates}
+              </span>
             </button>
-          )
+          );
         })}
       </div>
 
       {/* All panels managed by Activity — state preserved while hidden */}
       {panels.map((panel, i) => (
-        <Activity key={i} mode={i === activeIndex ? 'visible' : 'hidden'}>
+        <Activity key={i} mode={i === activeIndex ? "visible" : "hidden"}>
           {panel}
         </Activity>
       ))}
     </div>
-  )
+  );
 }
 ```
 

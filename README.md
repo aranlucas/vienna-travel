@@ -51,7 +51,7 @@ The checked-in itinerary covers **September 5–14, 2026**. It is a concrete exa
 
 ### Run it locally
 
-Use **Node.js 24** (matching CI) and **pnpm 12.4.2** (pinned in `package.json`).
+Use **Node.js 24** (matching CI) and **pnpm 12.9.1** (pinned in `package.json`).
 
 ```bash
 git clone https://github.com/aranlucas/vienna-travel.git
@@ -94,8 +94,8 @@ flowchart LR
 
 - `app/page.tsx` enriches the trip with route, GPX, and weather data on the server.
 - `components/map/`, `timeline/`, `weather/`, `planning/`, and `phases/` provide the main views.
-- `lib/gpxServer.ts`, `weatherService.ts`, and `routingService.ts` handle external and geographic data.
-- `components/webmcp/TripWebMcp.tsx` exposes the trip to compatible browser agents.
+- `lib/gpx-server.ts`, `weather-service.ts`, and `routing-service.ts` handle external and geographic data.
+- `components/webmcp/trip-web-mcp.tsx` exposes the trip to compatible browser agents.
 
 See [`spec.md`](spec.md) and the [data guide](lib/data/README.md) for the full architecture.
 
@@ -106,9 +106,20 @@ See [`spec.md`](spec.md) and the [data guide](lib/data/README.md) for the full a
 ```bash
 pnpm check:privacy
 pnpm lint
+pnpm lint:plugin
+pnpm format:check
 pnpm typecheck
+pnpm test:run
 pnpm build
 ```
+
+Oxforge supplies the lint and formatting policy. Tailwind reads `app/globals.css` so shared
+rules can validate the app's real design tokens. Fixed-pixel tokens intentionally keep
+controls and maps the same size at both the 16px mobile and 19px desktop root font sizes.
+The two documented compatibility entrypoints, `lib/tripData.ts` and
+`lib/confirmedStays.ts`, retain camelCase filenames through an exact-file naming override.
+Other files use the shared kebab-case convention. Local suppressions are limited to
+command-line output, ordered filesystem/retry work, and Leaflet's required integration APIs.
 
 This is a public itinerary demo. Keep personal traveler details and private booking references out of trip fixtures; [`SECURITY.md`](SECURITY.md) explains the boundary. Confirm current conditions and reservations with their providers when adapting the plan.
 

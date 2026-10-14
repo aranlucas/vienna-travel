@@ -1,26 +1,34 @@
-import { writeFile } from 'fs/promises'
-import { resolve } from 'path'
-import { PHASES } from '../lib/tripData'
-import { fetchDrivingRoute } from '../lib/routingService'
-import type { LatLng } from '../lib/routingService'
-import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from '../lib/heroRouteData'
-import { routeWaypointKey, STATIC_ROUTES, phaseRoutesSchema, type StaticRoutes } from '../lib/staticRoutes'
-import { fetchRelationGeometry } from '../lib/overpassRailService'
+/* eslint-disable no-console -- This command-line tool reports progress and failures to its caller. */
+import { writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { PHASES } from "../lib/tripData";
+import { fetchDrivingRoute } from "../lib/routing-service";
+import type { LatLng } from "../lib/routing-service";
+import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from "../lib/hero-route-data";
+import {
+  routeWaypointKey,
+  STATIC_ROUTES,
+  phaseRoutesSchema,
+  type StaticRoutes,
+} from "../lib/static-routes";
+import { fetchRelationGeometry } from "../lib/overpass-rail-service";
 
 async function main() {
-  const trainOnly = process.argv.includes('--train-only')
-  let heroDriveCoords = STATIC_ROUTES.heroDriveCoords
-  let phaseRoutes = STATIC_ROUTES.phaseRoutes
+  const trainOnly = process.argv.includes("--train-only");
+  let heroDriveCoords = STATIC_ROUTES.heroDriveCoords;
+  let phaseRoutes = STATIC_ROUTES.phaseRoutes;
 
   if (!trainOnly) {
-    console.log('Fetching hero driving route...')
-    heroDriveCoords = await fetchDrivingRoute(DRIVE_WAYPOINTS)
+    console.log("Fetching hero driving route...");
+    heroDriveCoords = await fetchDrivingRoute(DRIVE_WAYPOINTS);
 
     if (heroDriveCoords.length <= DRIVE_WAYPOINTS.length) {
-      throw new Error('Hero drive: OSRM did not return road-following geometry; static routes were not changed')
+      throw new Error(
+        "Hero drive: OSRM did not return road-following geometry; static routes were not changed",
+      );
     }
 
-    console.log('Fetching per-phase driving routes...')
+    console.log("Fetching per-phase driving routes...");
 
     const phaseResults = await Promise.all(
       PHASES.map(async (phase) => {
@@ -28,54 +36,60 @@ async function main() {
           phase.drivingSegments
             .filter((s) => s.waypoints && s.waypoints.length >= 2)
             .map(async (s) => {
-              const wpts: LatLng[] = s.waypoints!.map((c) => [c.lat, c.lng])
-              const route = await fetchDrivingRoute(wpts)
+              if (!s.waypoints) {
+                throw new Error(`${s.id}: missing driving waypoints`);
+              }
+
+              const wpts: LatLng[] = s.waypoints.map((c) => [c.lat, c.lng]);
+              const route = await fetchDrivingRoute(wpts);
 
               if (route.length <= wpts.length) {
                 throw new Error(
                   `${phase.id}/${s.id}: OSRM did not return road-following geometry; static routes were not changed`,
-                )
+                );
               }
 
-              console.log(`  ${phase.id}/${s.id}: ${route.length} points`)
+              console.log(`  ${phase.id}/${s.id}: ${route.length} points`);
 
-              return [s.id, route] satisfies [string, LatLng[]]
+              return [s.id, route] satisfies RouteEntry;
             }),
-        )
+        );
 
-        return [phase.id, { drivingRoutes: Object.fromEntries(drivingEntries) }] as const
+        return [phase.id, { drivingRoutes: Object.fromEntries(drivingEntries) }] as const;
       }),
-    )
+    );
 
-    phaseRoutes = phaseRoutesSchema.parse(Object.fromEntries(phaseResults))
+    phaseRoutes = phaseRoutesSchema.parse(Object.fromEntries(phaseResults));
   } else {
-    console.log('Keeping existing static driving routes (--train-only)')
+    console.log("Keeping existing static driving routes (--train-only)");
   }
 
-  console.log('Fetching hero train routes...')
+  console.log("Fetching hero train routes...");
 
   const heroTrainEntries = await Promise.all(
     HERO_TRAIN_SEGMENTS.map(async (segment) => {
-      const from = segment.waypoints[0]
-      const to = segment.waypoints[segment.waypoints.length - 1]
+      const from = segment.waypoints[0];
+      const to = segment.waypoints.at(-1);
 
-      if (segment.relationId == null) {
-        throw new Error(`${segment.id}: missing OSM relationId; bbox rail stitcher was removed`)
+      if (segment.relationId == null || !from || !to) {
+        throw new Error(`${segment.id}: missing OSM relationId; bbox rail stitcher was removed`);
       }
 
-      const route = await fetchRelationGeometry(segment.relationId, from, to)
+      const route = await fetchRelationGeometry(segment.relationId, from, to);
 
       if (route.length <= segment.waypoints.length) {
-        throw new Error(`${segment.id}: OSM did not return rail-following geometry; static routes were not changed`)
+        throw new Error(
+          `${segment.id}: OSM did not return rail-following geometry; static routes were not changed`,
+        );
       }
 
-      console.log(`  ${segment.id}: ${route.length} points`)
+      console.log(`  ${segment.id}: ${route.length} points`);
 
-      return [segment.id, route] satisfies [string, LatLng[]]
+      return [segment.id, route] satisfies RouteEntry;
     }),
-  )
+  );
 
-  const heroTrainRoutes = Object.fromEntries(heroTrainEntries)
+  const heroTrainRoutes = Object.fromEntries(heroTrainEntries);
 
   const sourceWaypointKeys = {
     heroDrive: routeWaypointKey(DRIVE_WAYPOINTS),
@@ -85,32 +99,38 @@ async function main() {
           .filter((segment) => segment.waypoints && segment.waypoints.length >= 2)
           .map((segment) => [
             segment.id,
-            routeWaypointKey(segment.waypoints!.map(({ lat, lng }) => [lat, lng] satisfies LatLng)),
+            routeWaypointKey(
+              (segment.waypoints ?? []).map(({ lat, lng }) => [lat, lng] satisfies LatLng),
+            ),
           ]),
       ),
     ),
     trainRoutes: Object.fromEntries(
       HERO_TRAIN_SEGMENTS.map((segment) => [
         segment.id,
-        `${segment.relationId}:${routeWaypointKey(segment.waypoints.map(({ lat, lng }) => [lat, lng] satisfies LatLng))}`,
+        `${segment.relationId ?? ""}:${routeWaypointKey(segment.waypoints.map(({ lat, lng }) => [lat, lng] satisfies LatLng))}`,
       ]),
     ),
-  }
+  };
 
   const data: StaticRoutes = {
     sourceWaypointKeys,
     heroDriveCoords,
     heroTrainRoutes,
     phaseRoutes,
-  }
+  };
 
-  const outPath = resolve(process.cwd(), 'lib/staticRoutes.json')
-  await writeFile(outPath, JSON.stringify(data, null, 2))
-  console.log(`\nWritten ${outPath}`)
-  console.log(`Hero: ${heroDriveCoords.length} pts | Phases: ${PHASES.map((p) => p.id).join(', ')}`)
+  const outPath = resolve(process.cwd(), "lib/staticRoutes.json");
+  await writeFile(outPath, JSON.stringify(data, null, 2));
+  console.log(`\nWritten ${outPath}`);
+  console.log(
+    `Hero: ${heroDriveCoords.length} pts | Phases: ${PHASES.map((p) => p.id).join(", ")}`,
+  );
 }
 
 main().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+  console.error(err);
+  process.exit(1);
+});
+
+type RouteEntry = [string, LatLng[]];

@@ -1,7 +1,30 @@
-@import 'tailwindcss';
-@import 'leaflet/dist/leaflet.css';
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 @theme {
+  /* Fixed-pixel tokens retain the compact trip UI at both root font sizes. */
+  --color-rail-blue: #4a9eb5;
+  --text-caption-tiny: 9px;
+  --text-caption-small: 10px;
+  --text-caption: 11px;
+  --text-body-fixed: 15px;
+  --spacing-touch: 44px;
+  --spacing-touch-roomy: 48px;
+  --spacing-touch-large: 52px;
+  --spacing-map-mobile: 280px;
+  --spacing-map-desktop: 480px;
+  --spacing-timeline-marker: 7px;
+  --spacing-timeline-tail: 24px;
+  --tracking-label-tight: 0.12em;
+  --tracking-label-compact: 0.14em;
+  --tracking-label: 0.15em;
+  --tracking-label-medium: 0.16em;
+  --tracking-label-wide: 0.18em;
+  --tracking-eyebrow: 0.2em;
+  --tracking-eyebrow-wide: 0.22em;
+  --tracking-heading: 0.25em;
+  --tracking-hero: 0.3em;
+  --leading-hero: 0.95;
   --color-forest-green: #1a2e1e;
   --color-dark-surface: #0f1a0f;
   --color-slate-blue: #2d3f5e;
@@ -43,7 +66,7 @@ body {
 
 /* Grain texture overlay */
 body::after {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
@@ -56,4 +79,17 @@ body::after {
 /* Leaflet map container fix */
 .leaflet-container {
   background: #0f1a0f;
+}
+
+@utility grid-cols-overview {
+  grid-template-columns: 1.1fr 0.9fr;
+}
+@utility grid-cols-timeline-mobile {
+  grid-template-columns: 3.5rem 1.5rem minmax(0, 1fr);
+}
+@utility grid-cols-timeline-desktop {
+  grid-template-columns: 5rem 2rem minmax(0, 1fr);
+}
+@utility grid-cols-weather-details {
+  grid-template-columns: 1fr 1fr auto;
 }

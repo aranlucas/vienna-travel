@@ -1,389 +1,397 @@
-import { type Coordinates, VIENNA_AIRPORT } from './trip'
-import { STAYS_BY_ID } from './stays'
+import { type Coordinates, VIENNA_AIRPORT } from "./trip";
+import { STAYS_BY_ID } from "./stays";
 
 export interface PointOfInterest {
-  id: string
-  name: string
-  coordinates: Coordinates
-  description: string
-  googleMapsUrl?: string
-  warning?: string
-  tip?: string
-  icon?: 'culture' | 'food' | 'nature' | 'hotel' | 'transport'
+  id: string;
+  name: string;
+  coordinates: Coordinates;
+  description: string;
+  googleMapsUrl?: string;
+  warning?: string;
+  tip?: string;
+  icon?: "culture" | "food" | "nature" | "hotel" | "transport";
 }
 
-type POIData = PointOfInterest & { phaseId: string }
+type POIData = PointOfInterest & { phaseId: string };
 
-type PointOfInterestCatalog = Record<string, POIData>
+type PointOfInterestCatalog = Record<string, POIData>;
 
 export const POIS = {
   // ── Vienna ──────────────────────────────────────────────────────────────────
   almanac: {
-    id: 'almanac',
-    name: 'Almanac Palais Vienna',
+    id: "almanac",
+    name: "Almanac Palais Vienna",
     coordinates: { lat: 48.2029, lng: 16.3786 },
-    description: 'Your Vienna base. Premium room, king bed.',
-    icon: 'hotel',
-    phaseId: 'vienna',
+    description: "Your Vienna base. Premium room, king bed.",
+    icon: "hotel",
+    phaseId: "vienna",
   },
   naschmarkt: {
-    id: 'naschmarkt',
-    name: 'Naschmarkt',
+    id: "naschmarkt",
+    name: "Naschmarkt",
     coordinates: { lat: 48.199, lng: 16.3654 },
-    description: "Vienna's famous open-air market. Buy hiking supplies: nuts, dried fruits, alpine cheese.",
-    warning: 'CLOSED Sundays — visit on Sept 5 only!',
-    icon: 'food',
-    phaseId: 'vienna',
+    description:
+      "Vienna's famous open-air market. Buy hiking supplies: nuts, dried fruits, alpine cheese.",
+    warning: "CLOSED Sundays — visit on Sept 5 only!",
+    icon: "food",
+    phaseId: "vienna",
   },
   stadtpark: {
-    id: 'stadtpark',
-    name: 'Stadtpark',
+    id: "stadtpark",
+    name: "Stadtpark",
     coordinates: { lat: 48.2022, lng: 16.3792 },
     description:
-      'Historic city park near your hotel, ideal for a low-effort stroll and the classic Johann Strauss monument photo.',
-    icon: 'nature',
-    phaseId: 'vienna',
+      "Historic city park near your hotel, ideal for a low-effort stroll and the classic Johann Strauss monument photo.",
+    icon: "nature",
+    phaseId: "vienna",
   },
   karlskirche: {
-    id: 'karlskirche',
-    name: 'Karlskirche',
+    id: "karlskirche",
+    name: "Karlskirche",
     coordinates: { lat: 48.1981, lng: 16.3715 },
     description:
       "One of Vienna's most striking Baroque churches, right by Karlsplatz and an easy add-on to the Naschmarkt / Belvedere side of town.",
-    icon: 'culture',
-    phaseId: 'vienna',
+    icon: "culture",
+    phaseId: "vienna",
   },
   stephansdom: {
-    id: 'stephansdom',
+    id: "stephansdom",
     name: "St. Stephen's Cathedral",
     coordinates: { lat: 48.2085, lng: 16.3731 },
     description: "Gothic masterpiece at the heart of Vienna's historic center.",
     googleMapsUrl:
-      'https://www.google.com/maps/place/St.+Stephen%27s+Cathedral/@48.2084113,16.3685998,16z/data=!3m2!4b1!5s0x476d079f9dbbb573:0x1d6dc1f6c15851df!4m6!3m5!1s0x476d079f223feccf:0x179757f3fadc3159!8m2!3d48.2084114!4d16.3734707!16zL20vMDFmZG1q?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "https://www.google.com/maps/place/St.+Stephen%27s+Cathedral/@48.2084113,16.3685998,16z/data=!3m2!4b1!5s0x476d079f9dbbb573:0x1d6dc1f6c15851df!4m6!3m5!1s0x476d079f223feccf:0x179757f3fadc3159!8m2!3d48.2084114!4d16.3734707!16zL20vMDFmZG1q?entry=ttu&g_ep=EgoyMDI2MDMxOC4xIKXMDSoASAFQAw%3D%3D",
+    icon: "culture",
+    phaseId: "vienna",
   },
-  'vienna-state-opera': {
-    id: 'vienna-state-opera',
-    name: 'Vienna State Opera',
+  "vienna-state-opera": {
+    id: "vienna-state-opera",
+    name: "Vienna State Opera",
     coordinates: { lat: 48.2029, lng: 16.3687 },
     description:
       "Ringstraße icon and one of the city's defining cultural landmarks. Strong stop even without a performance ticket.",
     googleMapsUrl:
-      'https://www.google.com/maps/place/Opernring%2B2%2C%2B1010%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476d079c861dbfd5%3A0xfd59268d25377d56?gl=US&hl=en',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "https://www.google.com/maps/place/Opernring%2B2%2C%2B1010%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476d079c861dbfd5%3A0xfd59268d25377d56?gl=US&hl=en",
+    icon: "culture",
+    phaseId: "vienna",
   },
   albertina: {
-    id: 'albertina',
-    name: 'Albertina',
+    id: "albertina",
+    name: "Albertina",
     coordinates: { lat: 48.2044, lng: 16.3687 },
     description:
-      'Top-tier museum beside the Opera with a strong permanent collection and an easy fit on the imperial-center walk.',
+      "Top-tier museum beside the Opera with a strong permanent collection and an easy fit on the imperial-center walk.",
     googleMapsUrl:
-      'https://www.google.com/maps/place/Albertinapl.%2B1%2C%2B1010%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476d079bf27e5ac1%3A0x66ef8a989f37deb8?gl=US&hl=en',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "https://www.google.com/maps/place/Albertinapl.%2B1%2C%2B1010%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476d079bf27e5ac1%3A0x66ef8a989f37deb8?gl=US&hl=en",
+    icon: "culture",
+    phaseId: "vienna",
   },
   burggarten: {
-    id: 'burggarten',
-    name: 'Burggarten',
+    id: "burggarten",
+    name: "Burggarten",
     coordinates: { lat: 48.2049, lng: 16.3661 },
     description:
-      'Compact inner-city garden between the Opera and Hofburg, good for a breather during the Ringstraße loop.',
-    icon: 'nature',
-    phaseId: 'vienna',
+      "Compact inner-city garden between the Opera and Hofburg, good for a breather during the Ringstraße loop.",
+    icon: "nature",
+    phaseId: "vienna",
   },
   hofburg: {
-    id: 'hofburg',
-    name: 'Hofburg Imperial Palace',
+    id: "hofburg",
+    name: "Hofburg Imperial Palace",
     coordinates: { lat: 48.2065, lng: 16.364 },
     description:
       'The Habsburg imperial core. Best fit for the "Imperial Vienna" day and more central than trying to force every palace into one walk.',
     googleMapsUrl:
-      'https://www.google.com/maps/place/Heldenplatz%2C%2B1010%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476d0799bf2006df%3A0x3e5339ad2c514e60?gl=US&hl=en',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "https://www.google.com/maps/place/Heldenplatz%2C%2B1010%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476d0799bf2006df%3A0x3e5339ad2c514e60?gl=US&hl=en",
+    icon: "culture",
+    phaseId: "vienna",
   },
-  'cafe-central': {
-    id: 'cafe-central',
-    name: 'Café Central',
+  "cafe-central": {
+    id: "cafe-central",
+    name: "Café Central",
     coordinates: { lat: 48.2098, lng: 16.3669 },
-    description: 'A legendary Viennese coffeehouse. Order a Melange and soak in the atmosphere.',
-    icon: 'food',
-    phaseId: 'vienna',
+    description: "A legendary Viennese coffeehouse. Order a Melange and soak in the atmosphere.",
+    icon: "food",
+    phaseId: "vienna",
   },
   schoenbrunn: {
-    id: 'schoenbrunn',
-    name: 'Schönbrunn Palace',
+    id: "schoenbrunn",
+    name: "Schönbrunn Palace",
     coordinates: { lat: 48.1845, lng: 16.3122 },
-    description: 'Habsburg summer palace with 1,441 rooms and immaculate formal gardens. Open Sundays.',
+    description:
+      "Habsburg summer palace with 1,441 rooms and immaculate formal gardens. Open Sundays.",
     googleMapsUrl:
-      'https://www.google.com/maps/place/Sch%C3%B6nbrunner%2BSchlo%C3%9Fstra%C3%9Fe%2B47%2C%2B1130%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476da8091cc07cbf%3A0x4e69ba5de4ea8bc9?gl=US&hl=en',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "https://www.google.com/maps/place/Sch%C3%B6nbrunner%2BSchlo%C3%9Fstra%C3%9Fe%2B47%2C%2B1130%2BWien%2C%2BAustria/data%3D%214m2%213m1%211s0x476da8091cc07cbf%3A0x4e69ba5de4ea8bc9?gl=US&hl=en",
+    icon: "culture",
+    phaseId: "vienna",
   },
   belvedere: {
-    id: 'belvedere',
-    name: 'Belvedere Museum',
+    id: "belvedere",
+    name: "Belvedere Museum",
     coordinates: { lat: 48.1907, lng: 16.3816 },
     description: "Baroque palace housing Klimt's 'The Kiss.' Open Sundays.",
-    icon: 'culture',
-    phaseId: 'vienna',
+    icon: "culture",
+    phaseId: "vienna",
   },
   grinzing: {
-    id: 'grinzing',
-    name: 'Grinzing Heuriger',
+    id: "grinzing",
+    name: "Grinzing Heuriger",
     coordinates: { lat: 48.2614, lng: 16.3528 },
-    description: 'Traditional Viennese wine tavern district. Enjoy Grüner Veltliner with locals.',
-    icon: 'food',
-    phaseId: 'vienna',
+    description: "Traditional Viennese wine tavern district. Enjoy Grüner Veltliner with locals.",
+    icon: "food",
+    phaseId: "vienna",
   },
   peterskirche: {
-    id: 'peterskirche',
+    id: "peterskirche",
     name: "St. Peter's Church (Peterskirche)",
     coordinates: { lat: 48.2094, lng: 16.3695 },
     description:
-      'Baroque church tucked just off Graben, with a striking dome, ornate interior, and free organ concerts most afternoons. A quiet respite between Stephansdom and the Hofburg.',
-    tip: 'Open Sundays for High Mass — a strong fit if shops are closed and you want an atmospheric stop between the Ringstraße walk and Café Central.',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "Baroque church tucked just off Graben, with a striking dome, ornate interior, and free organ concerts most afternoons. A quiet respite between Stephansdom and the Hofburg.",
+    tip: "Open Sundays for High Mass — a strong fit if shops are closed and you want an atmospheric stop between the Ringstraße walk and Café Central.",
+    icon: "culture",
+    phaseId: "vienna",
   },
-  'wiener-riesenrad': {
-    id: 'wiener-riesenrad',
-    name: 'Wiener Riesenrad (Giant Ferris Wheel)',
+  "wiener-riesenrad": {
+    id: "wiener-riesenrad",
+    name: "Wiener Riesenrad (Giant Ferris Wheel)",
     coordinates: { lat: 48.2163, lng: 16.3955 },
     description:
       "Vienna's landmark ferris wheel in the Prater. Sunset and evening rides give the best city panoramas; September hours run 9:00 AM–10:45 PM.",
-    tip: 'Book online in advance and aim for the sunset/blue-hour slot after dinner — either Sept 5 or Sept 6 evening can slot in easily from the Ring.',
-    icon: 'culture',
-    phaseId: 'vienna',
+    tip: "Book online in advance and aim for the sunset/blue-hour slot after dinner — either Sept 5 or Sept 6 evening can slot in easily from the Ring.",
+    icon: "culture",
+    phaseId: "vienna",
   },
   ankeruhr: {
-    id: 'ankeruhr',
-    name: 'Ankeruhr Anchor Clock',
+    id: "ankeruhr",
+    name: "Ankeruhr Anchor Clock",
     coordinates: { lat: 48.2114, lng: 16.3748 },
     description:
-      'Art Nouveau mechanical clock at Hoher Markt. Twelve historical figures parade across the face — at noon all twelve appear together in sequence.',
-    tip: 'Time a 5-minute stop for noon on either Vienna day for the full figure parade — just off the Stephansdom → Ring walk.',
-    icon: 'culture',
-    phaseId: 'vienna',
+      "Art Nouveau mechanical clock at Hoher Markt. Twelve historical figures parade across the face — at noon all twelve appear together in sequence.",
+    tip: "Time a 5-minute stop for noon on either Vienna day for the full figure parade — just off the Stephansdom → Ring walk.",
+    icon: "culture",
+    phaseId: "vienna",
   },
 
   // ── Salzkammergut ────────────────────────────────────────────────────────────
   mondsee: {
-    id: 'mondsee',
-    name: 'Mondsee',
+    id: "mondsee",
+    name: "Mondsee",
     coordinates: { lat: 47.8556, lng: 13.349 },
     description: 'The "Sound of Music" church. Beautiful lakeside town en route from Salzburg.',
-    icon: 'culture',
-    phaseId: 'salzkammergut',
+    icon: "culture",
+    phaseId: "salzkammergut",
   },
   attersee: {
-    id: 'attersee',
-    name: 'Attersee',
+    id: "attersee",
+    name: "Attersee",
     coordinates: { lat: 47.9195, lng: 13.5307 },
     description: "Austria's largest lake. Deep turquoise water, perfect for a lunch stop.",
-    icon: 'nature',
-    phaseId: 'salzkammergut',
+    icon: "nature",
+    phaseId: "salzkammergut",
   },
   hallstatt: {
-    id: 'hallstatt',
-    name: 'Hallstatt',
+    id: "hallstatt",
+    name: "Hallstatt",
     coordinates: { lat: 47.5622, lng: 13.6493 },
-    description: 'UNESCO World Heritage village clinging to a clifftop above a mirror lake.',
-    tip: 'Arrive by 7:30 AM, explore the old town first, then be at the rebuilt Salzbergbahn for the 9:00 AM first ascent. The Skywalk is uphill and reached by funicular; do not plan to walk there before opening.',
-    icon: 'nature',
-    phaseId: 'salzkammergut',
+    description: "UNESCO World Heritage village clinging to a clifftop above a mirror lake.",
+    tip: "Arrive by 7:30 AM, explore the old town first, then be at the rebuilt Salzbergbahn for the 9:00 AM first ascent. The Skywalk is uphill and reached by funicular; do not plan to walk there before opening.",
+    icon: "nature",
+    phaseId: "salzkammergut",
   },
-  'hallstatt-evangelical-church': {
-    id: 'hallstatt-evangelical-church',
-    name: 'Hallstatt Evangelical Church',
+  "hallstatt-evangelical-church": {
+    id: "hallstatt-evangelical-church",
+    name: "Hallstatt Evangelical Church",
     coordinates: { lat: 47.5615, lng: 13.6495 },
     description: "The postcard church on the lakefront in Hallstatt's compact old town.",
-    icon: 'culture',
-    phaseId: 'salzkammergut',
+    icon: "culture",
+    phaseId: "salzkammergut",
   },
   zimmerbraeu: {
-    id: 'zimmerbraeu',
-    name: 'Hotel Zimmerbräu',
+    id: "zimmerbraeu",
+    name: "Hotel Zimmerbräu",
     coordinates: { lat: 47.7377, lng: 13.4437 },
-    description: 'Confirmed lakeside base in central St. Wolfgang.',
-    tip: 'A central lakeside base for the morning mountain railway and afternoon bike-and-swim outing.',
-    icon: 'hotel',
-    phaseId: 'salzkammergut',
+    description: "Confirmed lakeside base in central St. Wolfgang.",
+    tip: "A central lakeside base for the morning mountain railway and afternoon bike-and-swim outing.",
+    icon: "hotel",
+    phaseId: "salzkammergut",
   },
-  'st-gilgen': {
-    id: 'st-gilgen',
-    name: 'St. Gilgen',
+  "st-gilgen": {
+    id: "st-gilgen",
+    name: "St. Gilgen",
     coordinates: { lat: 47.7668, lng: 13.3664 },
-    description: 'Charming lakeside village on the Wolfgangsee.',
-    icon: 'nature',
-    phaseId: 'salzkammergut',
+    description: "Charming lakeside village on the Wolfgangsee.",
+    icon: "nature",
+    phaseId: "salzkammergut",
   },
-  'st-wolfgang': {
-    id: 'st-wolfgang',
-    name: 'St. Wolfgang',
+  "st-wolfgang": {
+    id: "st-wolfgang",
+    name: "St. Wolfgang",
     coordinates: { lat: 47.7377, lng: 13.4437 },
-    description: 'Departure point for the Schafbergbahn cog railway.',
-    icon: 'transport',
-    phaseId: 'salzkammergut',
+    description: "Departure point for the Schafbergbahn cog railway.",
+    icon: "transport",
+    phaseId: "salzkammergut",
   },
   schafberg: {
-    id: 'schafberg',
-    name: 'Schafberg Summit',
+    id: "schafberg",
+    name: "Schafberg Summit",
     coordinates: { lat: 47.7735, lng: 13.4628 },
-    description: '5,850 ft summit with panoramic views over 7 lakes. Reached by historic steam cog railway.',
-    tip: 'Time slot is booked. Keep the confirmation handy and sit on the RIGHT side for the best lake views on the ascent.',
-    icon: 'nature',
-    phaseId: 'salzkammergut',
+    description:
+      "5,850 ft summit with panoramic views over 7 lakes. Reached by historic steam cog railway.",
+    tip: "Time slot is booked. Keep the confirmation handy and sit on the RIGHT side for the best lake views on the ascent.",
+    icon: "nature",
+    phaseId: "salzkammergut",
   },
-  'klimt-zentrum': {
-    id: 'klimt-zentrum',
-    name: 'Klimt-Zentrum am Attersee',
+  "klimt-zentrum": {
+    id: "klimt-zentrum",
+    name: "Klimt-Zentrum am Attersee",
     coordinates: { lat: 47.9494, lng: 13.5892 },
     description:
       "Museum in Schörfling devoted to Gustav Klimt's Attersee summers (1900–1916) — the region inspired most of his landscape paintings.",
-    tip: '2026 season runs May 21 through October; Wed–Fri 10–17, Sat/Sun 10–18. A tight 45-min stop pairs naturally with the Sept 7 Attersee lunch.',
-    icon: 'culture',
-    phaseId: 'salzkammergut',
+    tip: "2026 season runs May 21 through October; Wed–Fri 10–17, Sat/Sun 10–18. A tight 45-min stop pairs naturally with the Sept 7 Attersee lunch.",
+    icon: "culture",
+    phaseId: "salzkammergut",
   },
-  'bad-ischl': {
-    id: 'bad-ischl',
-    name: 'Bad Ischl — Kaiservilla',
+  "bad-ischl": {
+    id: "bad-ischl",
+    name: "Bad Ischl — Kaiservilla",
     coordinates: { lat: 47.7117, lng: 13.6236 },
     description:
       "Imperial spa town and 2024 European Capital of Culture. Franz Joseph's summer villa, the Marmorschlössl, and Konditorei Zauner are all walkable from the center.",
-    tip: 'An alternative town-and-café excursion on a wet day; do not add it to the September 8 train, bike and swim plan.',
-    icon: 'culture',
-    phaseId: 'salzkammergut',
+    tip: "An alternative town-and-café excursion on a wet day; do not add it to the September 8 train, bike and swim plan.",
+    icon: "culture",
+    phaseId: "salzkammergut",
   },
-  'salzwelten-hallstatt': {
-    id: 'salzwelten-hallstatt',
-    name: 'Salzwelten Hallstatt Salt Mine',
+  "salzwelten-hallstatt": {
+    id: "salzwelten-hallstatt",
+    name: "Salzwelten Hallstatt Salt Mine",
     coordinates: { lat: 47.5558, lng: 13.6495 },
     description:
       "The world's oldest salt mine plus the Skywalk 'World Heritage View' deck — a V-shaped platform 40 ft over the cliff, 1,181 ft above the village roofs.",
-    tip: 'The rebuilt Salzbergbahn officially reopened Aug 29, 2026. For Sept 8, book the 9:00 AM funicular + Skywalk only: the salt-mine tour cannot fit the fixed 10:15 AM departure.',
-    icon: 'nature',
-    phaseId: 'salzkammergut',
+    tip: "The rebuilt Salzbergbahn officially reopened Aug 29, 2026. For Sept 8, book the 9:00 AM funicular + Skywalk only: the salt-mine tour cannot fit the fixed 10:15 AM departure.",
+    icon: "nature",
+    phaseId: "salzkammergut",
   },
 
   // ── Tyrol ────────────────────────────────────────────────────────────────────
-  'ehrwald-base': {
-    id: 'ehrwald-base',
-    name: 'der grüne Baum Mountain Boutique Hotel',
+  "ehrwald-base": {
+    id: "ehrwald-base",
+    name: "der grüne Baum Mountain Boutique Hotel",
     coordinates: { lat: 47.4009, lng: 10.916 },
-    description: 'Confirmed Tyrol base for the Sept 9–11 alpine days.',
-    tip: 'Mountain base in Ehrwald, convenient for the early gondola start.',
-    icon: 'hotel',
-    phaseId: 'tyrol',
+    description: "Confirmed Tyrol base for the Sept 9–11 alpine days.",
+    tip: "Mountain base in Ehrwald, convenient for the early gondola start.",
+    icon: "hotel",
+    phaseId: "tyrol",
   },
   highline179: {
-    id: 'highline179',
-    name: 'Highline 179',
+    id: "highline179",
+    name: "Highline 179",
     coordinates: { lat: 47.4851, lng: 10.7198 },
     description:
       "World's longest pedestrian suspension bridge (1,332 ft). Swings between a medieval castle and a hilltop fort.",
-    icon: 'nature',
-    phaseId: 'tyrol',
+    icon: "nature",
+    phaseId: "tyrol",
   },
   plansee: {
-    id: 'plansee',
-    name: 'Plansee',
+    id: "plansee",
+    name: "Plansee",
     coordinates: { lat: 47.4532, lng: 10.7372 },
-    description: 'Deep blue fjord-like lake. Its narrow shape and towering cliffs feel like a Norwegian fjord.',
-    icon: 'nature',
-    phaseId: 'tyrol',
+    description:
+      "Deep blue fjord-like lake. Its narrow shape and towering cliffs feel like a Norwegian fjord.",
+    icon: "nature",
+    phaseId: "tyrol",
   },
   ehrwald: {
-    id: 'ehrwald',
-    name: 'Ehrwalder Almbahn',
+    id: "ehrwald",
+    name: "Ehrwalder Almbahn",
     coordinates: { lat: 47.4063, lng: 10.9081 },
-    description: 'Gondola base station. Start here for the Seebensee & Drachensee hike.',
-    icon: 'transport',
-    phaseId: 'tyrol',
+    description: "Gondola base station. Start here for the Seebensee & Drachensee hike.",
+    icon: "transport",
+    phaseId: "tyrol",
   },
   zugspitze: {
-    id: 'zugspitze',
-    name: 'Zugspitze Summit',
+    id: "zugspitze",
+    name: "Zugspitze Summit",
     coordinates: { lat: 47.4211, lng: 10.9854 },
     description:
-      '9,718 ft — the highest peak in the Alps accessible by the Tiroler Zugspitzbahn. Cross into Germany at the top!',
-    tip: 'Take the Tiroler Zugspitzbahn from Ehrwald. The border with Germany runs across the summit plateau.',
-    icon: 'nature',
-    phaseId: 'tyrol',
+      "9,718 ft — the highest peak in the Alps accessible by the Tiroler Zugspitzbahn. Cross into Germany at the top!",
+    tip: "Take the Tiroler Zugspitzbahn from Ehrwald. The border with Germany runs across the summit plateau.",
+    icon: "nature",
+    phaseId: "tyrol",
   },
   blindsee: {
-    id: 'blindsee',
-    name: 'Blindsee',
+    id: "blindsee",
+    name: "Blindsee",
     coordinates: { lat: 47.4193, lng: 10.9387 },
     description:
       'Famous for its otherworldly turquoise water and submerged "ghost trees" — dead trunks standing in the lake.',
-    icon: 'nature',
-    phaseId: 'tyrol',
+    icon: "nature",
+    phaseId: "tyrol",
   },
   fernsteinsee: {
-    id: 'fernsteinsee',
-    name: 'Fernsteinsee',
+    id: "fernsteinsee",
+    name: "Fernsteinsee",
     coordinates: { lat: 47.3458, lng: 10.8225 },
     description:
-      'Emerald-green lake just off the Fern Pass (B179) with a postcard island chapel. A quick photo stop on the way from the lakes to Ehrwald.',
-    tip: 'Roadside pull-off is small — plan on 15 minutes max and skip in poor weather since the color is what makes it.',
-    icon: 'nature',
-    phaseId: 'tyrol',
+      "Emerald-green lake just off the Fern Pass (B179) with a postcard island chapel. A quick photo stop on the way from the lakes to Ehrwald.",
+    tip: "Roadside pull-off is small — plan on 15 minutes max and skip in poor weather since the color is what makes it.",
+    icon: "nature",
+    phaseId: "tyrol",
   },
 
   // ── Achensee and return ─────────────────────────────────────────────────────
-  'pertisau-lakeside': {
-    id: 'pertisau-lakeside',
-    name: 'Pertisau · Achensee lakeside',
+  "pertisau-lakeside": {
+    id: "pertisau-lakeside",
+    name: "Pertisau · Achensee lakeside",
     coordinates: { lat: 47.4407, lng: 11.7025 },
-    description: 'Today’s relaxed day trip: lake views, a short flat promenade stroll and lunch in Pertisau.',
-    tip: 'Use signed paid lakeside parking, walk only as far as you feel like, and leave at 14:30 for the 17:30 Innsbruck Airport car return. Lunch suggestion: Café & Restaurant Christina, Seepromenade 27.',
-    icon: 'nature',
-    phaseId: 'olperer',
+    description:
+      "Today’s relaxed day trip: lake views, a short flat promenade stroll and lunch in Pertisau.",
+    tip: "Use signed paid lakeside parking, walk only as far as you feel like, and leave at 14:30 for the 17:30 Innsbruck Airport car return. Lunch suggestion: Café & Restaurant Christina, Seepromenade 27.",
+    icon: "nature",
+    phaseId: "olperer",
   },
-  'innsbruck-golden-roof': {
-    id: 'innsbruck-golden-roof',
-    name: 'Innsbruck — Golden Roof',
+  "innsbruck-golden-roof": {
+    id: "innsbruck-golden-roof",
+    name: "Innsbruck — Golden Roof",
     coordinates: { lat: 47.2683, lng: 11.3933 },
-    description: "Innsbruck's medieval Old Town. The Golden Roof (Goldenes Dachl) is the city's iconic landmark.",
-    tip: 'On Sept 13, use Hbf luggage storage before the old-town walk; hotel storage must be confirmed separately. Return to Hbf by 13:30 for bags and train food. The rental car is scheduled for return the previous evening.',
-    icon: 'culture',
-    phaseId: 'olperer',
+    description:
+      "Innsbruck's medieval Old Town. The Golden Roof (Goldenes Dachl) is the city's iconic landmark.",
+    tip: "On Sept 13, use Hbf luggage storage before the old-town walk; hotel storage must be confirmed separately. Return to Hbf by 13:30 for bags and train food. The rental car is scheduled for return the previous evening.",
+    icon: "culture",
+    phaseId: "olperer",
   },
-  'innsbruck-st-anne': {
-    id: 'innsbruck-st-anne',
+  "innsbruck-st-anne": {
+    id: "innsbruck-st-anne",
     name: "St. Anne's Column",
     coordinates: { lat: 47.2662, lng: 11.3921 },
-    description: 'The landmark column on Maria-Theresien-Straße and a clean anchor for the old-town stroll.',
-    icon: 'culture',
-    phaseId: 'olperer',
+    description:
+      "The landmark column on Maria-Theresien-Straße and a clean anchor for the old-town stroll.",
+    icon: "culture",
+    phaseId: "olperer",
   },
-  'innsbruck-hofburg': {
-    id: 'innsbruck-hofburg',
-    name: 'Innsbruck Hofburg',
+  "innsbruck-hofburg": {
+    id: "innsbruck-hofburg",
+    name: "Innsbruck Hofburg",
     coordinates: { lat: 47.2693, lng: 11.3957 },
-    description: 'Imperial Palace at the edge of the Old Town, an easy continuation after the Golden Roof.',
-    icon: 'culture',
-    phaseId: 'olperer',
+    description:
+      "Imperial Palace at the edge of the Old Town, an easy continuation after the Golden Roof.",
+    icon: "culture",
+    phaseId: "olperer",
   },
-  'nh-vienna-airport': {
-    id: 'nh-vienna-airport',
-    name: 'NH Vienna Airport',
-    coordinates: STAYS_BY_ID['nh-airport'].coordinates,
-    description: 'Airport hotel for the final overnight, directly by the terminal.',
-    icon: 'hotel',
-    phaseId: 'olperer',
+  "nh-vienna-airport": {
+    id: "nh-vienna-airport",
+    name: "NH Vienna Airport",
+    coordinates: STAYS_BY_ID["nh-airport"].coordinates,
+    description: "Airport hotel for the final overnight, directly by the terminal.",
+    icon: "hotel",
+    phaseId: "olperer",
   },
-  'vie-airport': {
-    id: 'vie-airport',
-    name: 'Vienna Airport (VIE)',
+  "vie-airport": {
+    id: "vie-airport",
+    name: "Vienna Airport (VIE)",
     coordinates: VIENNA_AIRPORT,
     description:
-      'Monday flight departs at 08:00. Leave NH at 05:15 with hand luggage only, or 04:45 if checking a bag; follow the airline’s current instructions.',
-    icon: 'transport',
-    phaseId: 'olperer',
+      "Monday flight departs at 08:00. Leave NH at 05:15 with hand luggage only, or 04:45 if checking a bag; follow the airline’s current instructions.",
+    icon: "transport",
+    phaseId: "olperer",
   },
-} satisfies PointOfInterestCatalog
+} satisfies PointOfInterestCatalog;
