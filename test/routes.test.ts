@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchRelationGeometry } from "../lib/overpass-rail-service";
-import { fetchDrivingRoute, type LatLng } from "../lib/routing-service";
-import { assertStaticRoutesCurrent } from "../lib/static-routes";
+import { fetchRelationGeometry } from "@/lib/overpass-rail-service";
+import { fetchDrivingRoute, type LatLng } from "@/lib/routing-service";
+import { assertStaticRoutesCurrent } from "@/lib/static-routes";
 
 const from = { lat: 0, lng: 0 };
 

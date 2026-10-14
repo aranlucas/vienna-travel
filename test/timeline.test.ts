@@ -1,5 +1,5 @@
 import { expect, it } from "vitest";
-import { buildTimelineEvents } from "../lib/timeline-events";
+import { buildTimelineEvents } from "@/lib/timeline-events";
 
 it("returns all timeline events in chronological order", () => {
   const events = buildTimelineEvents();

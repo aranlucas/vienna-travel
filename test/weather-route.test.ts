@@ -1,8 +1,8 @@
 import { afterEach, expect, it, vi } from "vitest";
 
-import type { DayPlan } from "../lib/tripData";
-import { createWeatherHandler } from "../lib/weather-route";
-import { resolveDaysWeather } from "../lib/weather-service";
+import type { DayPlan } from "@/lib/tripData";
+import { createWeatherHandler } from "@/lib/weather-route";
+import { resolveDaysWeather } from "@/lib/weather-service";
 
 const syntheticDay: DayPlan = {
   isoDate: "2026-10-02",
@@ -16,7 +16,7 @@ const syntheticDay: DayPlan = {
 
 const GET = createWeatherHandler(() => resolveDaysWeather([syntheticDay]));
 
-import { isWeatherSnapshot } from "../lib/weather-snapshot";
+import { isWeatherSnapshot } from "@/lib/weather-snapshot";
 
 afterEach(() => {
   vi.useRealTimers();

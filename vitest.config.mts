@@ -3,6 +3,11 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
-  resolve: { alias: { "@": import.meta.dirname } },
-  test: { maxWorkers: 1, fileParallelism: false, environment: "node" },
+  resolve: { tsconfigPaths: true },
+  test: {
+    include: ["test/**/*.test.{ts,tsx}"],
+    maxWorkers: 1,
+    fileParallelism: false,
+    environment: "node",
+  },
 });

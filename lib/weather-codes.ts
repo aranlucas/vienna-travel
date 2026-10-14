@@ -60,7 +60,7 @@ const WEATHER_CODE_NOTES: Record<WeatherCodeTone, string> = {
 };
 
 export function getWeatherCode(code?: number | null): WeatherCodeInfo | undefined {
-  if (code == null) {
+  if (code === null || code === undefined) {
     return undefined;
   }
 
