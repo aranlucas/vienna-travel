@@ -44,17 +44,17 @@ This allows targeted manual corrections without touching the stitching algorithm
 export const RAIL_SEGMENT_OVERRIDES: Record<string, LatLng[]> = {
   // Key format: "fromLat,fromLng->toLat,toLng"
   // Add entries here for any segment where Overpass still misbehaves
-}
+};
 ```
 
 **File:** `lib/overpassRailService.ts` — `fetchMultiSegmentRailRoute` checks override map:
 
 ```ts
-import { RAIL_SEGMENT_OVERRIDES } from './heroRouteData'
+import { RAIL_SEGMENT_OVERRIDES } from "./heroRouteData";
 
 // In the per-segment loop:
-const key = `${from.lat},${from.lng}->${to.lat},${to.lng}`
-if (RAIL_SEGMENT_OVERRIDES[key]) return RAIL_SEGMENT_OVERRIDES[key]
+const key = `${from.lat},${from.lng}->${to.lat},${to.lng}`;
+if (RAIL_SEGMENT_OVERRIDES[key]) return RAIL_SEGMENT_OVERRIDES[key];
 // else fetch from Overpass as before
 ```
 
@@ -104,20 +104,20 @@ git add lib/staticRoutes.json && git commit -m "chore: refresh static OSRM route
 **`lib/staticRoutes.ts`** owns the `StaticRoutes` interface and exports a typed wrapper:
 
 ```ts
-import type { LatLng } from './routingService'
-import data from './staticRoutes.json'
+import type { LatLng } from "./routingService";
+import data from "./staticRoutes.json";
 
 export interface StaticRoutes {
-  heroDriveCoords: LatLng[]
+  heroDriveCoords: LatLng[];
   phaseRoutes: {
-    vienna: { drivingRoutes: Record<string, LatLng[]> }
-    salzkammergut: { drivingRoutes: Record<string, LatLng[]> }
-    tyrol: { drivingRoutes: Record<string, LatLng[]> }
-    olperer: { drivingRoutes: Record<string, LatLng[]> }
-  }
+    vienna: { drivingRoutes: Record<string, LatLng[]> };
+    salzkammergut: { drivingRoutes: Record<string, LatLng[]> };
+    tyrol: { drivingRoutes: Record<string, LatLng[]> };
+    olperer: { drivingRoutes: Record<string, LatLng[]> };
+  };
 }
 
-export const STATIC_ROUTES = data as StaticRoutes
+export const STATIC_ROUTES = data as StaticRoutes;
 ```
 
 Phase IDs are a closed set (`vienna`, `salzkammergut`, `tyrol`, `olperer`) — no index signature.
@@ -164,7 +164,7 @@ With `<Activity>`, React does not set a style on any wrapper element. Instead it
 
 ```ts
 // Observe the container directly (for <Activity> which mutates the host node)
-observer.observe(container, { attributes: true, attributeFilter: ['style'] })
+observer.observe(container, { attributes: true, attributeFilter: ["style"] });
 // Then the existing ancestor walk-up as before
 ```
 

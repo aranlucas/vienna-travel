@@ -1,48 +1,48 @@
-import type { Coordinates } from './trip'
+import type { Coordinates } from "./trip";
 
 export interface DayRoute {
-  label: string
-  coordinates: Coordinates[]
+  label: string;
+  coordinates: Coordinates[];
 }
 
 /** Thin phase definition — map config and grouping only. No owned days/pois/hikes. */
 export interface PhaseDefinition {
-  id: string
-  number: 1 | 2 | 3 | 4
-  title: string
-  subtitle: string
-  dates: string
-  emoji: string
-  mapCenter: Coordinates
-  mapZoom: number
-  suggestedStopIds?: string[]
-  dayRoutes?: DayRoute[]
+  id: string;
+  number: 1 | 2 | 3 | 4;
+  title: string;
+  subtitle: string;
+  dates: string;
+  emoji: string;
+  mapCenter: Coordinates;
+  mapZoom: number;
+  suggestedStopIds?: string[];
+  dayRoutes?: DayRoute[];
 }
 
 export const PHASE_DEFINITIONS: PhaseDefinition[] = [
   {
-    id: 'vienna',
+    id: "vienna",
     number: 1,
-    title: 'Vienna',
-    subtitle: 'Imperial Capital',
-    dates: 'Sept 5–6',
-    emoji: '🏛️',
+    title: "Vienna",
+    subtitle: "Imperial Capital",
+    dates: "Sept 5–6",
+    emoji: "🏛️",
     mapCenter: { lat: 48.205, lng: 16.36 },
     mapZoom: 13,
     suggestedStopIds: [
-      'stadtpark',
-      'naschmarkt',
-      'karlskirche',
-      'peterskirche',
-      'ankeruhr',
-      'vienna-state-opera',
-      'hofburg',
-      'wiener-riesenrad',
-      'grinzing',
+      "stadtpark",
+      "naschmarkt",
+      "karlskirche",
+      "peterskirche",
+      "ankeruhr",
+      "vienna-state-opera",
+      "hofburg",
+      "wiener-riesenrad",
+      "grinzing",
     ],
     dayRoutes: [
       {
-        label: 'Day 1 Walk',
+        label: "Day 1 Walk",
         coordinates: [
           { lat: 48.2029, lng: 16.3781 },
           { lat: 48.2025, lng: 16.3785 },
@@ -93,7 +93,7 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
         ],
       },
       {
-        label: 'Day 2 Core Walk',
+        label: "Day 2 Core Walk",
         coordinates: [
           { lat: 48.2029, lng: 16.3781 },
           { lat: 48.2025, lng: 16.3785 },
@@ -147,50 +147,55 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
     ],
   },
   {
-    id: 'salzkammergut',
+    id: "salzkammergut",
     number: 2,
-    title: 'Salzkammergut',
-    subtitle: 'Turquoise Lakes',
-    dates: 'Sept 7–8',
-    emoji: '🏔️',
+    title: "Salzkammergut",
+    subtitle: "Turquoise Lakes",
+    dates: "Sept 7–8",
+    emoji: "🏔️",
     mapCenter: { lat: 47.7, lng: 13.52 },
     mapZoom: 10,
     suggestedStopIds: [
-      'mondsee',
-      'attersee',
-      'klimt-zentrum',
-      'bad-ischl',
-      'hallstatt',
-      'hallstatt-evangelical-church',
-      'salzwelten-hallstatt',
-      'zimmerbraeu',
-      'schafberg',
+      "mondsee",
+      "attersee",
+      "klimt-zentrum",
+      "bad-ischl",
+      "hallstatt",
+      "hallstatt-evangelical-church",
+      "salzwelten-hallstatt",
+      "zimmerbraeu",
+      "schafberg",
     ],
   },
   {
-    id: 'tyrol',
+    id: "tyrol",
     number: 3,
-    title: 'Tyrolean Alps',
-    subtitle: 'Ehrwald & Zugspitze',
-    dates: 'Sept 9–11',
-    emoji: '⛰️',
+    title: "Tyrolean Alps",
+    subtitle: "Ehrwald & Zugspitze",
+    dates: "Sept 9–11",
+    emoji: "⛰️",
     mapCenter: { lat: 47.4009, lng: 10.916 },
     mapZoom: 11,
-    suggestedStopIds: ['highline179', 'plansee', 'fernsteinsee', 'blindsee', 'zugspitze'],
+    suggestedStopIds: ["highline179", "plansee", "fernsteinsee", "blindsee", "zugspitze"],
   },
   {
-    id: 'olperer',
+    id: "olperer",
     number: 4,
-    title: 'Achensee & Return',
-    subtitle: 'Pertisau · Innsbruck',
-    dates: 'Sept 12–14',
-    emoji: '🏞️',
+    title: "Achensee & Return",
+    subtitle: "Pertisau · Innsbruck",
+    dates: "Sept 12–14",
+    emoji: "🏞️",
     mapCenter: { lat: 47.35, lng: 11.52 },
     mapZoom: 10,
-    suggestedStopIds: ['pertisau-lakeside', 'innsbruck-golden-roof', 'innsbruck-st-anne', 'innsbruck-hofburg'],
+    suggestedStopIds: [
+      "pertisau-lakeside",
+      "innsbruck-golden-roof",
+      "innsbruck-st-anne",
+      "innsbruck-hofburg",
+    ],
     dayRoutes: [
       {
-        label: 'Innsbruck Old Town Walk',
+        label: "Innsbruck Old Town Walk",
         coordinates: [
           { lat: 47.2637, lng: 11.4 },
           { lat: 47.2636, lng: 11.3999 },
@@ -224,4 +229,4 @@ export const PHASE_DEFINITIONS: PhaseDefinition[] = [
       },
     ],
   },
-]
+];

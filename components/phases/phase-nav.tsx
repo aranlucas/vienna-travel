@@ -1,0 +1,94 @@
+"use client";
+
+import { startTransition, useState } from "react";
+import { TRIP_DATA } from "@/lib/tripData";
+import { useTripProgress } from "@/components/planning/trip-progress-context";
+
+interface PhaseNavProps {
+  panels: React.ReactNode[];
+}
+
+export function PhaseNav({ panels }: PhaseNavProps) {
+  const phases = TRIP_DATA.phases;
+  const { today, showPast } = useTripProgress();
+
+  const visiblePhases = phases
+    .map((phase, index) => ({ phase, index }))
+    .filter(({ phase }) => showPast || phase.days.some((day) => day.isoDate >= today));
+
+  const currentIndex = phases.findIndex((phase) => phase.days.some((day) => day.isoDate === today));
+  const [selection, setSelection] = useState<PhaseSelection | null>(null);
+  const selectedIndex = selection?.date === today ? selection.index : null;
+
+  const activeIndex =
+    selectedIndex !== null && visiblePhases.some(({ index }) => index === selectedIndex)
+      ? selectedIndex
+      : currentIndex >= 0
+        ? currentIndex
+        : (visiblePhases[0]?.index ?? -1);
+
+  const activePanel = panels[activeIndex] ?? null;
+
+  return (
+    <div>
+      {currentIndex >= 0 && activeIndex !== currentIndex && (
+        <button
+          type="button"
+          onClick={() => setSelection(null)}
+          className="mbe-3 min-h-touch rounded-lg border border-amber/40 px-4 text-sm text-amber"
+        >
+          Back to today · {phases[currentIndex].title}
+        </button>
+      )}
+      {/* Tab bar */}
+      <div
+        role="tablist"
+        aria-label="Trip phases"
+        className="mbe-8 flex gap-1 overflow-x-auto border-be border-forest-green/30 pbe-1"
+      >
+        {visiblePhases.map(({ phase, index: i }) => {
+          const isActive = i === activeIndex;
+
+          return (
+            <button
+              type="button"
+              key={phase.id}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => {
+                if (i === activeIndex) {
+                  return;
+                }
+
+                startTransition(() => setSelection({ index: i, date: today }));
+              }}
+              className={`-mbe-px flex min-h-touch items-center gap-2 rounded-t border-be-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                isActive
+                  ? "text-amber border-amber bg-amber/5"
+                  : "text-cream-muted border-transparent hover:text-cream hover:border-forest-green/50"
+              }`}
+            >
+              <span>{phase.emoji}</span>
+              <span className="hidden sm:inline">{phase.title}</span>
+              <span className="sm:hidden">{phase.title.split(" ")[0]}</span>
+              <span
+                className={`hidden text-sm md:inline ${isActive ? "text-amber/70" : "text-cream-muted/50"}`}
+              >
+                {phase.dates}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div key={phases[activeIndex]?.id ?? activeIndex}>{activePanel}</div>
+      {!visiblePhases.length && (
+        <p className="text-cream-muted">
+          The trip is complete. Use “Show past days” to browse the itinerary.
+        </p>
+      )}
+    </div>
+  );
+}
+
+type PhaseSelection = { index: number; date: string };

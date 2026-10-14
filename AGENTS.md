@@ -32,7 +32,7 @@ lib/
   tripData.ts        # Assembly layer — builds fat PHASES for backward compat
                      #   Re-exports all types; do not add raw data here
   confirmedStays.ts  # Re-export shim → lib/data/stays.ts
-  timelineEvents.ts  # Pure derivation from transport + stays + itinerary; no hardcoding
+  timeline-events.ts  # Pure derivation from transport + stays + itinerary; no hardcoding
 ```
 
 ## Key conventions
@@ -40,5 +40,5 @@ lib/
 - **Activity time**: store as `{ time: '8:30 AM', title: 'Take the gondola' }` — never `text: '8:30 AM — Take the gondola'`
 - **Phase membership**: set `phaseId` on each day/POI/hike/segment — never nest flat data inside a phase object
 - **Bookings**: set `confirmed: true` on the Stay; BOOKINGS derives `booked` automatically — never manually mirror
-- **Timeline events**: flights come from FLIGHT_SEGMENTS, hotels from STAYS, activities from DayActivity.time — never hardcode events in timelineEvents.ts
+- **Timeline events**: flights come from FLIGHT_SEGMENTS, hotels from STAYS, activities from DayActivity.time — never hardcode events in timeline-events.ts
 - **Backward compat**: all component imports from `@/lib/tripData` and `@/lib/confirmedStays` remain valid
