@@ -1,12 +1,12 @@
 "use client";
 
-import { initializeWebMCPPolyfill } from "@mcp-b/webmcp-polyfill";
+import { installWebMCP } from "@mcp-b/webmcp-polyfill";
 import { useWebMCP } from "usewebmcp";
 import type { BookingItem, DayPlan, LiveCheckItem } from "@/lib/tripData";
 import { useLiveWeatherDays } from "@/components/weather/live-weather-context";
 
 if (typeof document !== "undefined") {
-  initializeWebMCPPolyfill();
+  installWebMCP();
 }
 
 const NO_INPUT_SCHEMA = {
