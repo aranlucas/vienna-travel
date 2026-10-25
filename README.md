@@ -51,7 +51,7 @@ The checked-in itinerary covers **September 5–14, 2026**. It is a concrete exa
 
 ### Run it locally
 
-Use **Node.js 24** (matching CI) and **pnpm 12.9.1** (pinned in `package.json`).
+Use the **Node.js version in `.node-version`** (matching CI) and the **pnpm version pinned by `packageManager` in `package.json`**.
 
 ```bash
 git clone https://github.com/aranlucas/vienna-travel.git
