@@ -6,7 +6,7 @@
     "prepare": "husky",
     "dev": "portless run next dev",
     "build": "next build",
-    "check:privacy": "node scripts/check-public-data.mjs",
+    "check:privacy": "vitest run test/public-data.test.ts",
     "start": "next start",
     "lint": "oxlint .",
     "lint:fix": "oxlint . --fix",

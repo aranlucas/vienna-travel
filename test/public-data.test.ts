@@ -1,5 +1,5 @@
 /* eslint-disable no-await-in-loop -- Keep filesystem traversal and diagnostics in stable source order. */
-/* eslint-disable no-console -- This command-line tool reports progress and failures to its caller. */
+import { expect, it } from "vitest";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 
@@ -30,15 +30,11 @@ const checks = [
   },
 ];
 
-/** @typedef {{ privatePath: string } | { absolutePath: string, relativePath: string }} SourceFile */
-/**
- * @param {string} directory
- * @returns {Promise<SourceFile[]>}
- */
-async function sourceFiles(directory) {
+type SourceFile = { privatePath: string } | { absolutePath: string; relativePath: string };
+
+async function sourceFiles(directory: string): Promise<SourceFile[]> {
   const entries = await readdir(directory, { withFileTypes: true });
-  /** @type {SourceFile[]} */
-  const files = [];
+  const files: SourceFile[] = [];
 
   for (const entry of entries) {
     const absolutePath = path.join(directory, entry.name);
@@ -64,36 +60,28 @@ async function sourceFiles(directory) {
   return files;
 }
 
-const failures = [];
+const files = await sourceFiles(dataRoot);
 
-for (const file of await sourceFiles(dataRoot)) {
-  if ("privatePath" in file) {
-    failures.push(`${file.privatePath}: private data path must not be present in the public tree`);
-    continue;
-  }
+it("excludes private files and directories from the public data tree", () => {
+  expect(files.filter((file) => "privatePath" in file)).toEqual([]);
+});
 
-  const source = await readFile(file.absolutePath, "utf8");
+it.each(checks)("excludes $reason from public data", async ({ reason, pattern }) => {
+  const failures: string[] = [];
 
-  for (const check of checks) {
-    const match = check.pattern.exec(source);
-
-    if (!match) {
+  for (const file of files) {
+    if ("privatePath" in file) {
       continue;
     }
 
-    const line = source.slice(0, match.index).split("\n").length;
-    failures.push(`${file.relativePath}:${line}: ${check.reason}`);
-  }
-}
+    const source = await readFile(file.absolutePath, "utf8");
+    const match = pattern.exec(source);
 
-if (failures.length > 0) {
-  console.error("Public-data privacy check failed:");
-
-  for (const failure of failures) {
-    console.error(`- ${failure}`);
+    if (match) {
+      const line = source.slice(0, match.index).split("\n").length;
+      failures.push(`${file.relativePath}:${line}: ${reason}`);
+    }
   }
 
-  process.exitCode = 1;
-} else {
-  console.log("Public-data privacy check passed.");
-}
+  expect(failures).toEqual([]);
+});
