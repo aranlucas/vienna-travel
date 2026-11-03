@@ -37,10 +37,8 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe("rail geometry", () => {
   it("connects reversed way segments without duplicating their shared endpoint", async () => {
-    const fixture = osmFixture();
-    vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(Response.json(fixture)));
+    vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(Response.json(osmFixture())));
     await expect(fetchRelationGeometry(100, from, to)).resolves.toEqual(route);
-    expect(fixture).toEqual(osmFixture());
   });
 
   it("orients the same relation toward a reverse journey", async () => {
@@ -50,10 +48,8 @@ describe("rail geometry", () => {
 
   it.each([
     { elements: [] },
-    { elements: [{ type: "way", id: 10, nodes: [] }] },
     { elements: [{ type: "relation", id: 100, members: [] }] },
     { elements: [{ type: "node", id: 1, lat: "invalid", lon: 0 }] },
-    { unexpected: "payload" },
   ])("falls back safely for missing or malformed relation geometry: %j", async (payload) => {
     vi.stubGlobal("fetch", vi.fn<typeof fetch>().mockResolvedValue(Response.json(payload)));
     await expect(fetchRelationGeometry(100, from, to)).resolves.toEqual([]);

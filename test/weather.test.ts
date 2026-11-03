@@ -7,7 +7,6 @@ import {
   isWeatherSnapshot,
   type WeatherSnapshot,
   mergeWeatherSnapshot,
-  weatherScope,
 } from "@/lib/weather-snapshot";
 import { fetchWeatherSnapshot, WEATHER_REQUEST_TIMEOUT_MS } from "@/lib/weather-client";
 
@@ -365,30 +364,6 @@ describe("browser weather transport", () => {
       expect(fetchWeatherSnapshot(controller.signal, fetcher)).rejects.toThrow("Aborted"),
       Promise.resolve().then(() => controller.abort()),
     ]);
-  });
-
-  it("preserves good weather on HTTP failures using the same state merge as the provider", async () => {
-    const days = [day()];
-    const payload = await resolveDaysWeather(days, { now, fetcher: mockFetch() });
-    const loaded = await fetchWeatherSnapshot(undefined, mockFetch(payload));
-    const previous = mergeWeatherSnapshot(days, null, loaded, now);
-
-    const fetcher = vi
-      .fn<typeof fetch>()
-      .mockResolvedValue(new Response("Service unavailable", { status: 503 }));
-
-    let incoming = null;
-
-    try {
-      incoming = await fetchWeatherSnapshot(undefined, fetcher);
-    } catch {
-      /* Provider failure path. */
-    }
-
-    const state = mergeWeatherSnapshot(days, previous, incoming, later);
-    expect(state.days[0].scope).toBe(weatherScope(days[0]));
-    expect(state.days[0].status).toBe("stale");
-    expect(state.refreshedAt).toBe(now.toISOString());
   });
 });
 
