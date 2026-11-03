@@ -8,59 +8,31 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-# Data architecture
+# Trip data
 
-All trip data lives in `lib/data/`. Never edit the legacy monolith location.
+- Edit canonical records in `lib/data/`. Keep `lib/tripData.ts` as an assembly/re-export layer and `lib/confirmedStays.ts` as a compatibility shim; preserve both import entrypoints.
+- Store activity times separately: `{ time: '8:30 AM', title: 'Take the gondola' }`.
+- Set `phaseId` on days, POIs, hikes and transport segments; phase definitions own grouping and map configuration.
+- Derive stay booking status from `Stay.confirmed`. Transport and activity bookings have their own status in `lib/data/logistics.ts`.
+- Derive timeline events from transport, stays and activities in `lib/timeline-events.ts`.
+- Before changing fixtures, read the [public-data privacy rules](lib/data/README.md).
 
-```
-lib/
-  data/
-    trip.ts          # Coordinates type + TRIP_META (title, dates, travelers)
-    stays.ts         # All accommodations — STAYS[], CONFIRMED_STAYS, STAYS_BY_ID
-                     #   confirmed: boolean drives BOOKINGS.booked
-    transport.ts     # FLIGHT_SEGMENTS, LAYOVERS, DRIVING_SEGMENTS, TRAIN_SEGMENTS
-                     #   each segment has phaseId
-    itinerary.ts     # DAYS: Record<isoDate, DayPlan>
-                     #   DayActivity has { time?, title } — no time embedded in text
-                     #   DayPlan has phaseId
-    phases.ts        # PHASE_DEFINITIONS — thin: map config + suggestedStopIds only
-    hikes.ts         # HIKES: Record<string, Hike & { phaseId }>
-    pois.ts          # POIS: Record<string, PointOfInterest & { phaseId }>
-    packing.ts       # PACKING_PLAN
-    logistics.ts     # BOOKINGS (booked derives from stay.confirmed)
-                     #   CHECKLIST, LIVE_CHECKS, PLANNING_SHORTLIST
-  tripData.ts        # Assembly layer — builds fat PHASES for backward compat
-                     #   Re-exports all types; do not add raw data here
-  confirmedStays.ts  # Re-export shim → lib/data/stays.ts
-  timeline-events.ts  # Pure derivation from transport + stays + itinerary; no hardcoding
-```
+# Scripts: native first
 
-## Key conventions
+Before adding a script file or a package script that runs one, use the first suitable option:
 
-- **Activity time**: store as `{ time: '8:30 AM', title: 'Take the gondola' }` — never `text: '8:30 AM — Take the gondola'`
-- **Phase membership**: set `phaseId` on each day/POI/hike/segment — never nest flat data inside a phase object
-- **Bookings**: set `confirmed: true` on the Stay; BOOKINGS derives `booked` automatically — never manually mirror
-- **Timeline events**: flights come from FLIGHT_SEGMENTS, hotels from STAYS, activities from DayActivity.time — never hardcode events in timeline-events.ts
-- **Backward compat**: all component imports from `@/lib/tripData` and `@/lib/confirmedStays` remain valid
+1. An existing tool's flag or subcommand; inspect its `--help`.
+2. Declarative tool configuration.
+3. A maintained tool plugin.
+4. A one-line package script calling a native command.
+5. A Vitest test for assertions.
+6. A custom script for repository-specific behavior only. Its first comment names the native option that could not cover it and why; cover it in Vitest and quote that comment in the PR.
 
-## Scripts: native first
+# Libraries first
 
-Before adding a script file (`scripts/`, `bin/`, `tools/`, root `*.sh|*.py|*.mjs`) or a package script that runs one, take the first rung that works:
+Prefer existing dependencies, then actively maintained, widely adopted, typed libraries. Reserve custom code for domain logic and glue. Explain dependency choices in the PR; when writing an equivalent by hand, name the library and why it did not fit.
 
-1. A flag or subcommand of a tool the repo already uses (`<tool> --help`).
-2. Declarative config for that tool (`pnpm-workspace.yaml`, `next.config.ts`, `postcss.config.mjs`, `vitest.config.mts`, `oxfmt.config.ts`).
-3. A maintained plugin for that tool.
-4. A one-line package.json script that calls a native command.
-5. A test in the existing runner (Vitest), for anything that asserts.
-6. A custom script, only for behavior specific to this repo. Its first comment names the native rung it couldn't use and why. It has a test in the existing runner, and the PR that adds it quotes that comment.
-
-## Code: libraries first
-
-Before hand-writing general-purpose code, use a well-maintained library: actively released, widely adopted, typed, and a fit for this stack. Reach for one already in the dependencies first. Write custom code for domain logic and for the glue no library covers. A PR that adds a dependency says why it was picked; a PR that hand-writes something a library covers names the library and why it didn't fit.
-
-- Interactive maps → `leaflet` and `react-leaflet`.
-- Elevation charts → `recharts`.
-- External service and stored checklist validation → `zod`.
+Use `leaflet`/`react-leaflet` for interactive maps, `recharts` for elevation charts, and `zod` for external-service and stored-checklist validation.
 
 ## Tests: behavior and contracts
 

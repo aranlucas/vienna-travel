@@ -4,7 +4,7 @@ Planning baseline: `8fa21f917a50` on `origin/main`, 2026-10-26. Proposed work ex
 
 ## Outcome
 
-Help a traveler answer what happens next and keep a usable plan when connectivity is poor. The [current application](README.md) already has regional maps, a timeline, hike/GPX details, packing and logistics views, weather, and read-only WebMCP tools.
+Help a traveler answer what happens next and keep a usable plan when connectivity is poor.
 
 ## 1. Take the next day's plan along
 
@@ -31,6 +31,15 @@ Acceptance: bookings continue to derive from the stay confirmation field, and th
 Extend the existing read-only WebMCP surface only for proven day-plan questions. Return the same data, confirmation states and freshness labels as the interface.
 
 Acceptance: an assistant can identify the selected day and uncertainty without gaining booking or mutation authority.
+
+## Unprioritized ideas
+
+Additional candidates outside the three priorities above:
+
+- Transfer-detail cards for stations, garages, car pickup/return and airport-hotel walks.
+- More canonical Google place URLs outside Vienna, plus one-click directions.
+- Completion tracking for bookings and live checks, and reminders for dated checks.
+- A dedicated alpine source for trailhead, hut and summit conditions.
 
 ## Boundaries and evidence
 

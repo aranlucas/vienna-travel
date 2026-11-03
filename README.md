@@ -1,57 +1,14 @@
-<div align="center">
+# Austria Expedition
 
-# 🏔️ Austria Expedition
+A public travel companion for the September 5–14, 2026 Austria itinerary: regional maps, daily plans, transport and stays, hike details, packing, weather, and read-only WebMCP access.
 
-### Coffee in Vienna. Lakes in Salzkammergut. Boots on in the Alps.
+[Explore the trip](https://vienna-travel.vercel.app) · [Timeline](https://vienna-travel.vercel.app/timeline) · [Packing](https://vienna-travel.vercel.app/packing)
 
-**Ten days of Austria, with the whole adventure at your fingertips.**
+![Illustrated journey from Vienna through the Austrian lakes and Alps](docs/images/austria-expedition-cover.png)
 
-[![Explore the itinerary](https://img.shields.io/badge/Explore_the_itinerary-Visit_demo-167D8D?style=for-the-badge)](https://vienna-travel.vercel.app)
-[![Next.js](https://img.shields.io/badge/Next.js-16-111111?style=for-the-badge&logo=nextdotjs)](package.json)
-[![Interactive maps](https://img.shields.io/badge/Maps-Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white)](components/map/)
-[![CI](https://github.com/aranlucas/vienna-travel/actions/workflows/ci.yml/badge.svg)](https://github.com/aranlucas/vienna-travel/actions/workflows/ci.yml)
+## Run locally
 
-[![Illustrated journey from Vienna's coffeehouses through turquoise lakes to the Austrian Alps](docs/images/austria-expedition-cover.png)](https://vienna-travel.vercel.app)
-
-<sub>Destination-inspired cover illustration. Open the demo to explore the actual itinerary.</sub>
-
-**[Explore the trip ↗](https://vienna-travel.vercel.app) · [See the day-by-day timeline ↗](https://vienna-travel.vercel.app/timeline) · [Make it your own](#make-it-your-own)**
-
-</div>
-
-## A trip worth getting excited about
-
-Start among Vienna’s grand streets, wind through lake country, and trade city shoes for hiking boots beneath the Tyrolean peaks. **Austria Expedition** turns a ten-day trip into a browsable travel companion: follow the route, open a day’s plan, scout a hike, and see what belongs in your bag.
-
-It is built for the moment you ask, **“What’s the plan today—and what do we need before we leave?”** The map, timeline, weather outlook, stays, and practical checks live together, so the next leg of the adventure is easy to find.
-
-## Four chapters. One very good excuse to go outside.
-
-| Chapter                     | The mood                                             | Explore in the app                                                                       |
-| --------------------------- | ---------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| 🏛️ **Vienna**               | Imperial streets and a proper coffee break.          | City walking routes, landmarks, and day-by-day stops.                                    |
-| 🩵 **Salzkammergut**        | Lakeside villages and water that barely looks real.  | A regional map, suggested stops, and the next drive.                                     |
-| 🥾 **Tyrolean Alps**        | Big peaks, alpine lakes, and a well-earned hut stop. | Seebensee–Drachensee hike details, the optional three-lake loop, and elevation profiles. |
-| 🌲 **Achensee & Innsbruck** | One more lake. One more mountain view.               | The final days around Pertisau and Innsbruck, plus the journey home.                     |
-
-## The little details that make a big trip easier
-
-- **🗺️ Get the whole picture.** Interactive Leaflet maps connect the overall route with city walks, drives, points of interest, and hiking details.
-- **📅 Go from “sometime that day” to an actual plan.** Daily cards and the travel timeline bring activities, transport, and accommodation into the same view.
-- **🥾 Know the climb before the climb.** Hike cards show distance, elevation, difficulty, highlights, and GPX downloads. The verified three-lake track powers its route data; the Seebensee file is clearly marked as a separate valley-start reference.
-- **🌦️ Pack for the day ahead.** Weather outlooks, seasonal guidance, and packing recommendations put the practical decisions close to the itinerary.
-- **✅ Keep the logistics in sight.** Booking status, departure checks, and planning reminders sit alongside the fun parts.
-- **🤖 Let an assistant read the plan.** Read-only WebMCP tools expose the same trip overview, day plans, weather, and searchable itinerary data shown in the interface.
-
-**Take a quick tour:** open the [trip](https://vienna-travel.vercel.app), choose a region, look through a day’s activities, and open its map. Then jump to the [timeline](https://vienna-travel.vercel.app/timeline) or [packing plan](https://vienna-travel.vercel.app/packing) to see how the pieces fit together.
-
-## Make it your own
-
-The checked-in itinerary covers **September 5–14, 2026**. It is a concrete example you can explore or adapt by editing structured trip data.
-
-### Run it locally
-
-Use the **Node.js version in `.node-version`** (matching CI) and the **pnpm version pinned by `packageManager` in `package.json`**.
+Use the Node.js version in [`.node-version`](.node-version) and the pnpm version pinned by `packageManager` in [`package.json`](package.json).
 
 ```bash
 git clone https://github.com/aranlucas/vienna-travel.git
@@ -60,48 +17,29 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-Open [vienna-travel.localhost](https://vienna-travel.localhost). `pnpm dev` runs through [Portless](https://github.com/vercel-labs/portless) (a dev dependency); its first run may ask for `sudo` to bind port 443 and trust a local certificate.
+Open the URL printed by Portless (normally `https://vienna-travel.localhost`; worktrees can get a branch-specific hostname). On first run it may request `sudo` to bind port 443 and trust a local certificate. Maps need no environment variables; `NEXT_PUBLIC_CARTO_BASEMAP_KEY` optionally adds a key to the CARTO tile requests.
 
-The default maps work without `NEXT_PUBLIC_CARTO_BASEMAP_KEY`; set it to use the optional CARTO basemap. Weather and route enrichment use external services. When a forecast is unavailable or outside its date range, the interface retains seasonal itinerary guidance.
+## Adapt the itinerary
 
-### Change the journey
+Edit the source records in [`lib/data/`](lib/data/), following the [public-data privacy boundary](lib/data/README.md) and [data conventions](AGENTS.md#trip-data). Keep traveler-specific confirmations in an encrypted private system.
 
-Start in [`lib/data/`](lib/data/README.md):
+Road and rail geometry are checked in so rendering does not depend on routing services. After changing driving waypoints, train waypoints or train relation IDs, refresh [`lib/staticRoutes.json`](lib/staticRoutes.json) from the repository root. This maintenance command requires a separately provisioned `tsx` runner on PATH; it is not a project dependency:
 
-| Want to change…                    | Edit…                           |
-| ---------------------------------- | ------------------------------- |
-| The trip title and dates           | `trip.ts`                       |
-| The daily adventure                | `itinerary.ts`                  |
-| Regions and map views              | `phases.ts`                     |
-| Where to stay and how to get there | `stays.ts` and `transport.ts`   |
-| Hikes and places worth a detour    | `hikes.ts` and `pois.ts`        |
-| What to pack and what to check     | `packing.ts` and `logistics.ts` |
-
-Trip data flows through `lib/tripData.ts`; timeline events are derived from those records. Keep dates, activities, and bookings in their source files so the views stay in sync.
-
-<details>
-<summary><strong>Under the hood: maps, weather, and one shared trip model</strong></summary>
-
-```mermaid
-flowchart LR
-  Data[Structured trip data] --> Trip[Trip assembly]
-  Trip --> Page[Next.js page]
-  GPX[Verified GPX tracks] --> Page
-  Weather[Open-Meteo weather] --> Page
-  Page --> Experience[Maps · timeline · packing · day plans]
-  Trip --> Tools[Read-only WebMCP tools]
+```bash
+tsx scripts/prefetch-routes.ts
 ```
 
-- `app/page.tsx` enriches the trip with route, GPX, and weather data on the server.
-- `components/map/`, `timeline/`, `weather/`, `planning/`, and `phases/` provide the main views.
-- `lib/gpx-server.ts`, `weather-service.ts`, and `routing-service.ts` handle external and geographic data.
-- `components/webmcp/trip-web-mcp.tsx` exposes the trip to compatible browser agents.
+Use `tsx scripts/prefetch-routes.ts --train-only` only when driving data is unchanged. The script contacts OSRM and the OpenStreetMap API and writes the JSON only after all requested geometry succeeds. Review the route changes before committing; the [route contract test](test/routes.test.ts) checks that cached geometry matches the canonical waypoints.
 
-See [`spec.md`](spec.md) and the [data guide](lib/data/README.md) for the full architecture.
+Keep the distinction between verified and reference GPX files: the Seebensee download starts in the valley and does not match the planned gondola-start hike. Reference tracks must remain download-only; they must not replace the itinerary's map or statistics.
 
-</details>
+Weather loads in the browser through `/api/weather`; failed refreshes retain the last forecast with a stale label or seasonal guidance. A forecast or GPX track does not establish current trail access, lift operation or safe alpine conditions. Confirm conditions and reservations with their providers.
 
-### Check your changes
+See the [roadmap](ROADMAP.md) for proposed product work and [security policy](SECURITY.md) for private reporting and exposure recovery.
+
+## Checks
+
+The available checks are defined in [`package.json`](package.json):
 
 ```bash
 pnpm check:privacy
@@ -112,16 +50,4 @@ pnpm test:run
 pnpm build
 ```
 
-Oxforge supplies the lint and formatting policy. Tailwind reads `app/globals.css` so shared
-rules can validate the app's real design tokens. Fixed-pixel tokens intentionally keep
-controls and maps the same size at both the 16px mobile and 19px desktop root font sizes.
-The two documented compatibility entrypoints, `lib/tripData.ts` and
-`lib/confirmedStays.ts`, retain camelCase filenames through an exact-file naming override.
-Other files use the shared kebab-case convention. Local suppressions are limited to
-command-line output, ordered filesystem/retry work, and Leaflet's required integration APIs.
-
-This is a public itinerary demo. Keep personal traveler details and private booking references out of trip fixtures; [`SECURITY.md`](SECURITY.md) explains the boundary. Confirm current conditions and reservations with their providers when adapting the plan.
-
----
-
-**Ready for the scenic route? [Explore Austria Expedition →](https://vienna-travel.vercel.app)**
+Fixed-pixel design tokens intentionally keep controls and maps the same size at the 16px mobile and 19px desktop root font sizes.
