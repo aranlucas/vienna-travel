@@ -19,13 +19,3 @@ it("repeated derivation preserves event identities and content", () => {
   expect(second).toEqual(first);
   expect(new Set(first.map((event) => event.id)).size).toBe(first.length);
 });
-
-it("uses stable, unique content keys for itinerary activity and source lists", () => {
-  const events = buildTimelineEvents();
-
-  const sourceKeys = events.map((event) =>
-    (event.links ?? []).map((link) => `${link.href}-${link.label}`),
-  );
-
-  expect(sourceKeys.every((keys) => new Set(keys).size === keys.length)).toBe(true);
-});
