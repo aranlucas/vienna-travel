@@ -82,11 +82,12 @@ jobs:
             exit 1
           fi
           cat /tmp/timeline-repro.log
-          rg 'Tuesday, Sep 08' /tmp/timeline-repro.log
+          grep -F 'Tuesday, Sep 08' /tmp/timeline-repro.log
+          grep -F 'expected 480 to be 660' /tmp/timeline-repro.log
           if pnpm exec vitest run test/webmcp.test.tsx > /tmp/webmcp-repro.log 2>&1; then
             cat /tmp/webmcp-repro.log
             echo 'Expected baseline invalid-input regression to fail'
             exit 1
           fi
           cat /tmp/webmcp-repro.log
-          rg 'promise resolved.*instead of rejecting' /tmp/webmcp-repro.log
+          grep -E 'promise resolved.*instead of rejecting' /tmp/webmcp-repro.log
