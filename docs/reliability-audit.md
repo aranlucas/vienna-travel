@@ -31,3 +31,9 @@ Tests and builds run in CI only; local work is source inspection and dependency 
 ## Validation plan and framework applicability
 
 Use published `e2e` 0.23.0 and `@e2e-dev/web` 0.15.5 (npm metadata verified, Node ^22.22.3 or >=24.8). This is a real browser target; deterministic locator/actions/assertions need no model credentials. Add a production-server CI journey for checklist completion, filtering and persistence across navigation/reload, plus timeline navigation. Retain existing meaningful tests and build gates. Dependency lifecycle scripts are suppressed locally. Independent review will challenge both findings and implementation; CI results will be recorded after execution.
+
+## Review and CI evidence
+
+Independent native reviewer inspected commit `7195495` and the complete repository boundaries without local execution. Their checkout-deadline finding was incorporated; final static review reported no remaining concrete objections.
+
+[CI run 42308260249](https://github.com/aranlucas/vienna-travel/actions/runs/42308260249) passed privacy, formatting, typecheck, behavioral tests and production build. Lint rejected missing blank lines and an awaited test loop, preventing the browser and baseline reproduction steps from running. The follow-up expands the four invalid-input assertions and applies the repository's statement-spacing rules; those assertions are preserved. Browser and baseline evidence remain pending. Vercel deployment failure is excluded under the user's policy.

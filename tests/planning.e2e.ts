@@ -38,9 +38,11 @@ test("checklist filtering preserves completion across reload and timeline naviga
   await expect(screen.getByRole("heading", "Trip Timeline", { exact: true })).toBeVisible();
   // Progress context may persist with client navigation; accept either archive state.
   const showPast = screen.getByRole("button", "Show past days", { exact: true });
+
   if ((await showPast.count()) > 0) {
     await showPast.tap();
   }
+
   await expect(screen.getByRole("navigation", "Jump to trip date")).toBeVisible();
   await screen.getByRole("button", "Trains", { exact: true }).tap();
   await expect(screen.getByText("Tuesday, Sep 08", { exact: true })).toBeVisible();
