@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import type { Phase } from "@/lib/tripData";
 import type { LatLng } from "@/lib/routing-service";
 import { STAYS, type Stay } from "@/lib/data/stays";
@@ -15,7 +14,6 @@ interface PhasePanelProps {
   phase: Phase;
   drivingRoutes: Record<string, LatLng[]>;
   hikingRoutes: Record<string, LatLng[]>;
-  children?: ReactNode;
 }
 
 function StayFacts({ stay }: StayFactsProps) {
@@ -36,10 +34,10 @@ function StayFacts({ stay }: StayFactsProps) {
   );
 }
 
-export function PhasePanel({ phase, drivingRoutes, hikingRoutes, children }: PhasePanelProps) {
+export function PhasePanel({ phase, drivingRoutes, hikingRoutes }: PhasePanelProps) {
   const stays = STAYS.filter((stay) => stay.phaseId === phase.id);
   const copy = PHASE_COPY.get(phase.id);
-  const callouts = children ?? copy?.callouts;
+  const callouts = copy?.callouts;
   const title = copy?.title ?? phase.title;
   const subtitle = copy?.subtitle ?? `Phase ${phase.number} · ${phase.dates}`;
   const trainHeading = copy?.trainHeading ?? "Train";

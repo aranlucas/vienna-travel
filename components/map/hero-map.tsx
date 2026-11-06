@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import { PHASES } from "@/lib/tripData";
@@ -8,7 +8,7 @@ import { CONFIRMED_STAYS } from "@/lib/confirmedStays";
 import type { LatLng } from "@/lib/routing-service";
 import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from "@/lib/hero-route-data";
 import { buildGoogleMapsUrl } from "@/lib/map-links";
-import { MAP_ATTRIBUTION, MAP_TILE_URL } from "@/lib/map-tiles";
+import { DRIVING_COLOR, MAP_ATTRIBUTION, MAP_TILE_URL } from "@/lib/map-tiles";
 import { getOutboundToVie } from "@/lib/data/transport";
 import { VIENNA_AIRPORT } from "@/lib/data/trip";
 import { PolylineWithArrows } from "./polyline-with-arrows";
@@ -112,17 +112,6 @@ function useIsMobile(breakpoint = 640): boolean {
 }
 
 export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
-  useEffect(() => {
-    // Leaflet 1.9 uses this prototype hook; remove it before setting bundled icon URLs.
-    // eslint-disable-next-line no-underscore-dangle -- Leaflet exposes this legacy hook to replace its bundled marker URL detection.
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconUrl: "/leaflet/marker-icon.png",
-      iconRetinaUrl: "/leaflet/marker-icon-2x.png",
-      shadowUrl: "/leaflet/marker-shadow.png",
-    });
-  }, []);
-
   const isMobile = useIsMobile();
   const bounds = L.latLngBounds(ALL_BOUND_POINTS);
   const boundsPadding: MapPoint = isMobile ? [20, 20] : [40, 40];
@@ -147,7 +136,7 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
 
         <PolylineWithArrows
           positions={driveCoords}
-          color="#fb923c"
+          color={DRIVING_COLOR}
           weight={3}
           opacity={0.9}
           arrows={{ size: "10px", frequency: "120px", fill: true, yawn: 50 }}
@@ -289,7 +278,7 @@ export default function HeroMap({ driveCoords, trainRoutes }: HeroMapProps) {
       >
         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <svg width="24" height="4" viewBox="0 0 24 4">
-            <line x1="0" y1="2" x2="24" y2="2" stroke="#fb923c" strokeWidth="2.5" />
+            <line x1="0" y1="2" x2="24" y2="2" stroke={DRIVING_COLOR} strokeWidth="2.5" />
           </svg>
           <span>Driving</span>
         </div>

@@ -74,15 +74,29 @@ it("returns from a hidden past phase to today's phase and tolerates repeated tab
 });
 
 it("keeps fresh checklist inputs controlled and restores checked state after remount", () => {
-  const items = [{ item: "Pack a jacket", critical: false }];
+  const items = [{ id: "jacket", legacyIndex: 0, item: "Pack a jacket", critical: false }];
   const mounted = render(<PreDepartureChecklist items={items} />);
-  const checkbox = screen.getByRole("checkbox");
-  expect(checkbox.getAttribute("checked")).toBeNull();
+  const checkbox = screen.getByRole<HTMLInputElement>("checkbox");
+  expect(checkbox.checked).toBe(false);
   fireEvent.click(checkbox);
-  expect(window.localStorage.getItem("predeparture-checklist-v1")).toBe('{"0":true}');
+  expect(checkbox.checked).toBe(true);
   mounted.unmount();
   render(<PreDepartureChecklist items={items} />);
-  expect(screen.getByRole("checkbox").getAttribute("checked")).toBe("");
+  expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBe(true);
   fireEvent.click(screen.getByRole("checkbox"));
-  expect(window.localStorage.getItem("predeparture-checklist-v1")).toBe('{"0":false}');
+  expect(screen.getByRole<HTMLInputElement>("checkbox").checked).toBe(false);
+});
+
+it("filters departure-eve tasks by metadata even when their wording changes", () => {
+  render(
+    <PreDepartureChecklist
+      items={[
+        { id: "eve", legacyIndex: 0, item: "New wording", critical: true, tonight: true },
+        { id: "later", legacyIndex: 1, item: "Other task", critical: false },
+      ]}
+    />,
+  );
+  fireEvent.click(screen.getByRole("button", { name: "Tonight only" }));
+  expect(screen.getByRole("checkbox", { name: "New wording" })).toBeTruthy();
+  expect(screen.queryByRole("checkbox", { name: "Other task" })).toBeNull();
 });

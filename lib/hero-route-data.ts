@@ -2,8 +2,7 @@
  * Shared constants for the hero map route.
  * Importable from both server (page.tsx) and client (HeroMap.tsx).
  */
-import { PHASES } from "./tripData";
-import { DRIVING_SEGMENTS } from "./data/transport";
+import { DRIVING_SEGMENTS, TRAIN_SEGMENTS } from "./data/transport";
 import type { LatLng } from "./routing-service";
 
 /**
@@ -19,6 +18,6 @@ export const DRIVE_WAYPOINTS: LatLng[] = DRIVING_SEGMENTS.flatMap((segment) =>
 });
 
 /** All train segments across all phases, for the hero overview map. */
-export const HERO_TRAIN_SEGMENTS = PHASES.flatMap((p) => p.trainSegments ?? []).filter(
+export const HERO_TRAIN_SEGMENTS = TRAIN_SEGMENTS.filter(
   (segment) => segment.waypoints.length >= 2,
 );

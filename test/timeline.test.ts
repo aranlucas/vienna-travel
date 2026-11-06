@@ -19,3 +19,17 @@ it("repeated derivation preserves event identities and content", () => {
   expect(second).toEqual(first);
   expect(new Set(first.map((event) => event.id)).size).toBe(first.length);
 });
+
+it("consolidates booked transport into one event at its scheduled time", () => {
+  const events = buildTimelineEvents();
+  const ascent = events.filter(({ id }) => id === "train-schafberg-ascent");
+  expect(ascent).toHaveLength(1);
+  expect(ascent[0]).toMatchObject({ type: "train", date: "2026-09-08", sortTime: 555 });
+
+  const returnFlights = events.filter(({ id }) =>
+    ["flight-vie-fra", "flight-fra-sea"].includes(id),
+  );
+
+  expect(returnFlights.map(({ id }) => id)).toEqual(["flight-vie-fra", "flight-fra-sea"]);
+  expect(returnFlights.map(({ sortTime }) => sortTime)).toEqual([480, 645]);
+});

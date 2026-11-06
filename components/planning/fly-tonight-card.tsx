@@ -1,30 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useTripProgress } from "./trip-progress-context";
 import { HOME_SECTION_IDS } from "@/lib/home-anchors";
 import { buildTimelineEvents } from "@/lib/timeline-events";
-
-const VIENNA_TIME_ZONE = "Europe/Vienna";
-
-function getViennaNow() {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: VIENNA_TIME_ZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(new Date());
-
-  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
-
-  return {
-    date: `${values.year}-${values.month}-${values.day}`,
-    minutes: Number(values.hour) * 60 + Number(values.minute),
-  };
-}
 
 function formatEventTime(sortTime: number) {
   const hours24 = Math.floor(sortTime / 60);
@@ -37,15 +17,7 @@ function formatEventTime(sortTime: number) {
 
 export function FlyTonightCard() {
   const events = useMemo(() => buildTimelineEvents(), []);
-  const [viennaNow, setViennaNow] = useState<ViennaTime | null>(null);
-
-  useEffect(() => {
-    const updateNow = () => setViennaNow(getViennaNow());
-    updateNow();
-    const interval = window.setInterval(updateNow, 60_000);
-
-    return () => window.clearInterval(interval);
-  }, []);
+  const { clock: viennaNow } = useTripProgress();
 
   const nextEvent = useMemo(() => {
     if (!viennaNow) {
@@ -105,5 +77,3 @@ export function FlyTonightCard() {
     </section>
   );
 }
-
-type ViennaTime = { date: string; minutes: number };

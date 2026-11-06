@@ -1,23 +1,8 @@
 import type { TrainSegment } from "@/lib/tripData";
-import { formatMiles } from "@/lib/units";
+import { formatMiles, formatDuration } from "@/lib/units";
 
 interface TrainStatsProps {
   segments: TrainSegment[];
-}
-
-function formatDuration(hours: number): string {
-  const h = Math.floor(hours);
-  const m = Math.round((hours - h) * 60);
-
-  if (h === 0) {
-    return `${m}min`;
-  }
-
-  if (m === 0) {
-    return `${h}h`;
-  }
-
-  return `${h}h ${m}min`;
 }
 
 export function TrainStats({ segments }: TrainStatsProps) {

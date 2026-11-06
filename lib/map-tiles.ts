@@ -13,3 +13,5 @@ export const MAP_TILE_URL = CARTO_KEY
 
 export const MAP_ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
+export const DRIVING_COLOR = "#fb923c";

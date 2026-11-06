@@ -1,5 +1,6 @@
 "use client";
 
+import { tripClock } from "@/lib/trip-clock";
 import { DAYS } from "@/lib/data/itinerary";
 import { flushSync } from "react-dom";
 import { TripProgressControl } from "@/components/planning/trip-progress";
@@ -82,96 +83,56 @@ function ActivityIcon() {
   );
 }
 
-function getEventIcon(type: TimelineEventType) {
-  switch (type) {
-    case "flight":
-      return <FlightIcon />;
-    case "layover":
-      return <LayoverIcon />;
-    case "hotel-checkin":
-    case "hotel-checkout":
-      return <HotelIcon />;
-    case "train":
-      return <TrainIcon />;
-    case "drive":
-      return <CarIcon />;
-    case "hike":
-      return <HikeIcon />;
-    case "activity":
-      return <ActivityIcon />;
-  }
-
-  throw new Error(`Unknown timeline event type: ${String(type)}`);
-}
-
-function getEventAccent(type: TimelineEventType): string {
-  switch (type) {
-    case "flight":
-      return "border-blue-400/40 bg-blue-400/10 text-blue-300";
-    case "layover":
-      return "border-cream-muted/20 bg-cream-muted/5 text-cream-muted";
-    case "hotel-checkin":
-      return "border-emerald-400/40 bg-emerald-400/10 text-emerald-300";
-    case "hotel-checkout":
-      return "border-amber/40 bg-amber/10 text-amber";
-    case "train":
-      return "border-purple-400/40 bg-purple-400/10 text-purple-300";
-    case "drive":
-      return "border-orange-400/40 bg-orange-400/10 text-orange-300";
-    case "hike":
-      return "border-emerald-500/40 bg-emerald-500/10 text-emerald-300";
-    case "activity":
-      return "border-cyan-400/40 bg-cyan-400/10 text-cyan-300";
-  }
-
-  throw new Error(`Unknown timeline event type: ${String(type)}`);
-}
-
-function getDotColor(type: TimelineEventType): string {
-  switch (type) {
-    case "flight":
-      return "bg-blue-400";
-    case "layover":
-      return "bg-cream-muted/50";
-    case "hotel-checkin":
-      return "bg-emerald-400";
-    case "hotel-checkout":
-      return "bg-amber";
-    case "train":
-      return "bg-purple-400";
-    case "drive":
-      return "bg-orange-400";
-    case "hike":
-      return "bg-emerald-500";
-    case "activity":
-      return "bg-cyan-400";
-  }
-
-  throw new Error(`Unknown timeline event type: ${String(type)}`);
-}
-
-function getTypeLabel(type: TimelineEventType): string {
-  switch (type) {
-    case "flight":
-      return "Flight";
-    case "layover":
-      return "Layover";
-    case "hotel-checkin":
-      return "Check In";
-    case "hotel-checkout":
-      return "Check Out";
-    case "train":
-      return "Train";
-    case "drive":
-      return "Drive";
-    case "hike":
-      return "Hike";
-    case "activity":
-      return "Activity";
-  }
-
-  throw new Error(`Unknown timeline event type: ${String(type)}`);
-}
+const EVENT_PRESENTATION = {
+  flight: {
+    icon: FlightIcon,
+    accent: "border-blue-400/40 bg-blue-400/10 text-blue-300",
+    dot: "bg-blue-400",
+    label: "Flight",
+  },
+  layover: {
+    icon: LayoverIcon,
+    accent: "border-cream-muted/20 bg-cream-muted/5 text-cream-muted",
+    dot: "bg-cream-muted/50",
+    label: "Layover",
+  },
+  "hotel-checkin": {
+    icon: HotelIcon,
+    accent: "border-emerald-400/40 bg-emerald-400/10 text-emerald-300",
+    dot: "bg-emerald-400",
+    label: "Check In",
+  },
+  "hotel-checkout": {
+    icon: HotelIcon,
+    accent: "border-amber/40 bg-amber/10 text-amber",
+    dot: "bg-amber",
+    label: "Check Out",
+  },
+  train: {
+    icon: TrainIcon,
+    accent: "border-purple-400/40 bg-purple-400/10 text-purple-300",
+    dot: "bg-purple-400",
+    label: "Train",
+  },
+  drive: {
+    icon: CarIcon,
+    accent: "border-orange-400/40 bg-orange-400/10 text-orange-300",
+    dot: "bg-orange-400",
+    label: "Drive",
+  },
+  hike: {
+    icon: HikeIcon,
+    accent: "border-emerald-500/40 bg-emerald-500/10 text-emerald-300",
+    dot: "bg-emerald-500",
+    label: "Hike",
+  },
+  activity: {
+    icon: ActivityIcon,
+    accent: "border-cyan-400/40 bg-cyan-400/10 text-cyan-300",
+    dot: "bg-cyan-400",
+    label: "Activity",
+  },
+} satisfies Record<TimelineEventType, EventPresentation>;
 
 function formatSortTime(sortTime: number): string {
   const normalizedMinutes = ((sortTime % 1440) + 1440) % 1440;
@@ -189,30 +150,11 @@ function parseTimeInput(value: string): number {
   return hours * 60 + minutes;
 }
 
-function getViennaNow() {
-  const parts = new Intl.DateTimeFormat("en-CA", {
-    timeZone: "Europe/Vienna",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).formatToParts(new Date());
-
-  const value = (type: Intl.DateTimeFormatPartTypes) =>
-    parts.find((part) => part.type === type)?.value ?? "";
-
-  return {
-    date: `${value("year")}-${value("month")}-${value("day")}`,
-    time: `${value("hour")}:${value("minute")}`,
-  };
-}
-
 // ── Event card ──
 
 function TimelineCard({ event, isLast }: TimelineCardProps) {
-  const accent = getEventAccent(event.type);
+  const EventIcon = EVENT_PRESENTATION[event.type].icon;
+  const accent = EVENT_PRESENTATION[event.type].accent;
 
   return (
     <div
@@ -229,7 +171,7 @@ function TimelineCard({ event, isLast }: TimelineCardProps) {
           <div className="absolute inset-bs-6 -inset-be-timeline-tail w-px bg-cream-muted/20" />
         )}
         <div
-          className={`relative mbs-5 size-2.5 shrink-0 rounded-full ring-4 ring-dark-surface ${getDotColor(event.type)}`}
+          className={`relative mbs-5 size-2.5 shrink-0 rounded-full ring-4 ring-dark-surface ${EVENT_PRESENTATION[event.type].dot}`}
         />
       </div>
       <article className="mbe-3 min-w-0 rounded-xl border border-cream-muted/15 bg-dark-card px-4 py-3 shadow-sm">
@@ -237,10 +179,10 @@ function TimelineCard({ event, isLast }: TimelineCardProps) {
           <span
             className={`inline-flex size-7 shrink-0 items-center justify-center rounded-md ${accent}`}
           >
-            {getEventIcon(event.type)}
+            <EventIcon />
           </span>
           <span className="text-caption-small font-semibold tracking-widest text-cream-muted uppercase">
-            {getTypeLabel(event.type)}
+            {EVENT_PRESENTATION[event.type].label}
           </span>
         </div>
         <h3 className="text-body-fixed leading-snug font-semibold wrap-break-word text-cream sm:text-base">
@@ -315,19 +257,20 @@ interface TravelTimelineProps {
 }
 
 export function TravelTimeline({ events }: TravelTimelineProps) {
-  const { today, showPast, setShowPast } = useTripProgress();
+  const { today, showPast, setShowPast, clock } = useTripProgress();
   const [filter, setFilter] = useState<TimelineEventType | "all">("all");
-  const viennaNow = useMemo(() => getViennaNow(), []);
+  const viennaNow = clock ?? { date: "", time: "", minutes: 0 };
   const todayIso = viennaNow.date;
-  const currentMinutes = parseTimeInput(viennaNow.time);
+  const currentMinutes = viennaNow.minutes;
 
   const nextEvent = useMemo(
     () =>
+      clock &&
       events.find(
         (event) =>
           event.date > todayIso || (event.date === todayIso && event.sortTime >= currentMinutes),
       ),
-    [events, todayIso, currentMinutes],
+    [events, todayIso, currentMinutes, clock],
   );
 
   const [jumpDate, setJumpDate] = useState(viennaNow.date);
@@ -346,7 +289,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
 
   const filtered = typeFiltered.filter((event) => showPast || event.date >= today);
 
-  const jumpToTime = (date = jumpDate, time = jumpTime) => {
+  const jumpToTime = (date = jumpDate || viennaNow.date, time = jumpTime || viennaNow.time) => {
     const targetMinutes = parseTimeInput(time);
 
     const target =
@@ -370,7 +313,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
   };
 
   const jumpToNow = () => {
-    const now = getViennaNow();
+    const now = tripClock();
     setJumpDate(now.date);
     setJumpTime(now.time);
     jumpToTime(now.date, now.time);
@@ -426,7 +369,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
             Date
             <input
               type="date"
-              value={jumpDate}
+              value={jumpDate || viennaNow.date}
               min={firstEventDate}
               max={lastEventDate}
               onChange={(event) => setJumpDate(event.target.value)}
@@ -437,7 +380,7 @@ export function TravelTimeline({ events }: TravelTimelineProps) {
             Time
             <input
               type="time"
-              value={jumpTime}
+              value={jumpTime || viennaNow.time}
               onChange={(event) => setJumpTime(event.target.value)}
               className="min-h-touch rounded-lg border border-forest-green/40 bg-dark-surface px-3 py-2 text-sm text-cream transition-colors outline-none focus:border-amber/60"
             />
@@ -536,3 +479,5 @@ type DateHeaderProps = { label: string };
 type TimelineFilterOption = { type: TimelineEventType | "all"; label: string };
 
 type TimelineGroup = { date: string; label: string; events: TimelineEvent[] };
+
+type EventPresentation = { icon: typeof FlightIcon; accent: string; dot: string; label: string };

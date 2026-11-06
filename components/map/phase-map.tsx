@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import type { Phase } from "@/lib/tripData";
 import type { LatLng } from "@/lib/routing-service";
 import { buildGoogleMapsUrl } from "@/lib/map-links";
 import { formatFeet, formatMiles } from "@/lib/units";
-import { MAP_ATTRIBUTION, MAP_TILE_URL } from "@/lib/map-tiles";
+import { DRIVING_COLOR, MAP_ATTRIBUTION, MAP_TILE_URL } from "@/lib/map-tiles";
 import { PolylineWithArrows } from "./polyline-with-arrows";
 import { MapInvalidator } from "./map-invalidator";
 
@@ -64,26 +63,12 @@ function createHikeIcon() {
 // neon-orange driving lines / green hiking trails on the map.
 const DAY_ROUTE_COLORS = ["#22d3ee", "#f472b6", "#a3e635", "#c084fc"];
 
-// Driving lines share this color on both HeroMap and PhaseMap.
-const DRIVING_COLOR = "#fb923c";
-
 export default function PhaseMap({
   phase,
   height = "400px",
   drivingRoutes,
   hikingRoutes,
 }: PhaseMapProps) {
-  useEffect(() => {
-    // Leaflet 1.9 uses this prototype hook; remove it before setting bundled icon URLs.
-    // eslint-disable-next-line no-underscore-dangle -- Leaflet exposes this legacy hook to replace its bundled marker URL detection.
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconUrl: "/leaflet/marker-icon.png",
-      iconRetinaUrl: "/leaflet/marker-icon-2x.png",
-      shadowUrl: "/leaflet/marker-shadow.png",
-    });
-  }, []);
-
   const center: MapPoint = [phase.mapCenter.lat, phase.mapCenter.lng];
 
   const hasDriving = phase.drivingSegments.some((s) => s.waypoints && s.waypoints.length >= 2);
@@ -103,7 +88,6 @@ export default function PhaseMap({
         <TileLayer url={MAP_TILE_URL} attribution={MAP_ATTRIBUTION} />
         <MapInvalidator />
 
-        {/* Per-segment OSRM driving routes */}
         {phase.drivingSegments.map((seg) => {
           const route = drivingRoutes[seg.id];
 
@@ -124,7 +108,6 @@ export default function PhaseMap({
           );
         })}
 
-        {/* Day-specific walking overlays */}
         {phase.dayRoutes?.map((route, i) => (
           <PolylineWithArrows
             key={`day-route-${route.label}`}
@@ -139,7 +122,6 @@ export default function PhaseMap({
 
         {/* Train routes shown on HeroMap only */}
 
-        {/* Pre-fetched hiking routes */}
         {phase.hikes.map((hike) => {
           const route = hikingRoutes[hike.id];
 
@@ -159,7 +141,6 @@ export default function PhaseMap({
           );
         })}
 
-        {/* POI markers */}
         {phase.pois.map((poi) => (
           <Marker
             key={poi.id}
@@ -217,7 +198,6 @@ export default function PhaseMap({
           </Marker>
         ))}
 
-        {/* Hike start markers */}
         {phase.hikes.map((hike) => (
           <Marker
             key={`${hike.id}-start`}

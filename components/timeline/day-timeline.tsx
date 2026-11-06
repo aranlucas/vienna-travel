@@ -7,7 +7,6 @@ import { useLiveWeatherDays } from "@/components/weather/live-weather-context";
 
 interface DayEntryProps {
   day: DayPlan;
-  index: number;
 }
 
 function ActivityBadge({ activity }: ActivityBadgeProps) {
@@ -33,7 +32,6 @@ function ActivityBadge({ activity }: ActivityBadgeProps) {
 function DayEntry({ day }: DayEntryProps) {
   return (
     <div className="relative ps-10">
-      {/* Dot */}
       <div className="absolute inset-s-0 inset-bs-2 size-4 rounded-full border-2 border-dark-surface bg-amber shadow-lg" />
 
       <div className="mbe-4 rounded-lg border border-forest-green/30 bg-dark-card p-4">
@@ -148,8 +146,8 @@ export function DayTimeline({ days }: DayTimelineProps) {
       <div className="grid gap-y-0">
         {liveDays
           .filter((day) => showPast || day.isoDate >= today)
-          .map((day, i) => (
-            <DayEntry key={day.date} day={day} index={i} />
+          .map((day) => (
+            <DayEntry key={day.date} day={day} />
           ))}
       </div>
     </div>
