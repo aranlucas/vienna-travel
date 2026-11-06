@@ -2,21 +2,14 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 
+import { tripClock } from "@/lib/trip-clock";
 import { TripProgressContext, useTripProgress } from "./trip-progress-context";
 
 export function TripProgressProvider({ children }: TripProgressProviderProps) {
-  const [today, setToday] = useState("");
+  const [clock, setClock] = useState<ReturnType<typeof tripClock> | null>(null);
   const [showPast, setShowPast] = useState(false);
   useEffect(() => {
-    const refresh = () =>
-      setToday(
-        new Intl.DateTimeFormat("en-CA", {
-          timeZone: "Europe/Vienna",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        }).format(new Date()),
-      );
+    const refresh = () => setClock(tripClock());
 
     refresh();
     const interval = window.setInterval(refresh, 60_000);
@@ -31,7 +24,9 @@ export function TripProgressProvider({ children }: TripProgressProviderProps) {
   }, []);
 
   return (
-    <TripProgressContext.Provider value={{ today, showPast, setShowPast }}>
+    <TripProgressContext.Provider
+      value={{ today: clock?.date ?? "", clock, showPast, setShowPast }}
+    >
       {children}
     </TripProgressContext.Provider>
   );

@@ -128,111 +128,176 @@ export const BOOKINGS: BookingItem[] = [
 
 export const CHECKLIST: DepartureChecklistItem[] = [
   {
+    id: "flight-checkin",
+    legacyIndex: 0,
+    tonight: true,
     item: "Tonight after 7:50 PM PT: check in with Lufthansa for LH489 + OS186, verify both names and passport details, choose seats, and save both boarding passes offline",
     critical: true,
   },
   {
+    id: "sea-arrival",
+    legacyIndex: 1,
+    tonight: true,
     item: "Friday flight plan: be inside SEA by 3:50 PM PT for the 6:50 PM international departure; recheck LH489, the departure gate, and live SEA checkpoint waits before leaving home",
     critical: true,
   },
   {
+    id: "entry-documents",
+    legacyIndex: 2,
     item: "Entry documents: each passport must have been issued within the last 10 years and stay valid through at least Dec 14, 2026; ETIAS is not operating yet, so do not pay an unofficial application site",
     critical: true,
   },
   {
+    id: "munich-transfer",
+    legacyIndex: 3,
     item: "Munich transfer: go directly to OS186 after landing; the 1h 50m connection includes Schengen passport control and EES registration, so keep passports ready and confirm bags are checked through to VIE",
     critical: true,
   },
   {
+    id: "outbound-rail",
+    legacyIndex: 4,
     item: "Book the still-unrecorded Sept 7 direct ÖBB Railjet today: choose a train arriving Salzburg by 11:00 AM and add seat reservations to protect the noon SIXT pickup",
     critical: true,
   },
   {
+    id: "offline-folder",
+    legacyIndex: 5,
+    tonight: true,
     item: "Save an offline travel folder on both phones: flight, hotel, rail, rental, and activity confirmations; travel insurance and emergency contacts; passport copies; and the Almanac address",
     critical: true,
   },
   {
+    id: "connectivity",
+    legacyIndex: 6,
+    tonight: true,
     item: "Arrival connectivity: install and test the eSIM or roaming plan, download Vienna and Austria offline maps, and separate two usable payment cards plus a little euro cash between both travelers",
     critical: true,
   },
   {
+    id: "under-seat",
+    legacyIndex: 7,
+    tonight: true,
     item: "Under-seat essentials: passports, prescriptions, phones, charging cables, power banks, valuables, one warm layer, and a minimal overnight change; keep power banks out of checked bags and overhead bins",
     critical: true,
   },
   {
+    id: "home-closeout",
+    legacyIndex: 8,
     item: "Home close-out Friday: keys and wallet accounted for, windows and doors locked, thermostat set, nonessential appliances unplugged, and any mail, plant, or pet coverage confirmed",
     critical: false,
   },
   {
+    id: "cash",
+    legacyIndex: 9,
     item: "Cash: €150–200 total in smaller notes, split between both people for earlier hut visits, parking and payment backup",
     critical: true,
   },
   {
+    id: "alpine-layers",
+    legacyIndex: 10,
     item: "Pack the full alpine layer system: base layer + fleece + packable insulation + waterproof shell; Zugspitze can be near or below freezing while the valley is warm",
     critical: true,
   },
   {
+    id: "rain-protection",
+    legacyIndex: 11,
     item: "Rain protection: reproof hiking shoes, test both shells, and pack rain pants plus one waterproof liner per daypack",
     critical: true,
   },
   {
+    id: "mountain-safety",
+    legacyIndex: 12,
     item: "Mountain safety: each person carries 2 L water capacity, a headlamp, and a space blanket; split first aid and the power bank between daypacks",
     critical: true,
   },
   {
+    id: "mountain-weather",
+    legacyIndex: 13,
     item: "Mountain weather routine: recheck the official local forecast and lift, road, hut, and trail status 24–48 hours ahead and again before leaving each morning",
     critical: true,
   },
   {
+    id: "bag-check",
+    legacyIndex: 14,
+    tonight: true,
     item: "Final bag check on Sept 3: rollers 6.5–7 kg, personal-item daypacks within 40 × 30 × 15 cm, no batteries or essential medicine in a gate-checkable roller",
     critical: true,
   },
   {
+    id: "rental-coverage",
+    legacyIndex: 15,
     item: "Rental coverage: download the current Chase benefit letter, confirm the primary renter and full-card-payment rules, and remember that collision/theft coverage is not liability insurance",
     critical: true,
   },
   {
+    id: "vignette",
+    legacyIndex: 16,
     item: "Confirm a valid Austrian vignette on the rental car at pickup; if absent, buy an immediate-valid 10-day vignette before using the autobahn",
     critical: true,
   },
-  { item: "Keep €1/€2 coins handy for station restrooms and small kiosks", critical: false },
   {
+    id: "coins",
+    legacyIndex: 17,
+    item: "Keep €1/€2 coins handy for station restrooms and small kiosks",
+    critical: false,
+  },
+  {
+    id: "schafberg",
+    legacyIndex: 18,
     item: "Schafbergbahn: reserve Sept 8 morning ascent and noon descent; nothing booked yet",
     critical: false,
   },
   {
+    id: "return-rail",
+    legacyIndex: 19,
     item: "RJX 13479 (Sept 13, dep 14:48): booked ✓ — keep passenger details with the traveler",
     critical: false,
   },
   {
+    id: "arrival-supplies",
+    legacyIndex: 20,
     item: "Arrival supplies: buy hiking snacks at VIE or Wien Mitte before hotel check-in; do not depend on Naschmarkt stalls",
     critical: true,
   },
   {
+    id: "scotty",
+    legacyIndex: 21,
     item: "Use the ÖBB Scotty/app for live platform and delay updates on long train days",
     critical: true,
   },
   {
+    id: "offline-maps",
+    legacyIndex: 22,
     item: "Download offline maps before the Tyrol hikes and Achensee day trip; replace the Seebensee valley-start reference GPX with a gondola-start route before Sept 10",
     critical: true,
   },
   {
+    id: "achensee-return",
+    legacyIndex: 23,
     item: "Achensee day trip: save Pertisau parking and navigation, leave at 14:30 for the fixed 17:30 Innsbruck Airport car return",
     critical: true,
   },
   {
+    id: "car-return",
+    legacyIndex: 24,
     item: "Innsbruck Airport return: passenger cars use parking area A; follow the blue “Car rental return” signs",
     critical: true,
   },
   {
+    id: "frankfurt-transfer",
+    legacyIndex: 25,
     item: "Return flight connection at FRA is only 75 minutes: keep both boarding passes ready, confirm bags are through-checked, and go directly to transfer/passport control",
     critical: true,
   },
   {
+    id: "museum",
+    legacyIndex: 26,
     item: "Choose the Sept 6 museum now: KHM, Albertina, and Belvedere are paid; the first-Sunday offer belongs to the Wien Museum network, not all federal museums",
     critical: true,
   },
   {
+    id: "hotel-confirmations",
+    legacyIndex: 27,
     item: "Keep the Hotel Zimmerbräu and der grüne Baum confirmations handy for Sept 7 and Sept 9 check-in windows",
     critical: false,
   },
@@ -505,4 +570,11 @@ export const PLANNING_SHORTLIST: PlanningShortlistItem[] = [
   },
 ];
 
-type DepartureChecklistItem = { item: string; critical: boolean };
+export type DepartureChecklistItem = {
+  id: string;
+  /** Original v1 storage position; keep stable when reordering records. */
+  legacyIndex: number;
+  tonight?: boolean;
+  item: string;
+  critical: boolean;
+};

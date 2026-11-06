@@ -5,33 +5,11 @@ import { PHASE_DEFINITIONS } from "./data/phases";
 import { DRIVE_WAYPOINTS, HERO_TRAIN_SEGMENTS } from "./hero-route-data";
 import data from "./staticRoutes.json";
 
-export interface StaticRoutes {
-  sourceWaypointKeys: {
-    heroDrive: string;
-    drivingRoutes: Record<string, string>;
-    trainRoutes: Record<string, string>;
-  };
-  heroDriveCoords: LatLng[];
-  /** Keyed by TrainSegment.id. Pre-baked Overpass rail geometry. */
-  heroTrainRoutes: Record<string, LatLng[]>;
-  phaseRoutes: {
-    vienna: { drivingRoutes: Record<string, LatLng[]> };
-    salzkammergut: { drivingRoutes: Record<string, LatLng[]> };
-    tyrol: { drivingRoutes: Record<string, LatLng[]> };
-    olperer: { drivingRoutes: Record<string, LatLng[]> };
-  };
-}
-
 const coordinate = z.tuple([z.number(), z.number()]);
 
 const routeGroup = z.object({ drivingRoutes: z.record(z.string(), z.array(coordinate)) });
 
-export const phaseRoutesSchema = z.object({
-  vienna: routeGroup,
-  salzkammergut: routeGroup,
-  tyrol: routeGroup,
-  olperer: routeGroup,
-});
+export const phaseRoutesSchema = z.record(z.string(), routeGroup);
 
 const staticRoutesSchema = z.object({
   sourceWaypointKeys: z.object({
@@ -44,9 +22,11 @@ const staticRoutesSchema = z.object({
   phaseRoutes: phaseRoutesSchema,
 });
 
+export type StaticRoutes = z.infer<typeof staticRoutesSchema>;
+
 export const STATIC_ROUTES = staticRoutesSchema.parse(data);
 
-const phaseGroups = new Map<string, StaticRoutes["phaseRoutes"]["vienna"]>(
+const phaseGroups = new Map<string, StaticRoutes["phaseRoutes"][string]>(
   Object.entries(STATIC_ROUTES.phaseRoutes),
 );
 

@@ -4,6 +4,7 @@ import { describeWeatherCode } from "./weather-codes";
 import {
   FORECAST_WINDOW_DAYS,
   forecastLeadDays,
+  isForecastEligible,
   weatherScope,
   weatherValues,
   type WeatherDaySnapshot,
@@ -12,7 +13,7 @@ import {
 
 const FORECAST_API = "https://api.open-meteo.com/v1/forecast";
 
-const TRIP_TIME_ZONE = "Europe/Vienna";
+import { TRIP_TIME_ZONE } from "./trip-clock";
 
 const FORECAST_FETCH_ATTEMPTS = 2;
 
@@ -348,15 +349,7 @@ export async function resolveDaysWeather(
   const locations = new Map<string, DayWeatherLocation>();
 
   for (const day of days) {
-    const delta = deltas.get(day.isoDate);
-
-    if (
-      day.weatherLocation &&
-      delta !== null &&
-      delta !== undefined &&
-      delta >= 0 &&
-      delta < FORECAST_WINDOW_DAYS
-    ) {
+    if (day.weatherLocation && isForecastEligible(day, now)) {
       locations.set(locationKey(day.weatherLocation), day.weatherLocation);
     }
   }
@@ -377,14 +370,14 @@ export async function resolveDaysWeather(
     const identity = { isoDate: day.isoDate, scope: weatherScope(day) };
     const delta = deltas.get(day.isoDate) ?? forecastLeadDays(day.isoDate, now);
 
-    if (delta < 0 || delta >= FORECAST_WINDOW_DAYS) {
+    if (!isForecastEligible(day, now)) {
       return { ...identity, status: "outside-window" };
     }
 
     const forecast = forecasts.get(locationKey(day.weatherLocation));
     const entry = forecast?.byDate.get(day.isoDate);
 
-    if (forecast && entry && delta < FORECAST_WINDOW_DAYS) {
+    if (forecast && entry) {
       const precipParts = [
         entry.precipPct === null || entry.precipPct === undefined
           ? null

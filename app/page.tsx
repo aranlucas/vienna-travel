@@ -109,7 +109,6 @@ export default async function Home() {
         liveChecks={LIVE_CHECKS}
       />
 
-      {/* Hero */}
       <HeroSection />
       <div className="mx-auto max-w-6xl px-6">
         <TripProgressControl />
@@ -231,10 +230,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Weather outlook — live forecasts per trip day */}
       <TripWeatherOutlook />
 
-      {/* Phase navigation — panels pre-rendered server-side */}
       <section
         id={HOME_SECTION_IDS.itinerary}
         className="mx-auto max-w-6xl scroll-mbs-20 px-6 pbe-20"
@@ -364,7 +361,6 @@ export default async function Home() {
         </section>
       </ThroughDate>
 
-      {/* Footer */}
       <footer className="border-bs border-forest-green/20 px-6 py-8 pbe-24 text-center text-xs text-cream-muted/40 md:pbe-8">
         Austria Expedition 2026 · Updated Sept 12, 2026 · Emergency in Austria: 112 (general) / 140
         (mountain rescue)

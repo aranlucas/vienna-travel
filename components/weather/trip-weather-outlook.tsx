@@ -14,6 +14,8 @@ type HintTone = "cold" | "wet" | "hot" | "alert";
 
 const UNIT_STORAGE_KEY = "weather-unit";
 
+let sessionUnit: Unit | null = null;
+
 const UNIT_EVENT = "weather-unit-change";
 
 function subscribeToUnit(onChange: () => void): () => void {
@@ -27,7 +29,15 @@ function subscribeToUnit(onChange: () => void): () => void {
 }
 
 function getUnitSnapshot(): Unit {
-  return window.localStorage.getItem(UNIT_STORAGE_KEY) === "C" ? "C" : "F";
+  if (sessionUnit) {
+    return sessionUnit;
+  }
+
+  try {
+    return window.localStorage.getItem(UNIT_STORAGE_KEY) === "C" ? "C" : "F";
+  } catch {
+    return "F";
+  }
 }
 
 function getServerUnit(): Unit {
@@ -269,7 +279,13 @@ function WeatherMetric({ label, value, detail }: WeatherMetricProps) {
 }
 
 const changeUnit = (next: Unit) => {
-  window.localStorage.setItem(UNIT_STORAGE_KEY, next);
+  try {
+    window.localStorage.setItem(UNIT_STORAGE_KEY, next);
+    sessionUnit = null;
+  } catch {
+    sessionUnit = next;
+  }
+
   window.dispatchEvent(new Event(UNIT_EVENT));
 };
 

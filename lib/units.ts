@@ -21,3 +21,19 @@ export function formatMiles(km: number, fractionDigits = 1): string {
 export function formatFeet(meters: number): string {
   return `${Math.round(toFeet(meters)).toLocaleString()} ft`;
 }
+
+export function formatDuration(hours: number): string {
+  const totalMinutes = Math.round(hours * 60);
+  const h = Math.floor(totalMinutes / 60);
+  const m = totalMinutes % 60;
+
+  if (h === 0) {
+    return `${m}min`;
+  }
+
+  if (m === 0) {
+    return `${h}h`;
+  }
+
+  return `${h}h ${m}min`;
+}

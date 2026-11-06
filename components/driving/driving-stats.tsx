@@ -1,23 +1,8 @@
 import type { DrivingSegment } from "@/lib/tripData";
-import { formatMiles } from "@/lib/units";
+import { formatMiles, formatDuration } from "@/lib/units";
 
 interface DrivingStatsProps {
   segments: DrivingSegment[];
-}
-
-function formatDuration(hours: number): string {
-  const h = Math.floor(hours);
-  const m = Math.round((hours - h) * 60);
-
-  if (h === 0) {
-    return `${m}min`;
-  }
-
-  if (m === 0) {
-    return `${h}h`;
-  }
-
-  return `${h}h ${m}min`;
 }
 
 export function DrivingStats({ segments }: DrivingStatsProps) {

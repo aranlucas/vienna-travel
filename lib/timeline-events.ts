@@ -74,7 +74,6 @@ function parseTimeFromWindow(window: string): string {
 export function buildTimelineEvents(): TimelineEvent[] {
   const events: TimelineEvent[] = [];
 
-  // ── Pre-scan: collect segment IDs claimed by activities ───────────────────
   // A claimed segment is suppressed in its own loop; the activity generates the
   // consolidated event instead (activity title + segment metadata).
   const claimedSegmentIds = new Set<string>();
@@ -94,7 +93,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
   const trainById = new Map(TRAIN_SEGMENTS.map((s) => [s.id, s]));
   const flightById = new Map(FLIGHT_SEGMENTS.map((s) => [s.id, s]));
 
-  // ── Flights — skip segments claimed by an activity ────────────────────────
   for (const flight of FLIGHT_SEGMENTS) {
     if (claimedSegmentIds.has(flight.id)) {
       continue;
@@ -113,7 +111,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     });
   }
 
-  // ── Layovers ──────────────────────────────────────────────────────────────
   for (const layover of LAYOVERS) {
     const hours = Math.floor(layover.durationMinutes / 60);
     const mins = layover.durationMinutes % 60;
@@ -130,7 +127,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     });
   }
 
-  // ── Hotel check-ins / check-outs — all STAYS (confirmed + unconfirmed) ────
   for (const stay of STAYS) {
     const checkinTime = timeToMinutes(parseTimeFromWindow(stay.checkIn.window));
 
@@ -164,7 +160,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     );
   }
 
-  // ── Train segments ────────────────────────────────────────────────────────
   for (const phase of PHASES) {
     if (!phase.trainSegments) {
       continue;
@@ -195,7 +190,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     }
   }
 
-  // ── Driving segments — skip segments claimed by an activity ──────────────
   for (const phase of PHASES) {
     for (const drive of phase.drivingSegments) {
       if (claimedSegmentIds.has(drive.id)) {
@@ -229,7 +223,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     }
   }
 
-  // ── Daily activities ──────────────────────────────────────────────────────
   // Activities with a segmentId consolidate: activity title + segment metadata.
   // Activities without segmentId generate a plain event (no duplicate risk).
   for (const { phase, day } of PHASES.flatMap((tripPhase) =>
@@ -263,7 +256,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
           continue;
         }
 
-        // ── Consolidated drive event ──────────────────────────────────────
         const drive = driveById.get(activity.segmentId);
 
         if (drive) {
@@ -289,7 +281,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
           continue;
         }
 
-        // ── Consolidated flight event ─────────────────────────────────────
         const flight = flightById.get(activity.segmentId);
 
         if (flight) {
@@ -309,7 +300,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
         }
       }
 
-      // ── Plain activity event ──────────────────────────────────────────
       events.push({
         id: `activity-${phase.id}-${day.isoDate}-${i}`,
         type: activity.type ?? "activity",
@@ -325,7 +315,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     }
   }
 
-  // ── Sort: by date, then by time within each day ───────────────────────────
   return events.toSorted((a, b) => {
     const dateCompare = a.date.localeCompare(b.date);
 
@@ -336,8 +325,6 @@ export function buildTimelineEvents(): TimelineEvent[] {
     return a.sortTime - b.sortTime;
   });
 }
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
 
 function formatDateLabel(isoDate: string): string {
   const date = new Date(isoDate + "T12:00:00");

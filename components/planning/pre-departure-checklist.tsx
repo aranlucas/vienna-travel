@@ -1,90 +1,28 @@
 "use client";
 
-import { z } from "zod";
-
 import { useMemo, useState, useSyncExternalStore } from "react";
-
-interface ChecklistItem {
-  item: string;
-  critical: boolean;
-}
-
-const STORAGE_KEY = "predeparture-checklist-v1";
-
-const STORAGE_EVENT = "predeparture-checklist-change";
-
-// Items that matter most on departure eve — matched by stable prefixes.
-const TONIGHT_PREFIXES = [
-  "Tonight after 7:50 PM PT",
-  "Friday flight plan",
-  "Save an offline travel folder",
-  "Arrival connectivity",
-  "Under-seat essentials",
-  "Final bag check on Sept 3",
-];
-
-function isTonightItem(item: string): boolean {
-  return TONIGHT_PREFIXES.some((prefix) => item.startsWith(prefix));
-}
-
-// localStorage is an external store: useSyncExternalStore keeps SSR, hydration,
-// and cross-tab updates consistent with no effects. The `storage` event covers
-// other tabs; STORAGE_EVENT covers writes from this tab (which never fire `storage`).
-function subscribe(onChange: () => void): () => void {
-  window.addEventListener("storage", onChange);
-  window.addEventListener(STORAGE_EVENT, onChange);
-
-  return () => {
-    window.removeEventListener("storage", onChange);
-    window.removeEventListener(STORAGE_EVENT, onChange);
-  };
-}
-
-function getSnapshot(): string {
-  return window.localStorage.getItem(STORAGE_KEY) ?? "{}";
-}
-
-function getServerSnapshot(): string {
-  return "{}";
-}
-
-function parseChecked(snapshot: string): CheckedItems {
-  try {
-    return z.record(z.string().regex(/^\d+$/), z.boolean()).parse(JSON.parse(snapshot));
-  } catch {
-    // Corrupted storage — treat as empty rather than crashing.
-  }
-
-  return {};
-}
-
-function writeChecked(next: CheckedItems): void {
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  } catch {
-    // Storage unavailable — checklist still works for the session.
-  }
-
-  window.dispatchEvent(new Event(STORAGE_EVENT));
-}
+import type { DepartureChecklistItem } from "@/lib/data/logistics";
+import { checklistStore } from "./checklist-store";
 
 export function PreDepartureChecklist({ items }: PreDepartureChecklistProps) {
-  const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const checked = useMemo(() => parseChecked(snapshot), [snapshot]);
+  const snapshot = useSyncExternalStore(
+    checklistStore.subscribe,
+    checklistStore.getSnapshot,
+    checklistStore.getServerSnapshot,
+  );
+
+  const checked = useMemo(() => checklistStore.read(snapshot, items), [snapshot, items]);
   const [tonightOnly, setTonightOnly] = useState(false);
 
   const visible = useMemo(
-    () =>
-      items
-        .map((item, index) => ({ ...item, index }))
-        .filter((entry) => !tonightOnly || isTonightItem(entry.item)),
+    () => items.filter((entry) => !tonightOnly || entry.tonight),
     [items, tonightOnly],
   );
 
-  const doneCount = items.filter((_, index) => checked[index]).length;
+  const doneCount = items.filter(({ id }) => checked[id]).length;
 
-  const toggle = (index: number) => {
-    writeChecked({ ...checked, [index]: !checked[index] });
+  const toggle = (id: string) => {
+    checklistStore.write({ ...checked, [id]: !checked[id] });
   };
 
   return (
@@ -114,12 +52,12 @@ export function PreDepartureChecklist({ items }: PreDepartureChecklistProps) {
       </div>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        {visible.map(({ item, critical, index }) => {
-          const done = checked[index] ?? false;
+        {visible.map(({ id, item, critical }) => {
+          const done = checked[id] ?? false;
 
           return (
             <label
-              key={index}
+              key={id}
               className={`flex min-h-touch-roomy cursor-pointer gap-3 rounded-lg border p-3 text-base ${
                 done
                   ? "border-forest-green/25 bg-dark-card opacity-70"
@@ -131,7 +69,7 @@ export function PreDepartureChecklist({ items }: PreDepartureChecklistProps) {
               <input
                 type="checkbox"
                 checked={done}
-                onChange={() => toggle(index)}
+                onChange={() => toggle(id)}
                 className="mbs-1 size-5 shrink-0 accent-amber"
               />
               <span className={`leading-snug ${done ? "line-through" : ""}`}>{item}</span>
@@ -143,6 +81,4 @@ export function PreDepartureChecklist({ items }: PreDepartureChecklistProps) {
   );
 }
 
-type PreDepartureChecklistProps = { items: ChecklistItem[] };
-
-type CheckedItems = Partial<Record<number, boolean>>;
+type PreDepartureChecklistProps = { items: DepartureChecklistItem[] };

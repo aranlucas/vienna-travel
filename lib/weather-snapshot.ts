@@ -4,7 +4,7 @@ import { WEATHER_REFRESH_MS } from "./weather-refresh";
 
 export const FORECAST_WINDOW_DAYS = 16;
 
-const TRIP_TIME_ZONE = "Europe/Vienna";
+import { TRIP_TIME_ZONE } from "./trip-clock";
 
 export const WEATHER_UNAVAILABLE =
   "Latest weather is temporarily unavailable. Keeping the last forecast or seasonal guidance.";
