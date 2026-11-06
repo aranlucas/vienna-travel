@@ -119,6 +119,20 @@ it("registers four tools through the real hook and preserves execution, weather 
   expect(await execute("get_weather_outlook", { date_or_day: "Day 6" })).toContain(
     "Seasonal guidance",
   );
+
+  await expect(execute("get_day_plan", { date_or_day: "   " })).rejects.toThrow(
+    "No trip day matched",
+  );
+  await expect(execute("get_day_plan", { date_or_day: "!!!" })).rejects.toThrow(
+    "No trip day matched",
+  );
+  await expect(execute("get_weather_outlook", { date_or_day: "   " })).rejects.toThrow(
+    "No trip day matched",
+  );
+  await expect(execute("get_weather_outlook", { date_or_day: "!!!" })).rejects.toThrow(
+    "No trip day matched",
+  );
+
   mounted.rerender(view([{ ...day, weather: "Updated live outlook" }]));
   expect(await execute("get_weather_outlook", { date_or_day: "Day 6" })).toContain(
     "Updated live outlook",

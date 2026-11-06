@@ -64,11 +64,11 @@ function timeToMinutes(timeStr: string): number {
   return 0;
 }
 
-/** Extract the first time token from a window string like "3:00 PM - 6:00 PM". */
-function parseTimeFromWindow(window: string): string {
-  const match = window.match(/\d{1,2}:\d{2}\s*(?:AM|PM)/i);
+/** Windows open at their first time; checkout deadlines use their final time. */
+function parseTimeFromWindow(window: string, deadline = false): string {
+  const matches = window.match(/\d{1,2}:\d{2}\s*(?:AM|PM)/gi);
 
-  return match ? match[0] : "3:00 PM";
+  return (deadline ? matches?.at(-1) : matches?.[0]) ?? "3:00 PM";
 }
 
 export function buildTimelineEvents(): TimelineEvent[] {
@@ -150,7 +150,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
         timeLabel: "Checkout by",
         date: stay.checkOut.isoDate,
         dateLabel: formatDateLabel(stay.checkOut.isoDate),
-        sortTime: timeToMinutes(parseTimeFromWindow(stay.checkOut.window)),
+        sortTime: timeToMinutes(parseTimeFromWindow(stay.checkOut.window, true)),
         title: stay.propertyName,
         subtitle: `${stay.checkOut.window} CEST`,
         details: [],
@@ -327,7 +327,7 @@ export function buildTimelineEvents(): TimelineEvent[] {
 }
 
 function formatDateLabel(isoDate: string): string {
-  const date = new Date(isoDate + "T12:00:00");
+  const date = new Date(isoDate + "T12:00:00Z");
   const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
   const months = [
