@@ -92,6 +92,10 @@ function normalize(value: string): string {
 function findDay(days: DayPlan[], input: string): DayPlan | undefined {
   const query = normalize(input);
 
+  if (!query) {
+    return undefined;
+  }
+
   return days.find((day) => {
     const dayNumber = day.dayLabel.match(/Day\s+(\d+)/i)?.[1];
 

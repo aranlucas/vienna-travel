@@ -44,3 +44,6 @@ next-env.d.ts
 # traveler-specific overlays and booking exports
 /lib/data/*.private.*
 /lib/data/private/
+
+# e2e reports and browser artifacts
+/.e2e/
