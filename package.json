@@ -25,13 +25,13 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-leaflet": "^5.0.0",
-    "recharts": "^3.10.1",
+    "recharts": "^3.11.0",
     "usewebmcp": "6.2.0",
     "zod": "4.6.7"
   },
   "devDependencies": {
     "@aranlucas/oxforge": "0.3.1",
-    "@e2e-dev/web": "0.16.0",
+    "@e2e-dev/web": "0.16.1",
     "@tailwindcss/postcss": "^4.3.5",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
@@ -40,18 +40,18 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.3.0",
-    "e2e": "0.23.1",
+    "e2e": "0.24.0",
     "husky": "^9.1.7",
     "jsdom": "^31.0.1",
-    "lint-staged": "^17.6.1",
+    "lint-staged": "^17.6.2",
     "oxfmt": "^0.79.0",
     "oxlint": "^1.94.0",
     "oxlint-tailwindcss": "^1.17.2",
-    "oxlint-tsgolint": "^7.0.2007",
-    "portless": "0.17.0",
+    "oxlint-tsgolint": "^7.0.2008",
+    "portless": "0.18.1",
     "tailwindcss": "^4.3.5",
     "typescript": "^7.0.2",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}": [
